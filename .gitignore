@@ -1,0 +1,14 @@
+.emacs
+.emacs.bmk
+.emacs.d/
+.emacs.html
+.emacs.org-example
+ProofGeneral
+ProofGeneral-4.2/
+RCS/
+TO-DELETE-BUT-SAVED-JUST-IN-CASE/
+emacs-cheat-sheet.png
+emacsconf.org
+java-mode-indent-annotations.el
+not-used-anymore/
+utilities/
