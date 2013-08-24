@@ -1,0 +1,1800 @@
+#+TITLE:       =.emacs=
+#+AUTHOR:      Harold Carr
+#+DESCRIPTION: literate version of my .emacs file.
+#+PROPERTY:    results silent
+#+PROPERTY:    tangle .emacs
+#+PROPERTY:    eval no-export
+#+PROPERTY:    comments org
+#+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
+#+OPTIONS:     skip:nil author:nil email:nil creator:nil timestamp:nil
+#+INFOJS_OPT:  view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+
+Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
+
+- [[http://www.gnu.org/software/emacs/manual/index.html]]
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/index.html]]
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html#Init-File]]
+- [[http://emacswiki.org/]]
+
+#+BEGIN_COMMENT
+-  Before you can build this on a new system, make sure that you put
+   the cursor over any of the above properties, and hit: =C-c C-c=
+
+- =tab= opens/close a particular section
+- Shift =tab= cycles between the outline and full text
+- Tangle it with:  =C-c C-v t=
+  - Creates:  =/tmp/.emacs=
+  - =cp= to the appropriate location
+#+END_COMMENT
+
+------------------------------------------------------------------------------
+* Intro
+
+#+NAME: Note
+#+BEGIN_SRC emacs-lisp :comments off
+;;; | ====================================================== |
+;;; | DO NOT EDIT the generated *.el file.                   |
+;;; | It was generated from an org-mode "literate" version.  |
+;;; | ====================================================== |
+
+;;;;
+;;;; Created       : a long time ago ...        by Harold Carr.
+;;;; Last Modified : 2013 Aug 24 (Sat) 13:56:36 by carr.
+;;;;
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Sections
+
+Name each "section" in this .emacs file.
+
+Then, when an error occurs, you can tell what section it occurs in
+by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
+
+=debug-on-error= is finer grained, but this is still useful.
+
+#+NAME: hcsection
+#+BEGIN_SRC emacs-lisp :comments off
+(defvar *hcSection* "")
+
+(defun hcSection (title)
+  "For debugging .emacs"
+  (setq *hcSection* title)
+  (message title))
+
+(setq debug-on-error t)
+
+(defmacro comment (&rest x) nil)
+
+(defmacro hcRequire (name &rest body)
+  `(if (require ',name nil t)
+       (progn ,@body)
+     (warn (concat (format "%s" ',name) " NOT FOUND"))))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Beans
+
+Never access a variable directly.
+
+#+NAME: beans
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Beans")
+
+(defmacro hcDefineBean (name &rest body)
+  (let ((var-name (intern (concat "*" (format "%s" name) "*"))))
+    `(progn
+       (defvar ,var-name ,@body)
+       (defun ,name () ,var-name))))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Predicates
+
+#+NAME: predicates
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Predicates")
+
+(defun hcIsVersionP    (x)(string-match x (emacs-version)))
+
+(defun hcLucidP        () (hcIsVersionP "Lucid"))
+(defun hcXEmacsP       () (hcIsVersionP "XEmacs"))
+(defun hcXP            () (equal window-system 'x))
+(defun hcOracleLinuxP  () (or (and (hcIsVersionP "redhat-linux")
+                                   (hcIsVersionP "us.oracle.com"))
+                              (and (hcIsVersionP "x86_64-unknown-linux-gnu")
+                                   (hcIsVersionP "2013-03-26 on adc2100420"))))
+(defun hcWin32P        () (or (equal window-system 'win32)
+			      (equal window-system 'w32)
+			      (equal window-system 'mswindows)
+                              (hcIsVersionP "cygwin")))
+(defun hcDarwinP       () (hcIsVersionP "darwin"))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Executing shell commands
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Shell")
+
+(defun hcShExecCmd (name &rest args)
+  (shell-command-to-string
+   (concat (if (symbolp name) (symbol-name name) name)
+           " "
+	   (apply #'concat
+		  (mapcar #'(lambda (arg) (format "%s " arg))
+			  args)))))
+
+(defmacro hcShDefCmd (name args)
+  `(defun ,name ,args
+     (apply #'hcShExecCmd (list ',name ,@args))))
+
+(defmacro hcShDefCmdMemo (name)
+  (let ((varName (intern (format "*%s*" name))))
+    `(progn
+       (defvar ,varName nil)
+       (defun ,name ()
+	 (cond (,varName)
+	       (t (setq ,varName (hcShExecCmd ',name))))))))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Locations
+
+Important (to me) directories.
+
+#+NAME: locations
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Locations")
+
+(defun hcExpandFileName (forExternalProgramP path)
+  (if (hcWin32P)
+      (let ((result (shell-command-to-string (concat "cygpath " (if forExternalProgramP "-m " "-u " path)))))
+	;; Get rid of extra linefeed put in by shell-command-to-string.
+	(substring result 0 (- (length result) 1)))
+    (expand-file-name path)))
+
+(defun hcLocation (name) (hcShExecCmd 'hcLocation name))
+
+(hcDefineBean hcEmacsDir (hcLocation 'emacs))
+(add-to-list 'load-path  (hcEmacsDir))
+
+(hcDefineBean hcEsync    (hcLocation 'esync))
+(hcDefineBean hcFsync    (hcLocation 'fsync))
+(hcDefineBean hcFtptmp   (hcLocation 'ftptmp))
+(hcDefineBean hcHome     (hcLocation 'home))
+(hcDefineBean hcRpt      (hcLocation 'rpt))
+(hcDefineBean hcSync     (hcLocation 'sync))
+(hcDefineBean hcUlhcd    (hcLocation 'ulhcd))
+(hcDefineBean hcWs       (hcLocation 'ws))
+
+(hcShDefCmdMemo hcPathSep)
+(hcShDefCmd hcLibClasspath ())
+(hcShDefCmd hcFsToBs (string))
+(hcShDefCmd ripHome ())
+(hcShDefCmd ripHomeBase ())
+(hcShDefCmd hcLlavaMainClass ())
+(defun ripHomeColon () (hcMakeDriveColon-el (ripHome)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Packages
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
+- [[http://emacswiki.org/emacs/ELPA]]
+
+#+NAME: packages
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Packages")
+
+;; ELPA does not update the load path when new packages are installed.
+;; This will do that.
+
+(defun package-update-load-path ()
+  "Update the load path for newly installed packages."
+  (interactive)
+  (let ((package-dir (hcExpandFileName nil package-user-dir)))
+    (mapc (lambda (pkg)
+            (let ((stem (symbol-name (car pkg)))
+		  (version "")
+		  (first t)
+		  path)
+	      (mapc (lambda (num)
+		      (if first
+			  (setq first nil)
+			  (setq version (format "%s." version)))
+		      (setq version (format "%s%s" version num)))
+		    (aref (cdr pkg) 0))
+              (setq path (format "%s/%s-%s" package-dir stem version))
+              (add-to-list 'load-path path)))
+          package-alist)))
+
+(hcRequire package
+  ;; TODO: Other code uses .emacs.d too.
+  ;;       For now I have a symlink from ~/.emacs.d to here.
+  ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
+  (add-to-list 'package-archives '("org"       . "http://orgmode.org/elpa/")             ) ;; put at front
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+  (add-to-list 'package-archives '("melpa"     . "http://melpa.milkbox.net/packages/")  t)
+  (package-initialize))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Top level misc
+
+#+NAME: toplevelmisc
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Top level misc stuff")
+
+;; Ask before exit.
+(setq confirm-kill-emacs
+      (lambda (e)
+        (y-or-n-p-with-timeout
+         "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
+
+;; don't ask when killing shell buffer (and other processes)
+(setq kill-buffer-query-functions
+      (remq 'process-kill-buffer-query-function
+            kill-buffer-query-functions))
+
+;; Do not want to destroy symbolic links.
+(setq backup-by-copying-when-linked t)
+
+;; Enable ESC : to evaluate emacs Lisp commands.
+(put 'eval-expression 'disabled nil)
+
+;; Do NOT use tabs for indenting
+(setq-default indent-tabs-mode nil)
+
+;; Why have extra do-nothing whitespace?
+(setq-default show-trailing-whitespace t)
+(setq default-indicate-empty-lines t)
+#+END_SRC
+
+** Mode line
+
+- [[http://www.emacswiki.org/emacs/DisplayTime]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(load "time")
+(display-time)
+
+(line-number-mode)
+(column-number-mode)
+#+END_SRC
+
+** Display full filepath in title
+
+- [[http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
+#+END_SRC
+
+** Make buffer names unique
+
+Use part of the path name for buffer name when visiting two different files with same name.
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Uniquify.html#Uniquify]]
+- [[http://emacswiki.org/emacs/uniquify]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcRequire uniquify
+  (setq uniquify-buffer-name-style 'post-forward)
+  (setq uniquify-separator ":"))
+#+END_SRC
+
+** Incremental/Interactively switching buffers or finding files
+
+- [[http://emacswiki.org/emacs/InteractivelyDoThings]]
+
+Note:
+- =C-x C-f= "interactively" finds a file
+- =C-x C-f C-f= uses the old find-file
+
+I used to use =iswitchb-mode= for switching buffers, but find =ido-mode= to be better.
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Iswitchb.html#Iswitchb]]
+- [[http://www.emacswiki.org/emacs/IswitchBuffers]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcRequire ido
+  (ido-mode t)
+  (setq ido-enable-flex-matching t))
+
+;; fall back if necessary
+(if (not (fboundp 'ido-mode))
+  (hcRequire iswitchb
+    (iswitchb-mode t)))
+#+END_SRC
+
+TODO
+- [[http://www.emacswiki.org/emacs-en/kill-ring-ido.el]]
+
+** Recently visited files
+
+TODO
+- [[http://emacsredux.com/blog/2013/04/05/recently-visited-files/]]
+
+------------------------------------------------------------------------------
+* Key Bindings
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html#Key-Bindings]]
+- [[http://www.emacswiki.org/emacs/KeyBindingDiscussion]]
+
+#+NAME: keybindings
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Key Bindings")
+
+;; Somehow VNC is turning C-Y into M-v (I think)
+(if (hcOracleLinuxP)
+  (global-set-key "\M-v" 'yank))
+
+; C-x 5 o other-frame "frame.el"
+; C-x o other-window "window.el"
+(global-set-key "\C-x\C-o" 'other-frame) ; overwrite: delete-blank-lines "simple.el"
+
+(global-set-key "\C-h" 'backward-delete-char)
+(global-set-key "\M-g" 'goto-line)
+(global-set-key "\M-(" 'backward-sexp)
+(global-set-key "\M-)" 'forward-sexp)
+(global-set-key "\M-4" 'lower-frame)
+
+(autoload 'dabbrev "dabbrev" "dabbrev" t)
+(if (not (hcWin32P))
+  (global-set-key "\M-\ " 'dabbrev-expand)
+  (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
+
+(defvar *hcSetMarkCommandState* 'default)
+(defun hcSetMarkCommand ()
+  (interactive)
+  (cond ((eq *hcSetMarkCommandState* 'default)
+	 (global-set-key "\M-2" 'set-mark-command)
+	 (global-unset-key "\C-@")
+	 (setq *hcSetMarkCommandState* 'swapped))))
+(defun hcResetSetMarkComment ()
+  (interactive)
+  (cond ((eq *hcSetMarkCommandState* 'swapped)
+	 (global-set-key "\C-@" 'set-mark-command)
+	 (global-set-key "\M-2" 'digit-argument)
+	 (setq *hcSetMarkCommandState* 'default))))
+(hcSetMarkCommand)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Shell
+
+#+NAME: shell
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Shell")
+#+END_SRC
+
+** Shell
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html#Shell]]
+- [[http://emacswiki.org/emacs/ShellMode]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(defun hcShell ()
+  (setq shell-multiple-shells t) ; new shell each time shell mode invoked.
+  ;;(setq shell-pushd-regexp "pushd") ; add ud
+  ;;(setq shell-popd-regexp "popd")   ; add od
+  ;;(setq shell-cd-regexp "cd")
+  (cond ((hcWin32P)
+         (setq process-coding-system-alist
+               '(("cmdproxy" . (raw-text-dos . raw-text-dos)))))
+	(nil ;(file-exists-p                 (concat (hcUlhcd) "/bin/bash"))
+	 (setq explicit-shell-file-name (concat (hcUlhcd) "/bin/bash"))))
+  ;;(setenv "SHELL"       explicit-shell-file-name)
+  ;; For subprocesses invoked via the shell (e.g., "shell -c command")
+  (if (and (boundp 'explicit-shell-file-name)
+           (not (null explicit-shell-file-name)))
+      (setq shell-file-name explicit-shell-file-name))
+  (setq win32-quote-process-args t)
+  (setq shell-command-switch "-c"))
+
+(hcShell)
+#+END_SRC
+
+- [[http://www.emacswiki.org/emacs/MultiTerm]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(comment
+(autoload 'multi-term "multi-term" nil t)
+(autoload 'multi-term-next "multi-term" nil t)
+
+(setq multi-term-program "/bin/bash")
+
+(global-set-key (kbd "C-c t") 'multi-term-next)
+(global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
+)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Compilation
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Building.html#Building]]
+  - see Compilation, Compilation Mode and Compilation Shell
+- [[http://emacswiki.org/emacs/CompilationMode]]
+
+For extending it to work with Maven:
+
+- [[http://praveen.kumar.in/2011/03/09/making-gnu-emacs-detect-custom-error-messages-a-maven-example/]]
+
+#+NAME: compilation
+#+BEGIN_SRC emacs-lisp :comments off
+(hcRequire compile
+  (add-to-list 'compilation-error-regexp-alist 'maven)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(maven "\\[ERROR\\] \\(.+?\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\].*"
+                       1 2 3)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Org Mode
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/org/index.html#Top]]
+- [[http://emacswiki.org/emacs/OrgMode]]
+- [[http://orgmode.org/org.html]]
+  - complete manaul in one HTML file
+- [[http://orgmode.org/manual/index.html]]
+
+#+NAME: orgmode
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "org-mode")
+
+;; let ME control org-mode font colors, etc.
+;; this is in ~/.emacs:
+;(custom-set-variables
+; '(org-export-htmlize-output-type (quote css)))
+
+(defun hcOrgMode ()
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
+
+  ;; "Standard" key bindings (but not provided)
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
+
+  ;;;
+  ;;; Org Misc
+  ;;;
+
+  ;; If you do not like transient-mark-mode, you can create an active
+  ;; region by using the mouse to select a region, or pressing C-<SPC>
+  ;; twice before moving the cursor.
+  (if (not (hcXEmacsP)) (transient-mark-mode 1))
+
+  ;;(setq org-hide-leading-stars t)
+
+  ;; show the whole file when first visited
+  (setq org-startup-folded nil)
+
+  ;; Org buffers only
+  ;;(add-hook 'org-mode-hook 'turn-on-font-lock)
+
+  ;; The default is 3
+  (setq org-export-headline-levels 6)
+
+  ;; Do not put the validate link at bottom of page
+  (setq org-export-html-validation-link nil) ; I think this is obsolete.
+  (setq org-html-postamble-format nil)       ; I think this is the replacement - does not seem to work.
+
+  ;; Do not put timestamp at bottom of page
+  (setq org-export-time-stamp-file nil)
+
+  ;; Do not put author at bottom of page
+  (setq org-export-author-info nil)
+
+  ;;;
+  ;;; Agenda
+  ;;;
+
+  ;; Include entries from the emacs diary into =org-mode='s agenda.
+  (setq org-agenda-include-diary t)
+
+  ;; org-mode manages the =org-agenda-files= variable automatically using
+  ;; C-c [ and C-c ] to add/remove files respectively.
+  ;; Instead, disable those keys and replace with an explicit directory list.
+  ;; Any org files in those directories are automatically included in the agenda.
+  (setq org-agenda-files
+        (list
+         (hcRpt)
+         (concat (hcRpt)   "/.past/2011")
+         (concat (hcRpt)   "/.past/2012")
+         (concat (hcFsync) "/TODO-ME.org")
+         ;; "/tmp/google.org"
+         ))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-defkey org-mode-map "\C-c["    'undefined)
+              (org-defkey org-mode-map "\C-c]"    'undefined)))
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "|" "DONE(d!/!)" "DELEGATED(D!/!)")
+          (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)" "PHONE")
+          (sequence "OPEN(O!)" "|" "CLOSED(C!)")
+          ))
+
+  (setq org-todo-keyword-faces
+        '(("TODO"       :foreground "yellow"         :weight bold)
+          ("NEXT"       :foreground "blue"           :weight bold)
+          ("STARTED"    :foreground "blue"           :weight bold)
+          ("DONE"       :foreground "forest green"   :weight bold)
+          ("DELEGATED"  :foreground "forest green"   :weight bold)
+
+          ("WAITING"    :foreground "white"          :weight bold)
+          ("SOMEDAY"    :foreground "orange"         :weight bold)
+          ("CANCELLED"  :foreground "forest green"   :weight bold)
+          ("PHONE"      :foreground "forest green"   :weight bold)
+
+          ("OPEN"       :foreground "blue"           :weight bold)
+          ("CLOSED"     :foreground "forest green"   :weight bold)
+          ))
+
+  ;;;
+  ;;; Literate programming
+  ;;;
+
+  ;; Important: set this or it will remove space after editing code: C-c,C-c,'
+  ;; The default is 2.
+  (setq org-edit-src-content-indentation 4)
+
+  ;; When exporting code I want it to look like what I wrote.
+  (setq org-src-preserve-indentation t)
+
+  ;; When editing code, use the current window.
+  (setq org-src-window-setup (quote current-window))
+
+  ;;; see http://doc.norang.ca/org-mode.html
+
+  ;; http://ditaa.org/ditaa/
+  ;; probably not needed since the jar comes with org-mode in contrib/scripts.
+  (setq org-ditaa-jar-path (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
+
+  (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+
+  ;; Make babel results blocks lowercase
+  (setq org-babel-results-keyword "results")
+
+  (if (and (not (hcXEmacsP))
+           (fboundp 'org-babel-do-load-languages))
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((emacs-lisp . t)
+         (dot        . t)
+         (ditaa      . t)
+         (haskell    . t)
+         )))
+
+  ;; Do not prompt to confirm evaluation
+  ;; This may be dangerous - make sure you understand the consequences
+  ;; of setting this -- see the docstring for details
+  (setq org-confirm-babel-evaluate nil)
+  ;(setq org-confirm-babel-evaluate t)
+
+  ;; Cache all babel results blocks by default
+  ;; For graphics generation, this is faster if nothing changes
+  (if (and (not (hcXEmacsP))
+           (fboundp 'org-babel-default-header-args))
+      (setq org-babel-default-header-args
+            (cons '(:cache . "yes")
+                  (assq-delete-all :cache org-babel-default-header-args))))
+)
+
+(defun bh/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
+
+(hcRequire org (hcOrgMode))
+
+(hcRequire ox-md) ;; load this so menu options show up
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Calendar and Diary
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Calendar_002fDiary.html#Calendar_002fDiary]]
+- [[http://emacswiki.org/emacs/CalendarMode]]
+
+#+NAME: calendar
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Calendar and Diary")
+
+(defun hcCalendar ()
+  (setq diary-file (concat (hcFsync) "/.emacs.diary"))
+  ;(setq calendar-week-start-day 1) ; monday
+  (setq calendar-offset -1)
+  (setq view-diary-entries-initially t)
+  (setq number-of-diary-entries 2)
+  ;; This causes a debug error in emacs 24
+  ;(setq mark-diary-entries-in-calendar t)
+  ;; This causes fancy not to be displayed
+  ;;(setq view-calendar-holidays-initially t)
+  ;;(setq holidays-in-diary-buffer nil)
+  (add-hook 'diary-display-hook 'fancy-diary-display)
+  (setq diary-list-include-blanks t)
+  ;; not working: (add-hook 'list-diary-entries-hook 'sort-diary-entries t)
+  ;; Make sure starting calendar comes after auto-resizing of frame.
+  (if (hcLucidP)
+      (defun diary-remind (form number)
+	(eval form)))
+  ;; Do not automatically show calendar on startup
+  ;(if (file-exists-p diary-file)
+  ;    (calendar))
+  ;; Customize appt.el
+  ;;(hcRequire appt)
+  (cond (nil
+	 ;; This seems to cause emacs to crash on nt
+	 ;; and does not exist in xemacs
+	 (setq appt-message-warning-time 15) ;; minutes
+	 (setq appt-display-duration 60) ;; seconds
+	 (add-hook 'diary-hook 'appt-make-list)
+	 (let ((diary-display-hook 'ignore))
+	   (diary)))))
+
+(hcRequire calendar (hcCalendar))
+#+END_SRC
+
+** Calendar Framework
+
+- [[https://github.com/kiwanami/emacs-calfw]]
+
+#+NAME: calendar
+#+BEGIN_SRC emacs-lisp :comments off
+;; M-x cfw:open-diary-calendar
+(hcRequire calfw-cal)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Line Numbers
+
+- [[http://www.emacswiki.org/LineNumbers]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcRequire linum)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Timestamp
+
+- [[ftp://202.5.194.21/SW_ebooks/EMAGAZINE/Writing_GNU_Emacs_Extensions.pdf]]
+  - starting on page 47
+
+#+BEGIN_SRC emacs-lisp :comments off
+; when running on samsun nc10; cygwin; startxwin; emacs; this is defined with
+; the computer name and my name and it screws up - so eval this by hand
+; TODO : it doesn't get redefined below because hcWin32P is false
+; because the window-system is x
+;(defun user-full-name () "Harold Carr")
+(hcRequire hcTimestamp)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Registers and Bookmarks
+
+- Registers
+  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html#Registers]]
+  - [[http://emacswiki.org/emacs/Registers]]
+- Bookmarks (like registers, but persistent)
+  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html#Bookmarks]]
+  - [[http://emacswiki.org/emacs/BookMarks]]
+
+TODO
+- [[http://www.emacswiki.org/emacs-en/BookmarkPlus]]
+
+#+NAME: bookmarks
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Bookmarks")
+(setq bookmark-save-flag 1)
+(setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Version Control and Magit
+
+Version Control
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html#Version-Control]]
+- [[http://emacswiki.org/emacs/VersionControl]]
+Magit
+- [[http://magit.github.com/magit/magit.html]]
+- [[http://www.emacswiki.org/emacs/Magit]]
+
+#+NAME: magit
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "git")
+(hcRequire magit)
+#+END_SRC
+
+------------------------------------------------------------------------------
+# <<HASKELL>>
+* Haskell
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Haskell")
+(hcRequire haskell-mode)
+#+END_SRC
+
+------------------------------------------------------------------------------
+# <<COQ-AND-PROOF-GENERAL>>
+* COQ and ProofGeneral
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "COQ and ProofGeneral")
+
+(add-to-list 'load-path (concat (hcEmacsDir) "/ProofGeneral/generic"))
+
+(hcRequire proof-site
+  (setq coq-prog-name
+        (cond ((hcWin32P) "/cygdrive/c/Program Files/Coq/bin/coqtop.exe")
+              (t          ;"/Applications/CoqIdE_8.3pl5.app/Contents/Resources/bin/coqtop"
+                          "/Applications/CoqIdE_8.4.app/Contents/Resources/bin/coqtop")))
+
+  (setq proof-splash-time 2)
+)
+#+END_SRC
+
+------------------------------------------------------------------------------
+# <<AGDA>>
+* AGDA
+
+;; (hcSection "Agda")
+#+BEGIN_SRC emacs-lisp :comments off
+(comment
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+; http://stackoverflow.com/questions/16660892/cl-labels-with-dynamic-scoping-is-not-implemented
+(setq file-local-variables-alist '((lexical-scoping . t)))
+)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Align
+
+- [[https://gist.github.com/700416]]
+- [[http://stackoverflow.com/questions/3633120/emacs-hotkey-to-align-equal-signs]]
+- uses [[http://www.emacswiki.org/emacs/rx]]
+
+#+NAME: calendar
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Align")
+
+(defmacro hcMakeAlignCmd (name char)
+  `(defun ,name (begin end)
+     ,(concat "Align region to " char " signs")
+     (interactive "r")
+     (align-regexp begin end
+                   (rx (group (zero-or-more (syntax whitespace))) ,char)
+                   1 1)))
+
+(hcMakeAlignCmd align-to-colon        ":")
+(hcMakeAlignCmd align-to-equals       "=")
+(hcMakeAlignCmd align-to-hash         "=>")
+(hcMakeAlignCmd align-to-comma-before ",")
+
+(defun align-to-comma-after (begin end)
+  "Align region to , signs"
+  (interactive "r")
+  (align-regexp begin end
+                (rx "," (group (zero-or-more (syntax whitespace))) ) 1 1 ))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Google Search
+
+- [[http://emacsredux.com/blog/2013/03/28/google/]]
+
+#+NAME: calendar
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Google Search")
+
+(defun google ()
+  "Google the selected region if any, display a query prompt otherwise."
+  (interactive)
+  (browse-url ;; results in default browser
+   (concat
+    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
+    (url-hexify-string (if mark-active
+                           (buffer-substring (region-beginning) (region-end))
+                         (read-string "Google: "))))))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Google Contacts
+
+- [[http://julien.danjou.info/projects/emacs-packages#google-contacts]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Google Contacts")
+
+;; uses oauth2 (in ELPA)
+
+;; M-x google-contacts
+
+;; key bindings:
+;; n or p : go the next or previous record;
+;; g      : refresh the result, bypassing the cache;
+;; m      : send an e-mail to a contact;
+;; s      : new search;
+;; q      : quit.
+(hcRequire google-contacts)
+
+;; integrate directly Google Contacts into Gnus;
+;; (hcRequire google-contacts-gnus)
+;; Then use ; to go to contact info while reading an e-mail.
+
+;; integrate directly Google Contacts into message-mode;
+;; (hcRequire google-contacts-message)
+;; Then use TAB to go to complete e-mail addresses in the header fields.
+#+END_SRC
+
+#+BEGIN_COMMMENT
+First time use:
+- M-x google-contacts
+- "Enter the code your browser displayed: "
+- browser shows accounts.google.com/... saying
+  google-oauth-el would like to manage your contacts
+  CLICK: Accept
+- Gives code.
+- Cut/paste into above.
+- "Passphrase for PLSTORE  plstore .../.emacs.d/oauth.plstore
+- enter and store in password manager
+#+END_COMMENT
+
+------------------------------------------------------------------------------
+* Google Maps
+
+- [[http://julien.danjou.info/projects/emacs-packages#google-maps]]
+
+#+BEGIN_COMMENT
+M-x google-maps
+- type a location.
+
+key bindings:
+
++ or - to zoom in or out;
+left, right, up, down to move;
+z to set a zoom level via prefix;
+q to quit;
+m to add or remove markers;
+c to center the map on a place;
+C to remove centering;
+t to change the maptype;
+w to copy the URL of the map to the kill-ring;
+h to show your home.
+
+Integrate into Org-mode:
+
+(require 'org-location-google-maps)
+
+Then use C-c M-L to enter a location assisted by Google geocoding service.
+Pressing C-c M-l will show you a map.
+
+Advanced: look at google-maps-static-show and google-maps-geocode-request functions.
+
+NOTE: home set via calendar-latitude/calendar-longitude
+#+END_COMMENT
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Google Maps")
+(hcRequire google-maps)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Twitter
+
+- [[http://www.emacswiki.org/emacs/TwitteringMode]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Twitter")
+(hcRequire twittering-mode)
+#+END_SRC
+
+
+------------------------------------------------------------------------------
+* Misc
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Misc")
+(hcRequire httpcode)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Features used but not customized
+
+** Dired
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html#Dired]]
+- [[http://emacswiki.org/emacs/DiredMode]]
+** Dynamic Abbreviations
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Dynamic-Abbrevs.html#Dynamic-Abbrevs]]
+- [[http://emacswiki.org/emacs/DynamicAbbreviations]]
+** Speedbar
+- [[http://www.gnu.org/software/emacs/manual/html_mono/speedbar.html]]
+- [[http://emacswiki.org/emacs/SpeedBar]]
+** Keyboard Macros
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html#Keyboard-Macros]]
+- [[http://emacswiki.org/emacs/KeyboardMacros]]
+** Document Viewing
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Document-View.html#Document-View]]
+- [[http://www.emacswiki.org/emacs/DocViewMode]]
+** Tags
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags]]
+- [[http://emacswiki.org/emacs/EmacsTags]]
+** Color Themes and rainbow-mode
+- [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/]]
+- [[http://julien.danjou.info/projects/emacs-packages#rainbow-mode]]
+
+------------------------------------------------------------------------------
+* Non Literate
+
+#+NAME: NonLiterate
+#+BEGIN_SRC emacs-lisp :comments off
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; XML/HTML
+(setq sgml-basic-offset 4)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Tags")
+
+; cd <...>
+; need a regex instead of "*" - also only files
+; find . -name "*" -print -o -name SCCS -name RCS -prune | .../bin/etags -
+
+;(visit-tags-table (concat (ripHomeBase) "/src/share/classes/TAGS"))
+;(visit-tags-table (concat (hcWs) "/jax-ws-sources/jaxws-ri/rt/src/com/sun/xml/ws"))
+;(visit-tags-table (concat (hcWs) "/wsit/wsit/rt/src/com/sun/xml/ws"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "WIN32")
+
+;; TODO: factor the following two together.
+
+(defmacro hcRedefProc (procedure args &rest body)
+  (let ((original-name
+	 (intern (concat "*hc-emacs-original-" (format "%s" procedure) "*"))))
+    `(progn
+       (defvar ,original-name nil)
+       (cond ((and (hcWin32P)
+		   (null ,original-name))
+	      (setq ,original-name (symbol-function ',procedure))
+	      (defun ,procedure	,args ,@body))))))
+
+(defmacro hcRedefVar (variable value)
+  (let ((original-name
+	 (intern (concat "*hc-emacs-original-" (format "%s" variable) "*"))))
+    `(progn
+       (defvar ,original-name nil)
+       (cond ((and (hcWin32P)
+		   (null ,original-name))
+	      (setq ,original-name ,variable)
+	      (setq ,variable ,value))))))
+
+;; Do this early since it is used during init.
+(hcRedefProc user-full-name ()
+	 "Harold Carr")
+
+;; Change canonical into win32 (i.e., colon) so emacs can do dir tracking.
+;; Same as hcMakeDriveColon script, but do not want to go to shell each time.
+(defun hcMakeDriveColon-el (str)
+  (if (and (>= (length str) 4)
+	   (string-equal (substring str 0 2) "//")
+	   (string-equal (substring str 3 4) "/"))
+      (concat (substring str 2 3) ":" (substring str 3 (length str)))
+    str))
+
+(hcRedefProc file-name-absolute-p (str)
+	 (funcall *hc-emacs-original-file-name-absolute-p*
+		  (hcMakeDriveColon-el str)))
+
+;(hcRedefProc expand-file-name (file &optional default)
+;	 (funcall *hc-emacs-original-expand-file-name*
+;		  (hcMakeDriveColon-el file) default))
+
+(cond ((not (hcWin32P))
+       (hcRedefVar file-name-buffer-file-type-alist '(("*.*" . t) (".*" . t)))))
+
+(defun hcToggleBinaryModeMap ()
+  (interactive)
+  (let ((tmp *hc-emacs-original-file-name-buffer-file-type-alist*))
+    (setq *hc-emacs-original-file-name-buffer-file-type-alist*
+	  file-name-buffer-file-type-alist)
+    (setq file-name-buffer-file-type-alist
+	  tmp)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Open current buffer's associated file in an external program")
+
+(defun prelude-open-with ()
+  "Simple function that allows us to open the underlying file of a buffer in an external program."
+  (interactive)
+  (when buffer-file-name
+    (shell-command (concat
+                    (if (eq system-type 'darwin)
+                        "open -a '/Applications/Google Chrome.app'"
+                      (read-shell-command "Open current file with: "))
+                    " "
+                    buffer-file-name))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Java")
+
+;; Make java mode support Java 1.5 annotations.
+(hcRequire java-mode-indent-annotations
+  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup))
+
+(setq *compile-threshold* " -XX:CompileThreshold=2 ")
+
+(defun BOOTDIR ()
+  (cond ((getenv "ALT_BOOTDIR"))
+	(t (let ((ALT_BOOTDIR (ALT_BOOTDIR)))
+	     (message (concat "BOOTDIR not set - defaulting to: "
+			      ALT_BOOTDIR))
+	     ALT_BOOTDIR))))
+
+(defun ALT_BOOTDIR ()
+  (let* ((jdir     (concat *hcUlhcd* "/java/jdk/"))
+	 (version  (cond ((hcWin32P)  "jdk1.3/win32")
+                         ((hcDarwinP) "jdk1.6.0_15/darwin")
+                         (t ("jdk1.2.2"))))
+	 (location (concat jdir "/" version)))
+    (cond ((file-directory-p location)
+	   location)
+	  (t
+	   (error "no default JDK")))))
+
+(defun set-ALT_BOOTDIR (&optional location)
+  (interactive)
+  (setenv "ALT_BOOTDIR"
+	  (cond (location) (t (ALT_BOOTDIR)))))
+
+(defun BOOTDIR-bin     () (concat (BOOTDIR) "/bin"))
+(defun BOOTDIR-classes () (concat (BOOTDIR) "/jre/lib/rt.jar"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Scala")
+
+(hcRequire scala-mode2
+  (setq scala-indent:step 4))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "LISP and Scheme and Clojure")
+
+(add-to-list 'auto-mode-alist '("\\.el$"      . lisp-interaction-mode))
+
+(add-to-list 'auto-mode-alist '("\\.cl$"      . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.dat$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.kawa$"    . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.llavarc$" . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.lva$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.lisp$"    . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.lsp$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.scm$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.silk$"    . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.slk$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.skij$"    . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.skj$"     . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.stk$"     . scheme-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; SLIME setup:
+;; http://riddell.us/tutorial/slime_swank/slime_swank.html
+
+;; JSWAT usage:
+;; http://bc.tech.coop/blog/081023.html
+;; http://groups.google.com/group/clojure/browse_thread/thread/403e593c86c2893f
+;; /System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/
+;; /System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/
+;; /usr/local/hc/java/jswat/jswat-4.3/bin/jswat -jdkhome /System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/ &
+;; (slime-connection-port (slime-connection))
+;;
+
+(comment
+java -server \
+     -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8888 \
+     -jar /usr/local/hc/java/clojure/clojure_20090320/clojure.jar &
+)
+
+(cond (nil ;;(not (hcXEmacsP))
+       ;; clojure-mode
+       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/clojure-mode"))
+       (require 'clojure-mode)
+
+       ;; swank-clojure
+       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/swank-clojure"))
+       (require 'swank-clojure-autoload)
+       (swank-clojure-config
+	;;(setq swank-clojure-jar-path (concat (hcUlhcd) "/java/clojure/clojure_20090320/clojure.jar"))
+	(setq swank-clojure-binary (concat (hcEsync) "/bin/hcClojure"))
+	;;(setq swank-clojure-extra-classpaths (list (concat (hcHome) "/.clojure/clojure-contrib.jar")))
+	)
+
+       ;; slime
+       (eval-after-load "slime"
+	 '(progn (slime-setup '(slime-repl))))
+
+       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/slime"))
+       (require 'slime)
+       (slime-setup)
+      )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcRequire hcRunCommand)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcRequire hcPomCommand)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcRunCommand clisp hcClispCmd)
+
+(defun hcClispCmd ()
+  (cond ((hcWin32P)
+	 (concat
+	  (hcUlhcd) "/lisp/clisp/clisp-1999-07-22/lisp -M "
+	  (hcUlhcd) "/lisp/clisp/clisp-1999-07-22/lispinit.mem"))
+	((hcDarwinP)
+	 ;;"clisp"
+	 "/sw/src/clisp-2.33.2-1/clisp-2.33.2/src/clisp"
+	 )
+	(t
+	 (concat
+	  (hcUlhcd) "/lisp/clisp/clisp-1999-01-08/base/lisp.run -M "
+	  (hcUlhcd) "/lisp/clisp/clisp-1999-01-08/base/lispinit.mem"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand clocc hcCloccCmd)
+
+(defun hcCloccCmd ()
+  (if (hcDarwinP)
+      (concat "clisp" " -M "
+	      " /Volumes/User/sw/lib/clocc/clocc-01-18-04/clocc/clocc-top.mem")
+    (error "only configured for darwin")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand sbcl hcSbclCmd)
+
+(defun hcSbclCmd ()
+    (if (hcDarwinP)
+      (concat
+       (hcUlhcd) "/lisp/sbcl/sbcl-0.8.2.7/src/runtime/sbcl --core "
+       (hcUlhcd) "/lisp/sbcl/sbcl-0.8.2.7/output/sbcl.core")
+      (error "only configured for darwin")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand j hcJCmd)
+
+(defun hcJCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   " -classpath "
+   (hcUlhcd) "/java/j/j-0.21.0/j.jar"
+   (hcPathSep)
+   (BOOTDIR-classes)
+   (hcPathSep)
+   (hcLibClasspath)
+   " "
+   " -Xss512K "
+   " "
+   " org.armedbear.lisp.Main"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand jscheme hcJschemeCmd)
+
+(defun hcJschemeCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   *compile-threshold*
+   " -jar "
+   (hcUlhcd) "/java/jscheme/jscheme_6_1.jar"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand kawa hcKawaCmd)
+
+(defun hcKawaCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   *compile-threshold*
+   " -classpath "
+   (hcUlhcd) "/java/kawa/kawa-1.7.jar"
+   (hcPathSep)
+   (BOOTDIR-classes)
+   (hcPathSep)
+   (hcLibClasspath)
+   " "
+   " kawa.repl"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcShDefCmd hcLlavaClasspath ())
+(hcShDefCmd ripClasspath (javaHome rmiIiopHome))
+
+;;; Hooks so you can add to classpath, vmargs and command line args.
+
+(defun hcLlavaCmdEnvExtras       (ps) "")
+(defun hcLlavaCmdClasspathExtras (ps) "")
+(defun hcLlavaCmdVmArgsExtras    (ps) "")
+(defun hcLlavaCmdMainClass       (ps) (hcLlavaMainClass))
+(defun hcLlavaCmdLineArgsExtras  (ps) "")
+
+;;------
+
+(hcRunCommand llava hcLlavaCmd)
+
+(defun hcLlavaCmd ()
+  (hcLlavaStartCmd (hcLlavaCmdMainClass (hcPathSep))))
+
+;;------
+
+(hcRunCommand jllava hcJLlavaCmd)
+
+(defun hcJLlavaCmd ()
+  (hcLlavaStartCmd
+   (concat "-jar " (hcSync) "/.llava.org/.system/jars/llava.jar")))
+
+;;------
+
+(hcRunCommand dljllava hcDLJLlavaCmd)
+
+(defun hcDLJLlavaCmd ()
+  (hcLlavaStartCmd
+   (concat "-jar " (hcFtptmp) "/llava.jar")))
+
+(defun hcLlavaStartCmd (startup)
+  (concat
+   (hcLlavaCmdEnvExtras (hcPathSep))
+   " "
+   (BOOTDIR-bin) "/java "
+   *compile-threshold*
+   "-Xmx2024m"
+   " -classpath "
+   (hcLlavaCmdClasspathExtras (hcPathSep))
+   (hcPathSep)
+   "."
+   (hcPathSep)
+   (hcLlavaClasspath)
+   (hcPathSep)
+   (BOOTDIR-classes)
+   (hcPathSep)
+   (hcLibClasspath)
+   (hcPathSep)
+;;   (ripClasspath (BOOTDIR) (ripHomeColon))
+   " "
+   " -Duser.home=" (hcHome)
+   " "
+;;   " -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y "
+   " "
+   (hcLlavaCmdVmArgsExtras (hcPathSep))
+   " "
+   startup
+   " "
+   (hcLlavaCmdLineArgsExtras (hcPathSep))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcShDefCmd hcSkijClasspath ())
+
+(hcRunCommand skij hcSkijCmd)
+
+(defun hcSkijCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   " -classpath "
+   "."
+   (hcPathSep)
+   (hcSkijClasspath)
+   (hcPathSep)
+   (BOOTDIR-classes)
+   (hcPathSep)
+   (hcLibClasspath)
+   (hcPathSep)
+;;   (ripClasspath (BOOTDIR) (ripHomeColon))
+   (hcLlavaCmdClasspathExtras (hcPathSep))
+   " "
+   " -Duser.home=" (hcHome)
+   " "
+   (hcLlavaCmdVmArgsExtras (hcPathSep))
+   " "
+   " com.ibm.jikes.skij.Scheme"
+   " "
+   (hcLlavaCmdLineArgsExtras (hcPathSep))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand silk hcSilkCmd)
+
+(defun hcSilkCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   " -classpath "
+   "."
+   (hcPathSep)
+   (hcUlhcd) "/java/silk/v3.0-99-10-31/silk/jar/scheme.jar"
+   (hcPathSep)
+   (BOOTDIR-classes)
+   (hcPathSep)
+   (hcUlhcd) "\\java\\jdk1.2.1\\jre\\lib\\tools.jar"
+   (hcPathSep)
+   (hcLibClasspath)
+   (hcPathSep)
+;;   (ripClasspath (BOOTDIR) (ripHomeColon))
+   (hcLlavaCmdClasspathExtras (hcPathSep))
+   " "
+   " -Duser.home=" (hcHome)
+   " "
+   (hcLlavaCmdVmArgsExtras (hcPathSep))
+   " "
+   " silk.Scheme generic/load.scm"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand MzScheme hcMzSchemeCmd)
+
+(defun hcMzSchemeCmd ()
+  (concat (hcUlhcd) "/lisp/plt/202/plt/bin/mzscheme"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hcRunCommand hcTelnetClient hcTelnetClientCmd)
+
+(defun hcTelnetClientCmd ()
+  (concat
+   (BOOTDIR-bin) "/java "
+   " -classpath "
+   (concat (hcEsync) "/java/.classes")
+   (hcPathSep)
+   (hcUlhcd) "/java/jta/jta20/.classes"
+   " "
+   " hc.net.TelnetClient localhost 4444"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "C")
+
+;;(load "c-mode")
+
+(setq c-indent-level 4)
+;(setq c-continued-statement-offset 4)
+;(setq c-brace-offset -4)
+;(setq c-argdecl-indent 4)
+;(setq c-label-offset -2)
+
+;;(load "c++-mode")
+
+(add-to-list 'auto-mode-alist '("\\.idl$"  . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.c$"    . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h$"    . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cc$"   . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hh$"   . c++-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Appearance")
+
+;; C-U C-X = : shows current font
+
+(defun h (n) (set-frame-height (selected-frame) n))
+(defun w (n) (set-frame-width (selected-frame) n))
+(defun hw (x y) (h x) (w y))
+(defun hwd () (interactive) (h 38) (w 80))
+
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+;;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+;;This turns of the mac os x menu bar
+;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+(defun hcGreyBackground ()
+  (interactive)
+  (set-face-background 'default "grey")
+  )
+
+(defun hcRightScrollBar ()
+  (interactive)
+  ;(scroll-bar-mode -1) ;; turn off
+  (set-scroll-bar-mode 'right)
+  )
+
+(defun hcAppearance ()
+  (interactive)
+  (hcGreyBackground)
+  (hcRightScrollBar)
+  )
+
+(defun hcHostedFont ()
+  (interactive)
+  (set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  )
+
+(defun hcHostedWidthHeight ()
+  (interactive)
+  (w 160)
+  (h 43)
+  )
+
+(defun hcHostedAppearance ()
+  (interactive)
+  (hcAppearance)
+  (hcHostedFont)
+  (hcHostedWidthHeight)
+  )
+
+(defun hcMacFont ()
+  (interactive)
+  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  )
+
+(defun hcMacWidthHeight ()
+  (interactive)
+  (w 144)
+  (h 49)
+  )
+
+(defun hcMacFW ()
+  (interactive)
+  (hcMacWidthHeight)
+  (hcMacFont)
+  )
+
+(defun hcMacAppearance ()
+  (interactive)
+  (hcAppearance)
+  (hcMacFont)
+  (hcMacWidthHeight)
+  )
+
+;; Toggle buffer tabs
+(defun toggleBufferTabs ()
+  (interactive)
+  (if (eq emacs-version 21.4)
+      (customize-set-variable 'gutter-buffers-tab-visible-p
+			      (not gutter-buffers-tab-visible-p))))
+
+;; Toggle tool bar
+(setq *toggle-toolbar-value* -1)
+(defun toggleToolbar ()
+  (interactive)
+  (if (eq emacs-major-version 21)
+      (cond ((string-match "XEmacs\\|Lucid" emacs-version)
+	     (set-specifier default-toolbar-visible-p
+			    (not (specifier-instance default-toolbar-visible-p))))
+	    ((string-match "sparc-sun-solaris2.10" (emacs-version))
+	     (tool-bar-mode *toggle-toolbar-value*)
+	     (setq *toggle-toolbar-value* (- *toggle-toolbar-value*)))
+	    (t
+	     (tool-bar-mode (not toolbar-active))))))
+
+;; SHORTHAND
+(defun hctoggle () (interactive) (toggleBufferTabs) (toggleToolbar))
+
+(defun hcf ()
+  (set-default-font
+   "-Adobe-Courier-Bold-R-Normal--14-140-75-75-M-90-ISO8859-1"))
+
+;; Good for laptop lcd.
+;; Do (w32-select-font) to discover font names
+(defun hcLucidaBold10 ()
+  (interactive)
+  (set-default-font
+   ;; NT
+   ;;"-*-Lucida Console-normal-r-*-*-20-120-*-*-c-*-*-ansi-"
+   ;; Win95
+   "-*-Courier New-bold-r-*-*-20-100-*-*-c-*-*-ansi-"))
+
+;; Good for 21 inch monitor with laptop.
+(defun hcFixReg9-21 ()
+  (interactive)
+  (set-default-font "-*-Fixedsys-normal-r-*-*-12-90-*-*-c-*-*-ansi-"))
+
+;; Setting background from elisp under NT causes weird behavior.
+;; Instead I set using -fg and -bg in .bat file.
+
+;; type fc-list on command line to see fonts installed
+
+(defun hcSetDisplay ()
+  (h 32)
+  (w 80)
+  (cond ((hcXP)
+         ;;(set-face-attribute 'default nil :family "courier" :height 140)
+         ;;(set-face-attribute 'default nil :family "courier" :height 160)
+         ;;(set-face-attribute 'default nil :family "courier" :height 170)
+         ;;(set-face-attribute 'default nil :family "courier" :height 180)
+         ;;(set-face-attribute 'default nil :family "courier" :height 200)
+         ;;(set-face-attribute 'default nil :family "courier" :height 220)
+
+	 ;;(set-face-font 'default "-adobe-courier-medium-o-normal--18-180-75-75-m-110-iso8859-2")
+
+	 ;;(set-face-font 'default "-*-Courier-Medium-R-*-*-*-160-72-72-*-*-iso8859-1")
+	 ;;(set-face-font 'modeline "-*-Courier-medium-R-*-*-*-160-72-72-*-*-iso8859-1")
+	 ;; 9x15 bold
+	 ;;(set-face-font 'default "-misc-fixed-bold-r-normal-*-*-140-*-*-c-*-iso8859-1")
+	 (set-face-font 'default "-*-Lucida Sans Typewriter-Medium-R-*-*-*-200-*-*-*-*-iso8859-1")
+	 (set-face-font 'modeline "-*-Lucida Sans Typewriter-medium-R-*-*-*-200-*-*-*-*-iso8859-1")
+
+	 ;(set-face-font 'default "-apple-courier-bold-r-normal--18-180-72-72-m-180-iso10646-1")
+	 ;(set-face-font 'default "-apple-courier-bold-r-normal--18-0-72-72-m-0-iso10646-1")
+
+         ;;; Background
+	 (set-face-background 'default "#9900991b99fe") ; grey
+
+	 ;; 90 = 144; 60 = 96; 60 = 96
+	 ;;(set-face-background 'default "#900060006000") ; earthy red
+	 ;; 222 = de; 184 = b8; 135= 87
+	 ;;(set-face-background 'default "#de00b8008700") ; earthy orange
+	 ;;(set-face-background 'default "#737373737373") ; grey
+	 (set-face-background 'default "#6a6a6a6a6a6a") ; grey
+	 ;;(set-face-background 'default "DarkSlateGrey")
+	 ;;(set-face-background 'default "grey")
+         ;;(defined-colors)
+         ;; ("snow" "ghost white" "GhostWhite" "white smoke" "WhiteSmoke" "gainsboro" "floral white" "FloralWhite" "old lace" "OldLace" "linen" "antique white" ...)
+	 ;;(set-face-background 'default "antique white")
+	 ;;(set-face-background 'default "grey99")
+	 ;;(set-face-background 'default "White")
+	 ;; this one:
+	 ;;(set-face-background 'default "#b9b9b9b9b9b9")
+	 ;;(set-face-background 'default "#dddddddddddd")
+	 ;; 68 = 104; 6f = 111; 82 = 130
+	 ;;(set-face-background 'default "#68006f008200") ; blue
+	 ;;(set-face-background 'default "Black")
+
+         ;;; Foreground
+	 ;;(set-face-foreground 'default "Green")
+	 ;;(set-face-foreground 'default "DarkSlateGrey")
+	 ;;(set-face-foreground 'default "#de00b8008700") ; earthy orange
+	 (set-face-foreground 'default "Black")
+	 ;;(set-face-foreground 'default "white")
+
+	 ;; Mark to region.
+	 (cond ((hcLucidP)
+		(set-face-background 'primary-selection "grey")
+		(set-face-foreground 'primary-selection "black")))
+
+	 ;; Incremental search.
+	 (cond ((hcLucidP)
+		(set-face-foreground 'isearch "black")
+		(set-face-background 'isearch "green")))
+	 ;; Toolbar.
+	 (cond ((hcLucidP)
+		(set-specifier default-toolbar-visible-p nil)))
+
+	 (cond ((hcLucidP)
+		(turn-off-font-lock)))
+	 )
+
+	((hcWin32P)
+	 ;(hcLucidaBold10)
+	 (hcFixReg9-21)
+	 )))
+
+;(hcSetDisplay)
+
+(comment
+(global-font-lock-mode -1)
+
+(setq font-lock-auto-fontify nil)
+(set-face-foreground 'default "Black")
+
+(cond ((hcLucidP)
+       (set-face-reverse-p 'modeline nil))
+      (t
+       (setq mode-line-inverse-video nil)))
+)
+
+;; Turn off font-lock?
+(defun hcFontLockModeHook ()
+  (if (fboundp 'global-font-lock-mode)
+      (global-font-lock-mode -1) ;; Emacs
+    (setq font-lock-auto-fontify nil))
+  (setq font-lock-mode-enable-list nil)
+  (setq font-lock-maximum-size 0))
+
+
+(comment
+(cond ((fboundp 'global-font-lock-mode)
+            ;; Turn on font-lock in all modes that support it
+            (global-font-lock-mode t)
+	    (setq font-lock-support-mode 'lazy-lock-mode)
+            ;; maximum colors
+            ;(setq font-lock-maximum-decoration t)
+;; Customize face attributes
+            (setq font-lock-face-attributes
+                  ;; Symbol-for-Face Foreground Background Bold Italic
+Underline
+                  '((font-lock-comment-face       "DarkGreen")
+                    (font-lock-string-face        "Black")
+                    (font-lock-keyword-face       "RoyalBlue")
+                    (font-lock-function-name-face "Blue")
+                    (font-lock-variable-name-face "Black")
+                    (font-lock-type-face          "Black")
+                    (font-lock-reference-face     "Purple")))
+            ;; Create the faces from the attributes
+;           (font-lock-make-faces)
+            ))
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "HC Commands")
+
+(defun hc-current-line ()
+  (interactive)
+  "Return line number containing point."
+  (let ((result 1))
+    (save-excursion
+      (beginning-of-line)
+      (while (not (bobp))
+	(forward-line -1)
+	(setq result (+ result 1))))
+    result))
+
+;; Modified from compile.
+(defun grep-find-no-scc (command-args)
+  "Same as grep-find except skips source code control directories."
+  (interactive
+   (let ((grep-find-command
+	  (cons (format "find . -type d \\( -name SCCS -o -name RCS -o -name .svn \\) -prune -o -type f -exec %s {} /dev/null \\;"
+			grep-command)
+		(+ 70 (length grep-command)))))
+     (progn
+       (unless grep-find-command
+	 (grep-compute-defaults))
+       (list (read-from-minibuffer "Run find (like this): "
+				   grep-find-command nil nil
+				   'grep-find-history)))))
+  (let ((null-device nil))		; see grep
+    (grep command-args)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Syntax")
+
+;; Make -, * and . letters.
+
+(cond (nil
+       (modify-syntax-entry ?- "w" lisp-mode-syntax-table)
+       (modify-syntax-entry ?. "w" lisp-mode-syntax-table)
+       (modify-syntax-entry ?* "w" lisp-mode-syntax-table)
+       (modify-syntax-entry ?_ "w" lisp-mode-syntax-table)
+       (modify-syntax-entry ?: "w" lisp-mode-syntax-table)))
+
+;; NT: c-mode-syntax-table not defined *****
+(cond (nil
+       (modify-syntax-entry ?- "w" c-mode-syntax-table)
+       (modify-syntax-entry ?. "w" c-mode-syntax-table)
+       (modify-syntax-entry ?* "w" c-mode-syntax-table)
+       (modify-syntax-entry ?_ "w" c-mode-syntax-table)))
+
+(cond (nil
+       (modify-syntax-entry ?- "w" text-mode-syntax-table)
+       (modify-syntax-entry ?. "w" text-mode-syntax-table)
+       (modify-syntax-entry ?* "w" text-mode-syntax-table)
+       (modify-syntax-entry ?_ "w" text-mode-syntax-table)))
+
+(cond (nil
+       (modify-syntax-entry ?- "w" (standard-syntax-table))
+       (modify-syntax-entry ?. "w" (standard-syntax-table))
+       (modify-syntax-entry ?* "w" (standard-syntax-table))
+       (modify-syntax-entry ?_ "w" (standard-syntax-table))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Portability")
+
+(if (not (boundp 'directory-sep-char))
+    (setq directory-sep-char 47))
+
+(if (not (fboundp 'file-name-extension))
+    (defun file-name-extension (filename &optional period)
+      "Return FILENAME's final \"extension\".
+The extension, in a file name, is the part that follows the last `.'.
+Return nil for extensionless file names such as `foo'.
+Return the empty string for file names such as `foo.'.
+
+If PERIOD is non-nil, then the returned value includes the period
+that delimits the extension, and if FILENAME has no extension,
+the value is \"\"."
+      (save-match-data
+        (let ((file (file-name-sans-versions (file-name-nondirectory filename))))
+          (if (string-match "\\.[^.]*\\'" file)
+              (substring file (+ (match-beginning 0) (if period 0 1)))
+            (if period
+                ""))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "JavaScript")
+(comment
+(hcRequire js-comint
+  ;(setq inferior-js-program-command "hcRhinoShell")
+  (setq inferior-js-program-command "/opt/local/bin/node"))
+
+(autoload 'js2-mode "js2-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(add-hook 'js2-mode-hook '(lambda ()
+			    (local-set-key "\C-x\C-e" 'js-send-last-sexp)
+			    (local-set-key "\C-\M-x"  'js-send-last-sexp-and-go)
+			    (local-set-key "\C-cb"    'js-send-buffer)
+			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
+			    (local-set-key "\C-cl"    'js-load-file-and-go)
+			    ))
+)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "custom-set-variables/faces")
+
+;; IMPORTANT: Init file should contain only ONE custom-set-faces and ONE custom-set-variables
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(calendar-latitude 40.785188)
+ '(calendar-longitude -111.863011)
+ '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "fc6e906a0e6ead5747ab2e7c5838166f7350b958d82e410257aeeb2820e8a07a" default)))
+ '(display-time-mode t)
+ '(load-home-init-file t t)
+ '(nxml-child-indent 4)
+ '(org-export-htmlize-output-type (quote css))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(tool-bar-mode nil))
+
+
+
+(if (not (hcXEmacsP))
+
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+
+;;; '(font-lock-builtin-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+;;; '(font-lock-comment-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+;;; '(font-lock-constant-face ((((class color) (min-colors 88) (background light)) (:foreground "black"))))
+;;; '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "White"))))
+;;; '(font-lock-keyword-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+;;; '(font-lock-string-face ((((class color) (min-colors 88) (background light)) (:foreground "blue"))))
+;;; '(font-lock-type-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+;;; '(font-lock-variable-name-face ((((class color) (min-colors 88) (background light)) (:foreground "cornsilk"))))
+;;; '(font-lock-warning-face ((((class color) (min-colors 88) (background light)) (:foreground "Black" :weight bold))))
+
+;;; '(js2-error-face ((t (:foreground "black"))) t)
+;;; '(js2-external-variable-face ((t (:foreground "white"))) t)
+;;; '(js2-function-param-face ((t (:foreground "black"))) t)
+;;; '(js2-instance-member-face ((t (:foreground "white"))) t)
+;;; '(js2-jsdoc-html-tag-delimiter-face ((t (:foreground "white"))) t)
+;;; '(js2-jsdoc-html-tag-name-face ((t (:foreground "white"))) t)
+;;; '(js2-jsdoc-tag-face ((t (:foreground "black"))) t)
+;;; '(js2-jsdoc-type-face ((t (:foreground "black"))) t)
+;;; '(js2-jsdoc-value-face ((t (:foreground "black"))) t)
+;;; '(js2-magic-paren-face ((t (:foreground "white"))) t)
+;;; '(js2-private-function-call-face ((t (:foreground "white"))) t)
+;;; '(js2-private-member-face ((t (:foreground "white"))) t)
+;;; '(js2-warning-face ((t (:foreground "white"))) t)
+
+ '(proof-locked-face ((t (:background "#8d8d8d"))) t))
+
+
+) ;; end IF
+
+
+;;; End of file.
+
+#+END_SRC
+
+
+#+NAME: EOF
+#+BEGIN_SRC emacs-lisp :comments off
+;;; End of file.
+#+END_SRC
+
+# End of file.
+
+
+
+
+
