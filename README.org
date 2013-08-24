@@ -1,1 +1,2 @@
-#+INCLUDE: "~/.emacs.org" src emacs-lisp
+See [[.emacs.org]] -- literate version of my .emacs
+
