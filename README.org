@@ -1,1 +1,1 @@
-[[.emacs.org]]
+#+INCLUDE: "~/.emacs.org" src emacs-lisp
