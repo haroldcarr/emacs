@@ -39,7 +39,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2013 Aug 24 (Sat) 13:56:36 by carr.
+;;;; Last Modified : 2014 Feb 23 (Sun) 12:06:40 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -226,6 +226,13 @@ Important (to me) directories.
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Top level misc stuff")
 
+;; Get rid of useless stuff.
+(dolist (mode '(tool-bar-mode)) ;; menu-bar-mode scroll-bar-mode
+  (when (fboundp mode) (funcall mode -1)))
+
+;; I have already seen it.
+(setq inhibit-startup-screen t)
+
 ;; Ask before exit.
 (setq confirm-kill-emacs
       (lambda (e)
@@ -247,8 +254,8 @@ Important (to me) directories.
 (setq-default indent-tabs-mode nil)
 
 ;; Why have extra do-nothing whitespace?
-(setq-default show-trailing-whitespace t)
-(setq default-indicate-empty-lines t)
+(setq-default show-trailing-whitespace     t)
+(setq         default-indicate-empty-lines t)
 #+END_SRC
 
 ** Mode line
@@ -413,6 +420,27 @@ TODO
 #+END_SRC
 
 ------------------------------------------------------------------------------
+* Emacs Code Browser (ECB)
+
+- [[http://www.emacswiki.org/emacs/EmacsCodeBrowser]]
+
+- Go to history     : "C-c . g h"
+- Go to methods     : "C-c . g m"
+- Go to sources     : "C-c . g s"
+- Go to directories : "C-c . g d"
+- Main buffer       : "C-c . g 1"
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcRequire ecb
+)
+
+;(custom-set-variables
+; '(ecb-options-version "2.40")
+;  ...)
+
+#+END_SRC
+
+------------------------------------------------------------------------------
 * Compilation
 
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Building.html#Building]]
@@ -446,7 +474,7 @@ For extending it to work with Maven:
 (hcSection "org-mode")
 
 ;; let ME control org-mode font colors, etc.
-;; this is in ~/.emacs:
+;; this is done elsewhere in this file
 ;(custom-set-variables
 ; '(org-export-htmlize-output-type (quote css)))
 
@@ -487,6 +515,9 @@ For extending it to work with Maven:
 
   ;; Do not put author at bottom of page
   (setq org-export-author-info nil)
+
+  ;; Do not put in validation link in HTML export
+  (setq org-html-validation-link nil)
 
   ;;;
   ;;; Agenda
@@ -593,6 +624,8 @@ For extending it to work with Maven:
 (hcRequire org (hcOrgMode))
 
 (hcRequire ox-md) ;; load this so menu options show up
+
+(hcRequire ox-beamer) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -656,8 +689,14 @@ For extending it to work with Maven:
 - [[http://www.emacswiki.org/LineNumbers]]
 
 #+BEGIN_SRC emacs-lisp :comments off
-(hcRequire linum)
+(hcRequire linum
+;;  (setq global-linum-mode t) ;; always on
+)
 #+END_SRC
+
+;(custom-set-variables
+; '(global-linum-mode t))
+
 
 ------------------------------------------------------------------------------
 * Timestamp
@@ -714,9 +753,48 @@ Magit
 # <<HASKELL>>
 * Haskell
 
+Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-emacs.html]]
+
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Haskell")
-(hcRequire haskell-mode)
+
+(hcRequire haskell-mode-autoloads
+  (autoload 'ghc-init "ghc" nil t)
+  (add-hook 'haskell-mode-hook (lambda () (ghc-init) (flymake-mode)))
+
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+  (setq haskell-stylish-on-save t)
+  (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"
+                                          "--with-ghc=ghci-ng"))
+  (define-key haskell-mode-map (kbd "C-x C-d") nil)
+  (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+  (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+  (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+  (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+  (define-key haskell-mode-map (kbd "C-c M-.") nil)
+  (define-key haskell-mode-map (kbd "C-c C-d") nil)
+  (define-key haskell-mode-map (kbd "C-c v c") 'haskell-cabal-visit-file)
+
+  ;; Do this to get a variable in scope
+  (auto-complete-mode)
+  (defun hc-ac-haskell-candidates (prefix)
+    (let ((cs (haskell-process-get-repl-completions (haskell-process) prefix)))
+      (remove-if (lambda (c) (string= "" c)) cs)))
+  (ac-define-source haskell
+    '((candidates . (hc-ac-haskell-candidates ac-prefix))))
+  (defun hc-haskell-hook ()
+    (add-to-list 'ac-sources 'ac-source-haskell))
+  (add-hook 'haskell-mode-hook 'hc-haskell-hook)
+
+  ;; auto-complete-mode so can interact with inferior haskell and popup completion
+  ;; I don't always want this.  Just turn on when needed.
+  ;;(add-hook 'haskell-mode-hook (lambda () (auto-complete-mode 1)))
+)
+
+;;(hcRequire shm
+;;  (add-hook 'haskell-mode-hook 'structured-haskell-mode))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -751,6 +829,33 @@ Magit
 (setq file-local-variables-alist '((lexical-scoping . t)))
 )
 #+END_SRC
+
+------------------------------------------------------------------------------
+* Send diagram text to SDEDIT (UML sequence diagrams)
+
+- [[http://sdedit.sourceforge.net/]]
+
+When the current buffer contains SDEDIT diagram text, just do
+- =M-x sdedit=
+
+Be sure the sdedit program is up and running as a service.
+
+#+BEGIN_SRC emacs-lisp :comments off
+(defun sdedit ()
+  (interactive)
+  (let ((p (open-network-stream "*HC-SDEDIT*" "*HC-SDEDIT-CONNECTION*" "localhost" "60001")))
+    (process-send-string p (concat (buffer-name) "
+" (buffer-string)))
+    (delete-process p)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Images
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html]]
+
+See setting in cusotm-set-variables
+
 
 ------------------------------------------------------------------------------
 * Align
@@ -894,7 +999,6 @@ NOTE: home set via calendar-latitude/calendar-longitude
 (hcRequire twittering-mode)
 #+END_SRC
 
-
 ------------------------------------------------------------------------------
 * Misc
 
@@ -927,6 +1031,9 @@ NOTE: home set via calendar-latitude/calendar-longitude
 ** Color Themes and rainbow-mode
 - [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/]]
 - [[http://julien.danjou.info/projects/emacs-packages#rainbow-mode]]
+** DIG (interface to DNS dig command)
+- [[/Applications/MacPorts/Emacs.app/Contents/Resources/lisp/net/dig.el.gz]]
+- [[http://stuff.mit.edu/afs/athena/astaff/project/emacs/source/emacs-23.1/lisp/net/dig.el]]
 
 ------------------------------------------------------------------------------
 * Non Literate
@@ -1428,6 +1535,7 @@ java -server \
 (defun hcMacFont ()
   (interactive)
   (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
   )
 
 (defun hcMacWidthHeight ()
@@ -1618,6 +1726,10 @@ Underline
             ))
 )
 
+(cond ((hcDarwinP)
+       (load-theme 'zenburn)
+       (hcMacFW)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "HC Commands")
 
@@ -1735,6 +1847,18 @@ the value is \"\"."
  '(calendar-longitude -111.863011)
  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "fc6e906a0e6ead5747ab2e7c5838166f7350b958d82e410257aeeb2820e8a07a" default)))
  '(display-time-mode t)
+ '(ecb-options-version "2.40")
+ '(ecb-source-path (quote (("/" "/"))))
+ '(ecb-tip-of-the-day nil)
+ '(ecb-windows-width 0.15)
+ ;; '(global-linum-mode t)
+ '(haskell-indent-spaces 4)
+ ;; '(haskell-mode-hook (quote (turn-on-haskell-indent)))
+ '(haskell-process-log t)
+ '(haskell-process-path-cabal "/Users/carr/Library/Haskell/bin/cabal")
+ '(haskell-process-path-ghci "/Users/carr/Library/Haskell/bin/ghci-ng")
+ '(haskell-process-type (quote ghci))
+ '(image-dired-dir "/tmp/emacs-image-dired/")
  '(load-home-init-file t t)
  '(nxml-child-indent 4)
  '(org-export-htmlize-output-type (quote css))
@@ -1780,10 +1904,6 @@ the value is \"\"."
 
 
 ) ;; end IF
-
-
-;;; End of file.
-
 #+END_SRC
 
 
