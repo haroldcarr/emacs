@@ -39,7 +39,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2014 Feb 23 (Sun) 12:06:40 by Harold Carr.
+;;;; Last Modified : 2014 Mar 29 (Sat) 09:36:01 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -96,6 +96,8 @@ Never access a variable directly.
 (hcSection "Predicates")
 
 (defun hcIsVersionP    (x)(string-match x (emacs-version)))
+(defun hcUnameContains (x)(string-match x (shell-command-to-string "uname -a")))
+
 
 (defun hcLucidP        () (hcIsVersionP "Lucid"))
 (defun hcXEmacsP       () (hcIsVersionP "XEmacs"))
@@ -103,7 +105,11 @@ Never access a variable directly.
 (defun hcOracleLinuxP  () (or (and (hcIsVersionP "redhat-linux")
                                    (hcIsVersionP "us.oracle.com"))
                               (and (hcIsVersionP "x86_64-unknown-linux-gnu")
-                                   (hcIsVersionP "2013-03-26 on adc2100420"))))
+                                   (hcIsVersionP "2013-03-26 on adc2100420"))
+                              (and (hcUnameContains "Linux")
+                                   (or (hcUnameContains "slcn19cn15ib")
+                                       (hcUnameContains "slcn19cn16ib")
+                                       (hcUnameContains "adc00phv")))))
 (defun hcWin32P        () (or (equal window-system 'win32)
 			      (equal window-system 'w32)
 			      (equal window-system 'mswindows)
@@ -581,10 +587,14 @@ For extending it to work with Maven:
   (setq org-src-window-setup (quote current-window))
 
   ;;; see http://doc.norang.ca/org-mode.html
+  ;;; see http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html
 
   ;; http://ditaa.org/ditaa/
   ;; probably not needed since the jar comes with org-mode in contrib/scripts.
-  (setq org-ditaa-jar-path (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
+  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
+
+  ;; http://plantuml.sourceforge.net/
+  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.7995.jar"))
 
   (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
 
@@ -599,6 +609,7 @@ For extending it to work with Maven:
          (dot        . t)
          (ditaa      . t)
          (haskell    . t)
+         (plantuml   . t)
          )))
 
   ;; Do not prompt to confirm evaluation
@@ -820,8 +831,8 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 # <<AGDA>>
 * AGDA
 
-;; (hcSection "Agda")
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Agda")
 (comment
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
@@ -937,7 +948,7 @@ See setting in cusotm-set-variables
 ;; Then use TAB to go to complete e-mail addresses in the header fields.
 #+END_SRC
 
-#+BEGIN_COMMMENT
+#+BEGIN_COMMENT
 First time use:
 - M-x google-contacts
 - "Enter the code your browser displayed: "
