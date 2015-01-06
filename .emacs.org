@@ -23,8 +23,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 - =tab= opens/close a particular section
 - Shift =tab= cycles between the outline and full text
 - Tangle it with:  =C-c C-v t=
-  - Creates:  =/tmp/.emacs=
-  - =cp= to the appropriate location
+  - Creates:  =.emacs= in this directory (overwrites previous)
 #+END_COMMENT
 
 ------------------------------------------------------------------------------
@@ -39,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2014 Mar 29 (Sat) 09:36:01 by Harold Carr.
+;;;; Last Modified : 2014 Dec 19 (Fri) 15:17:29 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -66,6 +65,7 @@ by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
 
 (defmacro comment (&rest x) nil)
 
+;; TODO: replace with https://github.com/jwiegley/use-package
 (defmacro hcRequire (name &rest body)
   `(if (require ',name nil t)
        (progn ,@body)
@@ -166,6 +166,7 @@ Important (to me) directories.
 (add-to-list 'load-path  (hcEmacsDir))
 
 (hcDefineBean hcEsync    (hcLocation 'esync))
+(hcDefineBean hcFinance  (hcLocation 'finance))
 (hcDefineBean hcFsync    (hcLocation 'fsync))
 (hcDefineBean hcFtptmp   (hcLocation 'ftptmp))
 (hcDefineBean hcHome     (hcLocation 'home))
@@ -221,7 +222,7 @@ Important (to me) directories.
   ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
   (add-to-list 'package-archives '("org"       . "http://orgmode.org/elpa/")             ) ;; put at front
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-  (add-to-list 'package-archives '("melpa"     . "http://melpa.milkbox.net/packages/")  t)
+  (add-to-list 'package-archives '("melpa"     . "http://melpa.org/packages/")  t)
   (package-initialize))
 #+END_SRC
 
@@ -348,13 +349,13 @@ TODO
 
 ; C-x 5 o other-frame "frame.el"
 ; C-x o other-window "window.el"
-(global-set-key "\C-x\C-o" 'other-frame) ; overwrite: delete-blank-lines "simple.el"
+(global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
 
-(global-set-key "\C-h" 'backward-delete-char)
+;; (global-set-key "\C-h" 'backward-delete-char) 
 (global-set-key "\M-g" 'goto-line)
-(global-set-key "\M-(" 'backward-sexp)
-(global-set-key "\M-)" 'forward-sexp)
-(global-set-key "\M-4" 'lower-frame)
+;; (global-set-key "\M-(" 'backward-sexp)
+;; (global-set-key "\M-)" 'forward-sexp)
+;; (global-set-key "\M-4" 'lower-frame)
 
 (autoload 'dabbrev "dabbrev" "dabbrev" t)
 (if (not (hcWin32P))
@@ -538,10 +539,14 @@ For extending it to work with Maven:
   ;; Any org files in those directories are automatically included in the agenda.
   (setq org-agenda-files
         (list
-         (hcRpt)
-         (concat (hcRpt)   "/.past/2011")
-         (concat (hcRpt)   "/.past/2012")
-         (concat (hcFsync) "/TODO-ME.org")
+         (concat (hcFsync)    "/TODO-ME.org")
+         (concat (hcFinance)  "/01-TODO.org")
+         (concat (hcRpt)      "/TODO-WORK.org")
+         ;; (hcRpt)
+         ;; (concat (hcRpt)   "/.past/2014")
+         ;; (concat (hcRpt)   "/.past/2013")
+         ;; (concat (hcRpt)   "/.past/2012")
+         ;; (concat (hcRpt)   "/.past/2011")
          ;; "/tmp/google.org"
          ))
 
@@ -550,9 +555,13 @@ For extending it to work with Maven:
               (org-defkey org-mode-map "\C-c["    'undefined)
               (org-defkey org-mode-map "\C-c]"    'undefined)))
 
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority ?E)
+  (setq org-default-priority ?E)
+
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "|" "DONE(d!/!)" "DELEGATED(D!/!)")
-          (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)" "PHONE")
+          (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)" "SKIP" "PHONE")
           (sequence "OPEN(O!)" "|" "CLOSED(C!)")
           ))
 
@@ -566,6 +575,7 @@ For extending it to work with Maven:
           ("WAITING"    :foreground "white"          :weight bold)
           ("SOMEDAY"    :foreground "orange"         :weight bold)
           ("CANCELLED"  :foreground "forest green"   :weight bold)
+          ("SKIP"       :foreground "forest green"   :weight bold)
           ("PHONE"      :foreground "forest green"   :weight bold)
 
           ("OPEN"       :foreground "blue"           :weight bold)
@@ -609,6 +619,7 @@ For extending it to work with Maven:
          (dot        . t)
          (ditaa      . t)
          (haskell    . t)
+         (latex      . t)
          (plantuml   . t)
          )))
 
@@ -637,6 +648,52 @@ For extending it to work with Maven:
 (hcRequire ox-md) ;; load this so menu options show up
 
 (hcRequire ox-beamer) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Org Mobile
+
+- [[http://orgmode.org/org.html#MobileOrg]]
+- iPhone: [[http://mobileorg.ncogni.to/]]
+- android: [[https://github.com/matburt/mobileorg-android/wiki]]
+
+#+NAME: orgmobile
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "org-mobile")
+
+(defun hcOrgMobile ()
+  (setq org-directory                  (concat (hcFtptmp)    "/org-directory"))           ; location of org files (TODO: sym links?)
+  (setq org-mobile-files              '(org-agenda-files))                                ; use ones I list in agenda
+  (setq org-mobile-directory           (concat (hcFtptmp)    "/Dropbox/apps/MobileOrg"))  ; where interaction with mobile happens
+  (setq org-mobile-use-encryption      t)
+  (setq org-mobile-encryption-tempfile (concat org-directory "/orgtmpcrypt"))             ; only you should have access
+  (setq org-mobile-encryption-password "")                                                ; do NOT set : will prompt
+  (setq org-mobile-inbox-for-pull      (concat org-directory "/from-mobile.org"))         ; caputre notes/flags appended here
+)
+
+(hcRequire async
+  (hcRequire org
+    (hcOrgMobile)))
+
+;; https://github.com/jwiegley/dot-emacs/blob/master/dot-org.el
+(defun my-org-mobile-pre-pull-function ()
+  (async-start
+   (lambda ()
+     (shell-command "open /Applications/Dropbox.app")
+     (sleep-for 30)
+     (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
+   ignore))
+
+(defun my-org-mobile-post-push-function ()
+  (async-start
+   (lambda ()
+     (shell-command "open /Applications/Dropbox.app")
+     (sleep-for 30)
+     (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
+   'ignore))
+
+(add-hook 'org-mobile-pre-pull-hook  'my-org-mobile-pre-pull-function)
+(add-hook 'org-mobile-post-push-hook 'my-org-mobile-post-push-function)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -750,14 +807,52 @@ TODO
 Version Control
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html#Version-Control]]
 - [[http://emacswiki.org/emacs/VersionControl]]
-Magit
+GIT
 - [[http://magit.github.com/magit/magit.html]]
 - [[http://www.emacswiki.org/emacs/Magit]]
+- [[https://github.com/pidu/git-timemachine]]
 
 #+NAME: magit
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "git")
 (hcRequire magit)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* w3m
+
+- [[https://github.com/haskell/haskell-mode/wiki/Browsing-Haddocks]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(comment
+(hcSection "w3m")
+
+(hcRequire w3m
+  (setq w3m-mode-map (make-sparse-keymap))
+
+  (define-key w3m-mode-map (kbd "RET")       'w3m-view-this-url)
+  (define-key w3m-mode-map (kbd "q")         'bury-buffer)
+  (define-key w3m-mode-map (kbd "<mouse-1>") 'w3m-maybe-url)
+  (define-key w3m-mode-map [f5]              'w3m-reload-this-page)
+  (define-key w3m-mode-map (kbd "C-c C-d")   'haskell-w3m-open-haddock)
+  (define-key w3m-mode-map (kbd "M-<left>")  'w3m-view-previous-page)
+  (define-key w3m-mode-map (kbd "M-<right>") 'w3m-view-next-page)
+  (define-key w3m-mode-map (kbd "M-.")       'w3m-haddock-find-tag)
+
+  (defun w3m-maybe-url ()
+    (interactive)
+    (if (or (equal '(w3m-anchor)         (get-text-property (point) 'face))
+            (equal '(w3m-arrived-anchor) (get-text-property (point) 'face)))
+        (w3m-view-this-url)))
+)
+
+;; C-c C-d to prompt for package to browse
+(hcRequire w3m-haddock
+  (add-hook 'w3m-display-hook 'w3m-haddock-display)
+  ;; M-x customize-variable haskell-w3m-haddock-dirs '("~/Library/Haskell/doc/"   "~/CABAL-SANDBOXES/Beginning_Haskell/share/doc/"   "~/CABAL-SANDBOXES/bitly-client/share/doc/"       "~/CABAL-SANDBOXES/graphviz/share/doc/"       "~/CABAL-SANDBOXES/hsparql/share/doc/"       "~/CABAL-SANDBOXES/tim-dysinger-env/share/doc/"      )
+  (define-key haskell-mode-map (kbd "C-c C-d") 'haskell-w3m-open-haddock)
+)
+)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -770,11 +865,20 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 (hcSection "Haskell")
 
 (hcRequire haskell-mode-autoloads
+  (speedbar-add-supported-extension ".hs") ; chris done
+
   (autoload 'ghc-init "ghc" nil t)
   (add-hook 'haskell-mode-hook (lambda () (ghc-init) (flymake-mode)))
 
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+  ;; begin https://github.com/tibbe/haskell-style-guide/blob/master/haskell-style.el
+  (setq haskell-indentation-layout-offset 4)
+  (setq haskell-indentation-left-offset 4)
+  (setq haskell-indentation-ifte-offset 4)
+  ;; end https://github.com/tibbe/haskell-style-guide/blob/master/haskell-style.el
+
   (setq haskell-stylish-on-save t)
   (setq haskell-process-args-cabal-repl '("--ghc-option=-ferror-spans"
                                           "--with-ghc=ghci-ng"))
@@ -785,8 +889,24 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
   (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
   (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
   (define-key haskell-mode-map (kbd "C-c M-.") nil)
-  (define-key haskell-mode-map (kbd "C-c C-d") nil)
+;;(define-key haskell-mode-map (kbd "C-c C-d") nil) ;; set above in w3m
   (define-key haskell-mode-map (kbd "C-c v c") 'haskell-cabal-visit-file)
+
+  ;; BEGIN CHRIS DONE
+  (define-key haskell-mode-map       (kbd "C-`")     'haskell-interactive-bring)
+;;(define-key haskell-cabal-mode-map (kbd "C-`")     'haskell-interactive-bring)
+
+  (define-key haskell-mode-map       (kbd "C-c C-c") 'haskell-process-cabal-build)
+;;(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+
+  (define-key haskell-mode-map       (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+;;(define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+
+  (define-key haskell-mode-map       (kbd "C-c c")   'haskell-process-cabal)
+;;(define-key haskell-cabal-mode-map (kbd "C-c c")   'haskell-process-cabal)
+
+  (define-key haskell-mode-map       (kbd "SPC")     'haskell-mode-contextual-space)
+  ;; END CHRIS DONE
 
   ;; Do this to get a variable in scope
   (auto-complete-mode)
@@ -1143,7 +1263,8 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 ;; Make java mode support Java 1.5 annotations.
 (hcRequire java-mode-indent-annotations
-  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup))
+  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
+  (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
 
 (setq *compile-threshold* " -XX:CompileThreshold=2 ")
 
@@ -1545,14 +1666,16 @@ java -server \
 
 (defun hcMacFont ()
   (interactive)
-  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-  ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
+;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
+(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
   )
 
 (defun hcMacWidthHeight ()
   (interactive)
-  (w 144)
-  (h 49)
+  (w 133)
+  (h 39)
   )
 
 (defun hcMacFW ()
@@ -1827,24 +1950,6 @@ the value is \"\"."
                 ""))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "JavaScript")
-(comment
-(hcRequire js-comint
-  ;(setq inferior-js-program-command "hcRhinoShell")
-  (setq inferior-js-program-command "/opt/local/bin/node"))
-
-(autoload 'js2-mode "js2-mode" nil t)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-
-(add-hook 'js2-mode-hook '(lambda ()
-			    (local-set-key "\C-x\C-e" 'js-send-last-sexp)
-			    (local-set-key "\C-\M-x"  'js-send-last-sexp-and-go)
-			    (local-set-key "\C-cb"    'js-send-buffer)
-			    (local-set-key "\C-c\C-b" 'js-send-buffer-and-go)
-			    (local-set-key "\C-cl"    'js-load-file-and-go)
-			    ))
-)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "custom-set-variables/faces")
 
 ;; IMPORTANT: Init file should contain only ONE custom-set-faces and ONE custom-set-variables
@@ -1865,20 +1970,21 @@ the value is \"\"."
  ;; '(global-linum-mode t)
  '(haskell-indent-spaces 4)
  ;; '(haskell-mode-hook (quote (turn-on-haskell-indent)))
+ '(haskell-process-auto-import-loaded-modules t) ;; Chris Done
  '(haskell-process-log t)
  '(haskell-process-path-cabal "/Users/carr/Library/Haskell/bin/cabal")
  '(haskell-process-path-ghci "/Users/carr/Library/Haskell/bin/ghci-ng")
+ '(haskell-process-suggest-remove-import-lines t) ;; Chris Done
  '(haskell-process-type (quote ghci))
+ '(haskell-tags-on-save t) ;; Chris Done
+ '(haskell-w3m-haddock-dirs (quote ("/Users/carr/CABAL-SANDBOXES/Beginning_Haskell/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/bitly-client/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/graphviz/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/hsparql/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/tim-dysinger-env/share/doc/x86_64-osx-ghc-7.6.3")))
  '(image-dired-dir "/tmp/emacs-image-dired/")
  '(load-home-init-file t t)
  '(nxml-child-indent 4)
  '(org-export-htmlize-output-type (quote css))
  '(send-mail-function (quote smtpmail-send-it))
- '(tool-bar-mode nil))
-
-
-
-(if (not (hcXEmacsP))
+ '(tool-bar-mode nil)
+)
 
 
 (custom-set-faces
@@ -1887,34 +1993,10 @@ the value is \"\"."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
 
-;;; '(font-lock-builtin-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
-;;; '(font-lock-comment-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
-;;; '(font-lock-constant-face ((((class color) (min-colors 88) (background light)) (:foreground "black"))))
-;;; '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "White"))))
-;;; '(font-lock-keyword-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
-;;; '(font-lock-string-face ((((class color) (min-colors 88) (background light)) (:foreground "blue"))))
-;;; '(font-lock-type-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
-;;; '(font-lock-variable-name-face ((((class color) (min-colors 88) (background light)) (:foreground "cornsilk"))))
-;;; '(font-lock-warning-face ((((class color) (min-colors 88) (background light)) (:foreground "Black" :weight bold))))
-
-;;; '(js2-error-face ((t (:foreground "black"))) t)
-;;; '(js2-external-variable-face ((t (:foreground "white"))) t)
-;;; '(js2-function-param-face ((t (:foreground "black"))) t)
-;;; '(js2-instance-member-face ((t (:foreground "white"))) t)
-;;; '(js2-jsdoc-html-tag-delimiter-face ((t (:foreground "white"))) t)
-;;; '(js2-jsdoc-html-tag-name-face ((t (:foreground "white"))) t)
-;;; '(js2-jsdoc-tag-face ((t (:foreground "black"))) t)
-;;; '(js2-jsdoc-type-face ((t (:foreground "black"))) t)
-;;; '(js2-jsdoc-value-face ((t (:foreground "black"))) t)
-;;; '(js2-magic-paren-face ((t (:foreground "white"))) t)
-;;; '(js2-private-function-call-face ((t (:foreground "white"))) t)
-;;; '(js2-private-member-face ((t (:foreground "white"))) t)
-;;; '(js2-warning-face ((t (:foreground "white"))) t)
-
- '(proof-locked-face ((t (:background "#8d8d8d"))) t))
-
-
-) ;; end IF
+ '(proof-locked-face ((t (:background "#8d8d8d"))) t)
+ '(w3m-haddock-heading-face ((t (:background "selectedKnobColor"))))
+;; '(w3m-haddock-heading-face ((t (:background "controlDarkShadowColor"))))
+)
 #+END_SRC
 
 
