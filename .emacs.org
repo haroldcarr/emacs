@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jan 08 (Thu) 08:38:36 by Harold Carr.
+;;;; Last Modified : 2015 Jan 28 (Wed) 10:32:20 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -162,25 +162,26 @@ Important (to me) directories.
 
 (defun hcLocation (name) (hcShExecCmd 'hcLocation name))
 
-(hcDefineBean hcEmacsDir (hcLocation 'emacs))
-(add-to-list 'load-path  (hcEmacsDir))
+(hcDefineBean hcEmacsDir     (hcLocation 'emacs))
+(add-to-list 'load-path      (hcEmacsDir))
 
-(hcDefineBean hcEsync    (hcLocation 'esync))
-(hcDefineBean hcFinance  (hcLocation 'finance))
-(hcDefineBean hcFsync    (hcLocation 'fsync))
-(hcDefineBean hcFtptmp   (hcLocation 'ftptmp))
-(hcDefineBean hcHome     (hcLocation 'home))
-(hcDefineBean hcRpt      (hcLocation 'rpt))
-(hcDefineBean hcSync     (hcLocation 'sync))
-(hcDefineBean hcUlhcd    (hcLocation 'ulhcd))
-(hcDefineBean hcWs       (hcLocation 'ws))
+(hcDefineBean hcEsync        (hcLocation  'esync))
+(hcDefineBean hcFinance      (hcLocation  'finance))
+(hcDefineBean hcFsync        (hcLocation  'fsync))
+(hcDefineBean hcFtptmp       (hcLocation  'ftptmp))
+(hcDefineBean hcHome         (hcLocation  'home))
+(hcDefineBean hcM2Repository (hcShExecCmd 'hcM2Repository))
+(hcDefineBean hcRpt          (hcLocation  'rpt))
+(hcDefineBean hcSync         (hcLocation  'sync))
+(hcDefineBean hcUlhcd        (hcLocation  'ulhcd))
+(hcDefineBean hcWs           (hcLocation  'ws))
 
 (hcShDefCmdMemo hcPathSep)
-(hcShDefCmd hcLibClasspath ())
-(hcShDefCmd hcFsToBs (string))
-(hcShDefCmd ripHome ())
-(hcShDefCmd ripHomeBase ())
-(hcShDefCmd hcLlavaMainClass ())
+(hcShDefCmd     hcLibClasspath ())
+(hcShDefCmd     hcFsToBs (string))
+(hcShDefCmd     ripHome ())
+(hcShDefCmd     ripHomeBase ())
+(hcShDefCmd     hcLlavaMainClass ())
 (defun ripHomeColon () (hcMakeDriveColon-el (ripHome)))
 #+END_SRC
 
@@ -431,10 +432,10 @@ TODO
 
 - [[http://www.emacswiki.org/emacs/EmacsCodeBrowser]]
 
-- Go to history     : "C-c . g h"
-- Go to methods     : "C-c . g m"
-- Go to sources     : "C-c . g s"
-- Go to directories : "C-c . g d"
+- Go to directories : "C-c . g d" ;; window 0
+- Go to sources     : "C-c . g s" ;; window 1
+- Go to methods     : "C-c . g m" ;; window 2
+- Go to history     : "C-c . g h" ;; window 3
 - Main buffer       : "C-c . g 1"
 
 #+BEGIN_SRC emacs-lisp :comments off
@@ -445,6 +446,39 @@ TODO
 ; '(ecb-options-version "2.40")
 ;  ...)
 
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Tags
+
+- http://www.emacswiki.org/emacs/BuildTags
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags]]
+- [[http://emacswiki.org/emacs/EmacsTags]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(defun hcTagsCreate (dir-name &optional tags-dir-path-filename)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  ;; ctags from brew
+  (let* ((dir (directory-file-name dir-name))
+         (ctags-filename (if (null tags-dir-path-filename) (concat dir "/TAGS") tags-dir-path-filename)))
+    (shell-command
+     (format "/usr/local/bin/ctags -f %s -e -R %s" ctags-filename dir))))
+
+(hcDefineBean hcTagsBuzz         (concat (hcWs)           "/buzz-message-bus/src"))
+(hcDefineBean hcTagsJava         "/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/src")
+(hcDefineBean hcTagsMessageBus   (concat (hcM2Repository) "/com/oracle/commons/fmw-commons/12.1.4-0-0-SNAPSHOT/sources/src"))
+(defun hcTagsCreateBuzz       () (interactive) (hcTagsCreate (hcTagsBuzz)))
+(defun hcTagsCreateJava       () (interactive) (hcTagsCreate (hcTagsJava)     "~/TAGS-JAVA"))
+(defun hcTagsCreateMessageBus () (interactive) (hcTagsCreate (hcTagsMessageBus)))
+(defun hcTagsCreateAll ()
+  (interactive)
+  (hcTagsCreateBuzz)
+  (hcTagsCreateJava)
+  (hcTagsCreateMessageBus))
+(defun vtb () (interactive) (visit-tags-table (hcTagsBuzz)))
+(defun vtj () (interactive) (visit-tags-table "~/TAGS-JAVA"))
+(defun vtm () (interactive) (visit-tags-table (hcTagsMessageBus)))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -1155,9 +1189,6 @@ NOTE: home set via calendar-latitude/calendar-longitude
 ** Document Viewing
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Document-View.html#Document-View]]
 - [[http://www.emacswiki.org/emacs/DocViewMode]]
-** Tags
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags]]
-- [[http://emacswiki.org/emacs/EmacsTags]]
 ** Color Themes and rainbow-mode
 - [[http://emacsredux.com/blog/2013/08/21/color-themes-redux/]]
 - [[http://julien.danjou.info/projects/emacs-packages#rainbow-mode]]
