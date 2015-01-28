@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2014 Dec 19 (Fri) 15:17:29 by Harold Carr.
+;;;; Last Modified : 2015 Jan 08 (Thu) 08:38:36 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -611,17 +611,16 @@ For extending it to work with Maven:
   ;; Make babel results blocks lowercase
   (setq org-babel-results-keyword "results")
 
-  (if (and (not (hcXEmacsP))
-           (fboundp 'org-babel-do-load-languages))
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((emacs-lisp . t)
-         (dot        . t)
-         (ditaa      . t)
-         (haskell    . t)
-         (latex      . t)
-         (plantuml   . t)
-         )))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (dot        . t)
+     (ditaa      . t)
+     (gnuplot    . t)
+     (haskell    . t)
+     (latex      . t)
+     (plantuml   . t)
+     ))
 
   ;; Do not prompt to confirm evaluation
   ;; This may be dangerous - make sure you understand the consequences
