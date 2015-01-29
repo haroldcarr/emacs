@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jan 28 (Wed) 16:02:18 by Harold Carr.
+;;;; Last Modified : 2015 Jan 29 (Thu) 11:21:15 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -121,7 +121,7 @@ Never access a variable directly.
 * Executing shell commands
 
 #+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Shell")
+(hcSection "Shell Commands")
 
 (defun hcShExecCmd (name &rest args)
   (shell-command-to-string
@@ -387,7 +387,6 @@ TODO
 (hcSection "Shell")
 #+END_SRC
 
-** Shell
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Shell.html#Shell]]
 - [[http://emacswiki.org/emacs/ShellMode]]
 
@@ -439,11 +438,14 @@ TODO
 - Main buffer       : "C-c . g 1"
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "ECB")
+
 (hcRequire ecb
   (setq ecb-options-version "2.40")
   (setq ecb-source-path     '(("/" "/")))
   (setq ecb-tip-of-the-day  nil)
   (setq ecb-windows-width   0.15)
+  (setq ecb-layout-name     "left9") ;; only the methods window
 )
 #+END_SRC
 
@@ -455,6 +457,13 @@ TODO
 - [[http://emacswiki.org/emacs/EmacsTags]]
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Tags")
+
+; alternate way to create using etags
+; cd <...>
+; need a regex instead of "*" - also only files
+; find . -name "*" -print -o -name SCCS -name RCS -prune | .../bin/etags -
+
 (defun hcTagsCreate (dir-name &optional tags-dir-path-filename)
   "Create tags file."
   (interactive "DDirectory: ")
@@ -493,6 +502,8 @@ For extending it to work with Maven:
 
 #+NAME: compilation
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Compilation")
+
 (hcRequire compile
   (add-to-list 'compilation-error-regexp-alist 'maven)
   (add-to-list 'compilation-error-regexp-alist-alist
@@ -790,6 +801,8 @@ For extending it to work with Maven:
 - [[http://www.emacswiki.org/LineNumbers]]
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Line Numbers")
+
 (hcRequire linum
 ;;  (setq global-linum-mode t) ;; always on
 )
@@ -802,6 +815,8 @@ For extending it to work with Maven:
   - starting on page 47
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Timestamp")
+
 ; when running on samsun nc10; cygwin; startxwin; emacs; this is defined with
 ; the computer name and my name and it screws up - so eval this by hand
 ; TODO : it doesn't get redefined below because hcWin32P is false
@@ -826,6 +841,7 @@ TODO
 #+NAME: bookmarks
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Bookmarks")
+
 (setq bookmark-save-flag 1)
 (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
 #+END_SRC
@@ -843,6 +859,8 @@ GIT
 
 #+NAME: magit
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Version Control and Magit")
+
 (hcSection "git")
 (hcRequire magit)
 #+END_SRC
@@ -1018,6 +1036,8 @@ When the current buffer contains SDEDIT diagram text, just do
 Be sure the sdedit program is up and running as a service.
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "SDEDIT")
+
 (defun sdedit ()
   (interactive)
   (let ((p (open-network-stream "*HC-SDEDIT*" "*HC-SDEDIT-CONNECTION*" "localhost" "60001")))
@@ -1032,6 +1052,8 @@ Be sure the sdedit program is up and running as a service.
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html]]
 
 #+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Images")
+
 (setq image-dired-dir "/tmp/emacs-image-dired/")
 #+END_SRC
 
@@ -1219,17 +1241,6 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 ;; XML/HTML
 (setq sgml-basic-offset 4)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Tags")
-
-; cd <...>
-; need a regex instead of "*" - also only files
-; find . -name "*" -print -o -name SCCS -name RCS -prune | .../bin/etags -
-
-;(visit-tags-table (concat (ripHomeBase) "/src/share/classes/TAGS"))
-;(visit-tags-table (concat (hcWs) "/jax-ws-sources/jaxws-ri/rt/src/com/sun/xml/ws"))
-;(visit-tags-table (concat (hcWs) "/wsit/wsit/rt/src/com/sun/xml/ws"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "WIN32")
@@ -2028,8 +2039,3 @@ the value is \"\"."
 #+END_SRC
 
 # End of file.
-
-
-
-
-
