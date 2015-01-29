@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jan 28 (Wed) 10:32:20 by Harold Carr.
+;;;; Last Modified : 2015 Jan 28 (Wed) 16:02:18 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -440,12 +440,11 @@ TODO
 
 #+BEGIN_SRC emacs-lisp :comments off
 (hcRequire ecb
+  (setq ecb-options-version "2.40")
+  (setq ecb-source-path     '(("/" "/")))
+  (setq ecb-tip-of-the-day  nil)
+  (setq ecb-windows-width   0.15)
 )
-
-;(custom-set-variables
-; '(ecb-options-version "2.40")
-;  ...)
-
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -514,11 +513,6 @@ For extending it to work with Maven:
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "org-mode")
 
-;; let ME control org-mode font colors, etc.
-;; this is done elsewhere in this file
-;(custom-set-variables
-; '(org-export-htmlize-output-type (quote css)))
-
 (defun hcOrgMode ()
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
 
@@ -559,6 +553,9 @@ For extending it to work with Maven:
 
   ;; Do not put in validation link in HTML export
   (setq org-html-validation-link nil)
+
+  ;; let ME control org-mode font colors, etc.
+  (setq org-export-htmlize-output-type 'css)
 
   ;;;
   ;;; Agenda
@@ -750,6 +747,9 @@ For extending it to work with Maven:
   ;; This causes fancy not to be displayed
   ;;(setq view-calendar-holidays-initially t)
   ;;(setq holidays-in-diary-buffer nil)
+  (setq calendar-latitude  40.785188)
+  (setq calendar-longitude -111.863011)
+
   (add-hook 'diary-display-hook 'fancy-diary-display)
   (setq diary-list-include-blanks t)
   ;; not working: (add-hook 'list-diary-entries-hook 'sort-diary-entries t)
@@ -794,10 +794,6 @@ For extending it to work with Maven:
 ;;  (setq global-linum-mode t) ;; always on
 )
 #+END_SRC
-
-;(custom-set-variables
-; '(global-linum-mode t))
-
 
 ------------------------------------------------------------------------------
 * Timestamp
@@ -882,7 +878,13 @@ GIT
 ;; C-c C-d to prompt for package to browse
 (hcRequire w3m-haddock
   (add-hook 'w3m-display-hook 'w3m-haddock-display)
-  ;; M-x customize-variable haskell-w3m-haddock-dirs '("~/Library/Haskell/doc/"   "~/CABAL-SANDBOXES/Beginning_Haskell/share/doc/"   "~/CABAL-SANDBOXES/bitly-client/share/doc/"       "~/CABAL-SANDBOXES/graphviz/share/doc/"       "~/CABAL-SANDBOXES/hsparql/share/doc/"       "~/CABAL-SANDBOXES/tim-dysinger-env/share/doc/"      )
+  (setq haskell-w3m-haddock-dirs '("~/Library/Haskell/doc/"
+                                   "~/CABAL-SANDBOXES/Beginning_Haskell/share/doc/"
+                                   "~/CABAL-SANDBOXES/bitly-client/share/doc/"
+                                   "~/CABAL-SANDBOXES/graphviz/share/doc/"
+                                   "~/CABAL-SANDBOXES/hsparql/share/doc/"
+                                   "~/CABAL-SANDBOXES/tim-dysinger-env/share/doc/"
+                                   ))
   (define-key haskell-mode-map (kbd "C-c C-d") 'haskell-w3m-open-haddock)
 )
 )
@@ -905,6 +907,17 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
   (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+
+  (setq haskell-indent-spaces 4)
+
+  ;;(setq haskell-mode-hook '(turn-on-haskell-indent))
+  (setq haskell-tags-on-save t) ;; Chris Done
+  (setq haskell-process-auto-import-loaded-modules t) ;; Chris Done
+  (setq haskell-process-log t)
+  (setq haskell-process-path-cabal "/Users/carr/Library/Haskell/bin/cabal")
+  (setq haskell-process-path-ghci "/Users/carr/Library/Haskell/bin/ghci-ng")
+  (setq haskell-process-suggest-remove-import-lines t) ;; Chris Done
+  (setq haskell-process-type 'ghci)
 
   ;; begin https://github.com/tibbe/haskell-style-guide/blob/master/haskell-style.el
   (setq haskell-indentation-layout-offset 4)
@@ -1018,8 +1031,9 @@ Be sure the sdedit program is up and running as a service.
 
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html]]
 
-See setting in cusotm-set-variables
-
+#+BEGIN_SRC emacs-lisp :comments off
+(setq image-dired-dir "/tmp/emacs-image-dired/")
+#+END_SRC
 
 ------------------------------------------------------------------------------
 * Align
@@ -1989,31 +2003,9 @@ the value is \"\"."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(calendar-latitude 40.785188)
- '(calendar-longitude -111.863011)
- '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "1e7e097ec8cb1f8c3a912d7e1e0331caeed49fef6cff220be63bd2a6ba4cc365" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "e16a771a13a202ee6e276d06098bc77f008b73bbac4d526f160faa2d76c1dd0e" "fc6e906a0e6ead5747ab2e7c5838166f7350b958d82e410257aeeb2820e8a07a" default)))
- '(display-time-mode t)
- '(ecb-options-version "2.40")
- '(ecb-source-path (quote (("/" "/"))))
- '(ecb-tip-of-the-day nil)
- '(ecb-windows-width 0.15)
- ;; '(global-linum-mode t)
- '(haskell-indent-spaces 4)
- ;; '(haskell-mode-hook (quote (turn-on-haskell-indent)))
- '(haskell-process-auto-import-loaded-modules t) ;; Chris Done
- '(haskell-process-log t)
- '(haskell-process-path-cabal "/Users/carr/Library/Haskell/bin/cabal")
- '(haskell-process-path-ghci "/Users/carr/Library/Haskell/bin/ghci-ng")
- '(haskell-process-suggest-remove-import-lines t) ;; Chris Done
- '(haskell-process-type (quote ghci))
- '(haskell-tags-on-save t) ;; Chris Done
- '(haskell-w3m-haddock-dirs (quote ("/Users/carr/CABAL-SANDBOXES/Beginning_Haskell/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/bitly-client/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/graphviz/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/hsparql/share/doc/x86_64-osx-ghc-7.6.3" "/Users/carr/CABAL-SANDBOXES/tim-dysinger-env/share/doc/x86_64-osx-ghc-7.6.3")))
- '(image-dired-dir "/tmp/emacs-image-dired/")
  '(load-home-init-file t t)
  '(nxml-child-indent 4)
- '(org-export-htmlize-output-type (quote css))
  '(send-mail-function (quote smtpmail-send-it))
- '(tool-bar-mode nil)
 )
 
 
