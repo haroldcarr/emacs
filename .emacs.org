@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jan 29 (Thu) 11:21:15 by Harold Carr.
+;;;; Last Modified : 2015 Feb 09 (Mon) 08:49:34 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -526,6 +526,9 @@ For extending it to work with Maven:
 
 (defun hcOrgMode ()
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
+  ;; So I can visit script links in org files (instead of execute them)
+  ;; I link to the real file: ln -s <some-script> <some-script>.hcScript
+  (add-to-list 'org-file-apps '("\\.hcScript\\'" . emacs))
 
   ;; "Standard" key bindings (but not provided)
   (global-set-key "\C-cl" 'org-store-link)
@@ -1361,7 +1364,6 @@ NOTE: home set via calendar-latitude/calendar-longitude
 (add-to-list 'auto-mode-alist '("\\.el$"      . lisp-interaction-mode))
 
 (add-to-list 'auto-mode-alist '("\\.cl$"      . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.dat$"     . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.kawa$"    . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.llavarc$" . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.lva$"     . scheme-mode))
