@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Feb 09 (Mon) 08:49:34 by Harold Carr.
+;;;; Last Modified : 2015 May 27 (Wed) 12:12:33 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -473,20 +473,29 @@ TODO
     (shell-command
      (format "/usr/local/bin/ctags -f %s -e -R %s" ctags-filename dir))))
 
-(hcDefineBean hcTagsBuzz         (concat (hcWs)           "/buzz-message-bus/src"))
-(hcDefineBean hcTagsJava         "/Library/Java/JavaVirtualMachines/jdk1.8.0_31.jdk/Contents/Home/src")
-(hcDefineBean hcTagsMessageBus   (concat (hcM2Repository) "/com/oracle/commons/fmw-commons/12.1.4-0-0-SNAPSHOT/sources/src"))
-(defun hcTagsCreateBuzz       () (interactive) (hcTagsCreate (hcTagsBuzz)))
-(defun hcTagsCreateJava       () (interactive) (hcTagsCreate (hcTagsJava)     "~/TAGS-JAVA"))
-(defun hcTagsCreateMessageBus () (interactive) (hcTagsCreate (hcTagsMessageBus)))
+(defun        hcTagsDir       (x)    (concat (hcEsync)        "/TAGS/" x))
+(hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/src/"))
+(hcDefineBean hcTagsCatalogDst       (hcTagsDir               "TAGS-CATALOG"))
+(hcDefineBean hcTagsJavaSrc          "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/src")
+(hcDefineBean hcTagsJavaDst          (hcTagsDir               "TAGS-JAVA"))
+(hcDefineBean hcTagsBuzzSrc          (concat (hcWs)           "/buzz-message-bus/src"))
+(hcDefineBean hcTagsBuzzDst          (hcTagsDir               "TAGS-BUZZ"))
+(hcDefineBean hcTagsMessageBusSrc    (concat (hcM2Repository) "/com/oracle/commons/fmw-commons/12.1.4-0-0-SNAPSHOT/sources/src"))
+(hcDefineBean hcTagsMessageBusDst    (hcTagsDir               "TAGS-MESSAGE-BUS"))
+(defun hcTagsCreateCatalog    () (interactive) (hcTagsCreate (hcTagsCatalogSrc)    (hcTagsCatalogDst)))
+(defun hcTagsCreateJava       () (interactive) (hcTagsCreate (hcTagsJavaSrc)       (hcTagsJavaDst)))
+(defun hcTagsCreateBuzz       () (interactive) (hcTagsCreate (hcTagsBuzzSrc)       (hcTagsBuzzDst)))
+(defun hcTagsCreateMessageBus () (interactive) (hcTagsCreate (hcTagsMessageBusSrc) (hcTagsMessageBusDst)))
 (defun hcTagsCreateAll ()
   (interactive)
-  (hcTagsCreateBuzz)
+  (hcTagsCreateCatalog)
   (hcTagsCreateJava)
+  (hcTagsCreateBuzz)
   (hcTagsCreateMessageBus))
-(defun vtb () (interactive) (visit-tags-table (hcTagsBuzz)))
-(defun vtj () (interactive) (visit-tags-table "~/TAGS-JAVA"))
-(defun vtm () (interactive) (visit-tags-table (hcTagsMessageBus)))
+(defun vtc () (interactive) (visit-tags-table (hcTagsCatalogDst)))
+(defun vtj () (interactive) (visit-tags-table (hcTagsJavaDst)))
+(defun vtb () (interactive) (visit-tags-table (hcTagsBuzzDst)))
+(defun vtm () (interactive) (visit-tags-table (hcTagsMessageBusDst)))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -548,6 +557,9 @@ For extending it to work with Maven:
 
   ;; show the whole file when first visited
   (setq org-startup-folded nil)
+
+  ;; don't fold when yanking
+  (setq org-yank-folded-subtrees nil)
 
   ;; Org buffers only
   ;;(add-hook 'org-mode-hook 'turn-on-font-lock)
