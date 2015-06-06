@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 May 27 (Wed) 12:12:33 by Harold Carr.
+;;;; Last Modified : 2015 Jun 01 (Mon) 15:09:58 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -1331,6 +1331,13 @@ NOTE: home set via calendar-latitude/calendar-longitude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Java")
 
+(defvar *hcJavaMode* 'google)
+(add-hook 'java-mode-hook
+  (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
+
+;; M-x google-set-c-style
+(hcRequire google-c-style)
+
 ;; Make java mode support Java 1.5 annotations.
 (hcRequire java-mode-indent-annotations
   (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
@@ -1387,6 +1394,24 @@ NOTE: home set via calendar-latitude/calendar-longitude
 (add-to-list 'auto-mode-alist '("\\.skij$"    . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.skj$"     . scheme-mode))
 (add-to-list 'auto-mode-alist '("\\.stk$"     . scheme-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Cider/Clojure
+
+(defun hc-cider-insert-and-eval-in-repl-no-switch ()
+  "Insert FORM in the REPL buffer and evaluate it.  Do not switch to REPL buffer."
+  (interactive)
+  (let ((form (cider-last-sexp))
+        (start-pos (point)))
+    (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
+      (setq form (replace-match "" t t form)))
+    (with-current-buffer (cider-current-repl-buffer)
+      (insert form)
+      (indent-region start-pos (point))
+      (cider-repl-return))))
+
+(hcRequire cider-mode
+  (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-and-eval-in-repl-no-switch))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SLIME setup:
