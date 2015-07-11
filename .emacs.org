@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jun 01 (Mon) 15:09:58 by Harold Carr.
+;;;; Last Modified : 2015 Jul 03 (Fri) 08:01:26 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -179,10 +179,7 @@ Important (to me) directories.
 (hcShDefCmdMemo hcPathSep)
 (hcShDefCmd     hcLibClasspath ())
 (hcShDefCmd     hcFsToBs (string))
-(hcShDefCmd     ripHome ())
-(hcShDefCmd     ripHomeBase ())
 (hcShDefCmd     hcLlavaMainClass ())
-(defun ripHomeColon () (hcMakeDriveColon-el (ripHome)))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -352,7 +349,7 @@ TODO
 ; C-x o other-window "window.el"
 (global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
 
-;; (global-set-key "\C-h" 'backward-delete-char) 
+;; (global-set-key "\C-h" 'backward-delete-char)
 (global-set-key "\M-g" 'goto-line)
 ;; (global-set-key "\M-(" 'backward-sexp)
 ;; (global-set-key "\M-)" 'forward-sexp)
@@ -377,6 +374,40 @@ TODO
 	 (global-set-key "\M-2" 'digit-argument)
 	 (setq *hcSetMarkCommandState* 'default))))
 (hcSetMarkCommand)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* daemon / emacsclient
+
+#+NAME: shell
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "daemon / emacsclient")
+#+END_SRC
+
+See (I could not get C-c e to work in IntelliJ)
+- [[http://spin.atomicobject.com/2014/08/07/intellij-emacs/]]
+
+#+BEGIN_EXAMPLE
+# manual start
+./bin-hosted/emacs --daemon
+# manual use
+./bin-hosted/emacsclient -c <any file/dir name>
+# manual kill
+# - from within emacs
+M-x kill-emacs
+or
+M-x save-buffers-kill-emacs
+# from outside of emacs
+emacsclient -e '(kill-emacs)'
+or
+emacsclient -e '(client-save-kill-emacs)'
+#+END_EXAMPLE
+
+#+BEGIN_SRC emacs-lisp :comments off
+(if (functionp 'window-system)
+    (when (and (window-system)
+           (>= emacs-major-version 24))
+      (server-start)))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -492,10 +523,10 @@ TODO
   (hcTagsCreateJava)
   (hcTagsCreateBuzz)
   (hcTagsCreateMessageBus))
-(defun vtc () (interactive) (visit-tags-table (hcTagsCatalogDst)))
-(defun vtj () (interactive) (visit-tags-table (hcTagsJavaDst)))
-(defun vtb () (interactive) (visit-tags-table (hcTagsBuzzDst)))
-(defun vtm () (interactive) (visit-tags-table (hcTagsMessageBusDst)))
+(defun hcVtc () (interactive) (visit-tags-table (hcTagsCatalogDst)))
+(defun hcVtj () (interactive) (visit-tags-table (hcTagsJavaDst)))
+(defun hcVtb () (interactive) (visit-tags-table (hcTagsBuzzDst)))
+(defun hcVtm () (interactive) (visit-tags-table (hcTagsMessageBusDst)))
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -663,7 +694,7 @@ For extending it to work with Maven:
   ;; http://plantuml.sourceforge.net/
   (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.7995.jar"))
 
-  (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
+  (add-hook 'org-babel-after-execute-hook 'hc/display-inline-images 'append)
 
   ;; Make babel results blocks lowercase
   (setq org-babel-results-keyword "results")
@@ -694,7 +725,7 @@ For extending it to work with Maven:
                   (assq-delete-all :cache org-babel-default-header-args))))
 )
 
-(defun bh/display-inline-images ()
+(defun hc/display-inline-images ()
   (condition-case nil
       (org-display-inline-images)
     (error nil)))
@@ -732,7 +763,7 @@ For extending it to work with Maven:
     (hcOrgMobile)))
 
 ;; https://github.com/jwiegley/dot-emacs/blob/master/dot-org.el
-(defun my-org-mobile-pre-pull-function ()
+(defun hc-org-mobile-pre-pull-function ()
   (async-start
    (lambda ()
      (shell-command "open /Applications/Dropbox.app")
@@ -740,7 +771,7 @@ For extending it to work with Maven:
      (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
    ignore))
 
-(defun my-org-mobile-post-push-function ()
+(defun hc-org-mobile-post-push-function ()
   (async-start
    (lambda ()
      (shell-command "open /Applications/Dropbox.app")
@@ -748,8 +779,8 @@ For extending it to work with Maven:
      (shell-command "osascript -e 'tell application \"Dropbox\" to quit'"))
    'ignore))
 
-(add-hook 'org-mobile-pre-pull-hook  'my-org-mobile-pre-pull-function)
-(add-hook 'org-mobile-post-push-hook 'my-org-mobile-post-push-function)
+(add-hook 'org-mobile-pre-pull-hook  'hc-org-mobile-pre-pull-function)
+(add-hook 'org-mobile-post-push-hook 'hc-org-mobile-post-push-function)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -871,6 +902,8 @@ GIT
 - [[http://magit.github.com/magit/magit.html]]
 - [[http://www.emacswiki.org/emacs/Magit]]
 - [[https://github.com/pidu/git-timemachine]]
+Magit and Ediff
+- [[http://dachary.org/?p=2893]]
 
 #+NAME: magit
 #+BEGIN_SRC emacs-lisp :comments off
@@ -1053,7 +1086,7 @@ Be sure the sdedit program is up and running as a service.
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "SDEDIT")
 
-(defun sdedit ()
+(defun hcSdedit ()
   (interactive)
   (let ((p (open-network-stream "*HC-SDEDIT*" "*HC-SDEDIT-CONNECTION*" "localhost" "60001")))
     (process-send-string p (concat (buffer-name) "
@@ -1112,7 +1145,7 @@ Be sure the sdedit program is up and running as a service.
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Google Search")
 
-(defun google ()
+(defun hcGoogle ()
   "Google the selected region if any, display a query prompt otherwise."
   (interactive)
   (browse-url ;; results in default browser
@@ -1345,14 +1378,14 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 (setq *compile-threshold* " -XX:CompileThreshold=2 ")
 
-(defun BOOTDIR ()
-  (cond ((getenv "ALT_BOOTDIR"))
-	(t (let ((ALT_BOOTDIR (ALT_BOOTDIR)))
+(defun HC-BOOTDIR ()
+  (cond ((getenv "HC-ALT_BOOTDIR"))
+	(t (let ((HC-ALT_BOOTDIR (HC-ALT_BOOTDIR)))
 	     (message (concat "BOOTDIR not set - defaulting to: "
-			      ALT_BOOTDIR))
-	     ALT_BOOTDIR))))
+			      HC-ALT_BOOTDIR))
+	     HC-ALT_BOOTDIR))))
 
-(defun ALT_BOOTDIR ()
+(defun HC-ALT_BOOTDIR ()
   (let* ((jdir     (concat *hcUlhcd* "/java/jdk/"))
 	 (version  (cond ((hcWin32P)  "jdk1.3/win32")
                          ((hcDarwinP) "jdk1.6.0_15/darwin")
@@ -1363,13 +1396,13 @@ NOTE: home set via calendar-latitude/calendar-longitude
 	  (t
 	   (error "no default JDK")))))
 
-(defun set-ALT_BOOTDIR (&optional location)
+(defun set-HC-ALT_BOOTDIR (&optional location)
   (interactive)
-  (setenv "ALT_BOOTDIR"
-	  (cond (location) (t (ALT_BOOTDIR)))))
+  (setenv "HC-ALT_BOOTDIR"
+	  (cond (location) (t (HC-ALT_BOOTDIR)))))
 
-(defun BOOTDIR-bin     () (concat (BOOTDIR) "/bin"))
-(defun BOOTDIR-classes () (concat (BOOTDIR) "/jre/lib/rt.jar"))
+(defun HC-BOOTDIR-bin     () (concat (HC-BOOTDIR) "/bin"))
+(defun HC-BOOTDIR-classes () (concat (HC-BOOTDIR) "/jre/lib/rt.jar"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Scala")
@@ -1506,11 +1539,11 @@ java -server \
 
 (defun hcJCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    " -classpath "
    (hcUlhcd) "/java/j/j-0.21.0/j.jar"
    (hcPathSep)
-   (BOOTDIR-classes)
+   (HC-BOOTDIR-classes)
    (hcPathSep)
    (hcLibClasspath)
    " "
@@ -1524,7 +1557,7 @@ java -server \
 
 (defun hcJschemeCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    *compile-threshold*
    " -jar "
    (hcUlhcd) "/java/jscheme/jscheme_6_1.jar"))
@@ -1535,12 +1568,12 @@ java -server \
 
 (defun hcKawaCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    *compile-threshold*
    " -classpath "
    (hcUlhcd) "/java/kawa/kawa-1.7.jar"
    (hcPathSep)
-   (BOOTDIR-classes)
+   (HC-BOOTDIR-classes)
    (hcPathSep)
    (hcLibClasspath)
    " "
@@ -1586,7 +1619,7 @@ java -server \
   (concat
    (hcLlavaCmdEnvExtras (hcPathSep))
    " "
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    *compile-threshold*
    "-Xmx2024m"
    " -classpath "
@@ -1596,11 +1629,10 @@ java -server \
    (hcPathSep)
    (hcLlavaClasspath)
    (hcPathSep)
-   (BOOTDIR-classes)
+   (HC-BOOTDIR-classes)
    (hcPathSep)
    (hcLibClasspath)
    (hcPathSep)
-;;   (ripClasspath (BOOTDIR) (ripHomeColon))
    " "
    " -Duser.home=" (hcHome)
    " "
@@ -1620,17 +1652,16 @@ java -server \
 
 (defun hcSkijCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    " -classpath "
    "."
    (hcPathSep)
    (hcSkijClasspath)
    (hcPathSep)
-   (BOOTDIR-classes)
+   (HC-BOOTDIR-classes)
    (hcPathSep)
    (hcLibClasspath)
    (hcPathSep)
-;;   (ripClasspath (BOOTDIR) (ripHomeColon))
    (hcLlavaCmdClasspathExtras (hcPathSep))
    " "
    " -Duser.home=" (hcHome)
@@ -1647,19 +1678,18 @@ java -server \
 
 (defun hcSilkCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    " -classpath "
    "."
    (hcPathSep)
    (hcUlhcd) "/java/silk/v3.0-99-10-31/silk/jar/scheme.jar"
    (hcPathSep)
-   (BOOTDIR-classes)
+   (HC-BOOTDIR-classes)
    (hcPathSep)
    (hcUlhcd) "\\java\\jdk1.2.1\\jre\\lib\\tools.jar"
    (hcPathSep)
    (hcLibClasspath)
    (hcPathSep)
-;;   (ripClasspath (BOOTDIR) (ripHomeColon))
    (hcLlavaCmdClasspathExtras (hcPathSep))
    " "
    " -Duser.home=" (hcHome)
@@ -1681,7 +1711,7 @@ java -server \
 
 (defun hcTelnetClientCmd ()
   (concat
-   (BOOTDIR-bin) "/java "
+   (HC-BOOTDIR-bin) "/java "
    " -classpath "
    (concat (hcEsync) "/java/.classes")
    (hcPathSep)
@@ -1713,10 +1743,10 @@ java -server \
 
 ;; C-U C-X = : shows current font
 
-(defun h (n) (set-frame-height (selected-frame) n))
-(defun w (n) (set-frame-width (selected-frame) n))
-(defun hw (x y) (h x) (w y))
-(defun hwd () (interactive) (h 38) (w 80))
+(defun hc-h (n) (set-frame-height (selected-frame) n))
+(defun hc-w (n) (set-frame-width (selected-frame) n))
+(defun hc-hw (x y) (hc-h x) (hc-w y))
+(defun hc-hwd () (interactive) (hc-h 38) (hc-w 80))
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -1747,8 +1777,8 @@ java -server \
 
 (defun hcHostedWidthHeight ()
   (interactive)
-  (w 160)
-  (h 43)
+  (hc-w 160)
+  (hc-h 43)
   )
 
 (defun hcHostedAppearance ()
@@ -1768,8 +1798,8 @@ java -server \
 
 (defun hcMacWidthHeight ()
   (interactive)
-  (w 133)
-  (h 39)
+  (hc-w 100)
+  (hc-h 27)
   )
 
 (defun hcMacFW ()
@@ -1786,28 +1816,28 @@ java -server \
   )
 
 ;; Toggle buffer tabs
-(defun toggleBufferTabs ()
+(defun hcToggleBufferTabs ()
   (interactive)
   (if (eq emacs-version 21.4)
       (customize-set-variable 'gutter-buffers-tab-visible-p
 			      (not gutter-buffers-tab-visible-p))))
 
 ;; Toggle tool bar
-(setq *toggle-toolbar-value* -1)
-(defun toggleToolbar ()
+(setq *hc-toggle-toolbar-value* -1)
+(defun hcToggleToolbar ()
   (interactive)
   (if (eq emacs-major-version 21)
       (cond ((string-match "XEmacs\\|Lucid" emacs-version)
 	     (set-specifier default-toolbar-visible-p
 			    (not (specifier-instance default-toolbar-visible-p))))
 	    ((string-match "sparc-sun-solaris2.10" (emacs-version))
-	     (tool-bar-mode *toggle-toolbar-value*)
-	     (setq *toggle-toolbar-value* (- *toggle-toolbar-value*)))
+	     (tool-bar-mode *hc-toggle-toolbar-value*)
+	     (setq *hc-toggle-toolbar-value* (- *hc-toggle-toolbar-value*)))
 	    (t
 	     (tool-bar-mode (not toolbar-active))))))
 
 ;; SHORTHAND
-(defun hctoggle () (interactive) (toggleBufferTabs) (toggleToolbar))
+(defun hctoggle () (interactive) (hcToggleBufferTabs) (hcToggleToolbar))
 
 (defun hcf ()
   (set-default-font
@@ -1834,8 +1864,8 @@ java -server \
 ;; type fc-list on command line to see fonts installed
 
 (defun hcSetDisplay ()
-  (h 32)
-  (w 80)
+  (hc-h 32)
+  (hc-w 80)
   (cond ((hcXP)
          ;;(set-face-attribute 'default nil :family "courier" :height 140)
          ;;(set-face-attribute 'default nil :family "courier" :height 160)
@@ -1973,7 +2003,7 @@ Underline
     result))
 
 ;; Modified from compile.
-(defun grep-find-no-scc (command-args)
+(defun hc-grep-find-no-scc (command-args)
   "Same as grep-find except skips source code control directories."
   (interactive
    (let ((grep-find-command
