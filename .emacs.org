@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jul 03 (Fri) 08:01:26 by Harold Carr.
+;;;; Last Modified : 2015 Jul 18 (Sat) 21:16:06 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -231,6 +231,9 @@ Important (to me) directories.
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Top level misc stuff")
 
+;; rather than highlight or off
+(setq blink-matching-paren (quote jump))
+
 ;; Get rid of useless stuff.
 (dolist (mode '(tool-bar-mode)) ;; menu-bar-mode scroll-bar-mode
   (when (fboundp mode) (funcall mode -1)))
@@ -374,6 +377,27 @@ TODO
 	 (global-set-key "\M-2" 'digit-argument)
 	 (setq *hcSetMarkCommandState* 'default))))
 (hcSetMarkCommand)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Unicode key bindings
+
+- [[http://ergoemacs.org/emacs/emacs_n_unicode.html]]
+
+#+NAME: unicodekeybindings
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Key Bindings")
+
+;; ¬∧∨∃⊦∵∴∈∉⊂⊃⊆⊇⊄⋂⋃
+
+(global-set-key (kbd "<f5>")   (lambda () (interactive) (find-file (concat (hcEmacsDir) "/unicode.txt"))))
+(global-set-key (kbd "<f6> /") (lambda () (interactive) (insert "λ")))
+(global-set-key (kbd "<f6> <") (lambda () (interactive) (insert "←")))
+(global-set-key (kbd "<f6> >") (lambda () (interactive) (insert "→")))
+(global-set-key (kbd "<f6> a") (lambda () (interactive) (insert "∀")))
+(global-set-key (kbd "<f6> e") (lambda () (interactive) (insert "∃")))
+(global-set-key (kbd "<f6> 0") (lambda () (interactive) (insert "∅")))
+
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -963,6 +987,7 @@ Magit and Ediff
 Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-emacs.html]]
 
 #+BEGIN_SRC emacs-lisp :comments off
+(comment
 (hcSection "Haskell")
 
 (hcRequire haskell-mode-autoloads
@@ -1038,6 +1063,7 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 
 ;;(hcRequire shm
 ;;  (add-hook 'haskell-mode-hook 'structured-haskell-mode))
+)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -1793,6 +1819,7 @@ java -server \
 ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
 ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+;;(set-frame-font "Source Code Pro-21" nil t)
 ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
   )
 
