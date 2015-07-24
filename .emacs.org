@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jul 18 (Sat) 21:16:06 by Harold Carr.
+;;;; Last Modified : 2015 Jul 23 (Thu) 17:26:20 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -54,18 +54,20 @@ by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
 
 #+NAME: hcsection
 #+BEGIN_SRC emacs-lisp :comments off
+(defvar *hcSectionEnabled* nil)
 (defvar *hcSection* "")
 
 (defun hcSection (title)
   "For debugging .emacs"
-  (setq *hcSection* title)
-  (message title))
+  (cond (*hcSectionEnabled*
+         (setq *hcSection* title)
+         (message title))))
 
-(setq debug-on-error t)
+(setq debug-on-error nil)
 
 (defmacro comment (&rest x) nil)
 
-;; TODO: replace with https://github.com/jwiegley/use-package
+;; see: https://github.com/jwiegley/use-package
 (defmacro hcRequire (name &rest body)
   `(if (require ',name nil t)
        (progn ,@body)
@@ -222,6 +224,14 @@ Important (to me) directories.
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
   (add-to-list 'package-archives '("melpa"     . "http://melpa.org/packages/")  t)
   (package-initialize))
+
+(eval-and-compile
+  (defvar use-package-verbose t)
+  (hcRequire cl)
+  (hcRequire use-package)
+  (hcRequire bind-key))
+
+(require 'diminish nil t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -264,6 +274,13 @@ Important (to me) directories.
 ;; Why have extra do-nothing whitespace?
 (setq-default show-trailing-whitespace     t)
 (setq         default-indicate-empty-lines t)
+
+;; highlight text beyond nth column
+(use-package whitespace
+  :config
+  (setq whitespace-style '(face lines-tail))
+  (setq whitespace-line-column 100)
+  (global-whitespace-mode t))
 #+END_SRC
 
 ** Mode line
@@ -297,7 +314,8 @@ Use part of the path name for buffer name when visiting two different files with
 - [[http://emacswiki.org/emacs/uniquify]]
 
 #+BEGIN_SRC emacs-lisp :comments off
-(hcRequire uniquify
+(use-package uniquify
+  :config
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator ":"))
 #+END_SRC
@@ -316,13 +334,15 @@ I used to use =iswitchb-mode= for switching buffers, but find =ido-mode= to be b
 - [[http://www.emacswiki.org/emacs/IswitchBuffers]]
 
 #+BEGIN_SRC emacs-lisp :comments off
-(hcRequire ido
+(use-package ido
+  :config
   (ido-mode t)
   (setq ido-enable-flex-matching t))
 
 ;; fall back if necessary
 (if (not (fboundp 'ido-mode))
-  (hcRequire iswitchb
+  (use-package iswitchb
+    :config
     (iswitchb-mode t)))
 #+END_SRC
 
@@ -495,7 +515,9 @@ emacsclient -e '(client-save-kill-emacs)'
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "ECB")
 
-(hcRequire ecb
+(use-package ecb
+  :defer t
+  :config
   (setq ecb-options-version "2.40")
   (setq ecb-source-path     '(("/" "/")))
   (setq ecb-tip-of-the-day  nil)
@@ -568,7 +590,9 @@ For extending it to work with Maven:
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Compilation")
 
-(hcRequire compile
+(use-package compile
+  :defer t
+  :config
   (add-to-list 'compilation-error-regexp-alist 'maven)
   (add-to-list 'compilation-error-regexp-alist-alist
                '(maven "\\[ERROR\\] \\(.+?\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\].*"
@@ -754,11 +778,14 @@ For extending it to work with Maven:
       (org-display-inline-images)
     (error nil)))
 
-(hcRequire org (hcOrgMode))
+(use-package org
+  :defer t
+  :config
+  (hcOrgMode))
 
-(hcRequire ox-md) ;; load this so menu options show up
+(use-package ox-md :defer t) ;; load this so menu options show up
 
-(hcRequire ox-beamer) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
+(use-package ox-beamer :defer t) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -782,8 +809,11 @@ For extending it to work with Maven:
   (setq org-mobile-inbox-for-pull      (concat org-directory "/from-mobile.org"))         ; caputre notes/flags appended here
 )
 
-(hcRequire async
-  (hcRequire org
+(use-package async
+  :defer t
+  :config
+  (use-package org
+    :config
     (hcOrgMobile)))
 
 ;; https://github.com/jwiegley/dot-emacs/blob/master/dot-org.el
@@ -842,7 +872,7 @@ For extending it to work with Maven:
   ;(if (file-exists-p diary-file)
   ;    (calendar))
   ;; Customize appt.el
-  ;;(hcRequire appt)
+  ;;(use-package appt :defer t)
   (cond (nil
 	 ;; This seems to cause emacs to crash on nt
 	 ;; and does not exist in xemacs
@@ -852,7 +882,7 @@ For extending it to work with Maven:
 	 (let ((diary-display-hook 'ignore))
 	   (diary)))))
 
-(hcRequire calendar (hcCalendar))
+(use-package calendar :defer t :config (hcCalendar))
 #+END_SRC
 
 ** Calendar Framework
@@ -862,7 +892,7 @@ For extending it to work with Maven:
 #+NAME: calendar
 #+BEGIN_SRC emacs-lisp :comments off
 ;; M-x cfw:open-diary-calendar
-(hcRequire calfw-cal)
+(use-package calfw-cal :defer t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -873,8 +903,8 @@ For extending it to work with Maven:
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Line Numbers")
 
-(hcRequire linum
-;;  (setq global-linum-mode t) ;; always on
+(use-package linum :defer t
+;;  :config (setq global-linum-mode t) ;; always on
 )
 #+END_SRC
 
@@ -892,7 +922,7 @@ For extending it to work with Maven:
 ; TODO : it doesn't get redefined below because hcWin32P is false
 ; because the window-system is x
 ;(defun user-full-name () "Harold Carr")
-(hcRequire hcTimestamp)
+(use-package hcTimestamp :defer t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -934,7 +964,7 @@ Magit and Ediff
 (hcSection "Version Control and Magit")
 
 (hcSection "git")
-(hcRequire magit)
+(use-package magit)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -946,7 +976,9 @@ Magit and Ediff
 (comment
 (hcSection "w3m")
 
-(hcRequire w3m
+(use-package w3m
+  :defer t
+  :config
   (setq w3m-mode-map (make-sparse-keymap))
 
   (define-key w3m-mode-map (kbd "RET")       'w3m-view-this-url)
@@ -966,7 +998,9 @@ Magit and Ediff
 )
 
 ;; C-c C-d to prompt for package to browse
-(hcRequire w3m-haddock
+(use-package w3m-haddock
+  :defer t
+  :config
   (add-hook 'w3m-display-hook 'w3m-haddock-display)
   (setq haskell-w3m-haddock-dirs '("~/Library/Haskell/doc/"
                                    "~/CABAL-SANDBOXES/Beginning_Haskell/share/doc/"
@@ -990,7 +1024,9 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 (comment
 (hcSection "Haskell")
 
-(hcRequire haskell-mode-autoloads
+(use-package haskell-mode-autoloads
+  :defer t
+  :config
   (speedbar-add-supported-extension ".hs") ; chris done
 
   (autoload 'ghc-init "ghc" nil t)
@@ -1061,8 +1097,9 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
   ;;(add-hook 'haskell-mode-hook (lambda () (auto-complete-mode 1)))
 )
 
-;;(hcRequire shm
-;;  (add-hook 'haskell-mode-hook 'structured-haskell-mode))
+;;(use-package shm
+;;  :defer t
+;;  :config (add-hook 'haskell-mode-hook 'structured-haskell-mode))
 )
 #+END_SRC
 
@@ -1075,7 +1112,9 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 
 (add-to-list 'load-path (concat (hcEmacsDir) "/ProofGeneral/generic"))
 
-(hcRequire proof-site
+(use-package proof-site
+  :defer t
+  :config
   (setq coq-prog-name
         (cond ((hcWin32P) "/cygdrive/c/Program Files/Coq/bin/coqtop.exe")
               (t          ;"/Applications/CoqIdE_8.3pl5.app/Contents/Resources/bin/coqtop"
@@ -1200,14 +1239,14 @@ Be sure the sdedit program is up and running as a service.
 ;; m      : send an e-mail to a contact;
 ;; s      : new search;
 ;; q      : quit.
-(hcRequire google-contacts)
+(use-package google-contacts :defer t)
 
 ;; integrate directly Google Contacts into Gnus;
-;; (hcRequire google-contacts-gnus)
+;; (use-package google-contacts-gnus :defer t)
 ;; Then use ; to go to contact info while reading an e-mail.
 
 ;; integrate directly Google Contacts into message-mode;
-;; (hcRequire google-contacts-message)
+;; (use-package google-contacts-message :defer t)
 ;; Then use TAB to go to complete e-mail addresses in the header fields.
 #+END_SRC
 
@@ -1260,7 +1299,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Google Maps")
-(hcRequire google-maps)
+(use-package google-maps :defer t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -1270,7 +1309,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Twitter")
-(hcRequire twittering-mode)
+(use-package twittering-mode :defer t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -1278,7 +1317,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Misc")
-(hcRequire httpcode)
+(use-package httpcode :defer t)
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -1395,10 +1434,11 @@ NOTE: home set via calendar-latitude/calendar-longitude
   (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
 
 ;; M-x google-set-c-style
-(hcRequire google-c-style)
+(use-package google-c-style)
 
 ;; Make java mode support Java 1.5 annotations.
-(hcRequire java-mode-indent-annotations
+(use-package java-mode-indent-annotations
+  :config
   (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
   (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
 
@@ -1433,7 +1473,9 @@ NOTE: home set via calendar-latitude/calendar-longitude
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Scala")
 
-(hcRequire scala-mode2
+(use-package scala-mode2
+  :defer t
+  :config
   (setq scala-indent:step 4))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1469,7 +1511,9 @@ NOTE: home set via calendar-latitude/calendar-longitude
       (indent-region start-pos (point))
       (cider-repl-return))))
 
-(hcRequire cider-mode
+(use-package cider-mode
+  :defer t
+  :config
   (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-and-eval-in-repl-no-switch))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1516,10 +1560,10 @@ java -server \
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcRequire hcRunCommand)
+(use-package hcRunCommand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcRequire hcPomCommand)
+(use-package hcPomCommand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcRunCommand clisp hcClispCmd)

@@ -3,6 +3,7 @@
 .emacs.d/
 .emacs.html
 .emacs.org-example
+.emacs-HASKELL-PROBLEM
 .newsrc
 .newsrc-save
 .newsrc.eld
@@ -15,4 +16,5 @@ emacsconf.org
 java-mode-indent-annotations.el
 orgmode-compact-8-2-3c.pdf
 orgmode-complete-8-2-3c.pdf
+unicode.txt
 utilities/
