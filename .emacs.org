@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Jul 23 (Thu) 17:26:20 by Harold Carr.
+;;;; Last Modified : 2015 Aug 06 (Thu) 20:03:59 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -1021,13 +1021,10 @@ Magit and Ediff
 Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-emacs.html]]
 
 #+BEGIN_SRC emacs-lisp :comments off
-(comment
 (hcSection "Haskell")
 
-(use-package haskell-mode-autoloads
-  :defer t
-  :config
-  (speedbar-add-supported-extension ".hs") ; chris done
+(hcRequire haskell-mode
+  ;;(speedbar-add-supported-extension ".hs") ; chris done
 
   (autoload 'ghc-init "ghc" nil t)
   (add-hook 'haskell-mode-hook (lambda () (ghc-init) (flymake-mode)))
@@ -1042,7 +1039,7 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
   (setq haskell-process-auto-import-loaded-modules t) ;; Chris Done
   (setq haskell-process-log t)
   (setq haskell-process-path-cabal "/Users/carr/Library/Haskell/bin/cabal")
-  (setq haskell-process-path-ghci "/Users/carr/Library/Haskell/bin/ghci-ng")
+  (setq haskell-process-path-ghci "stack ghci")
   (setq haskell-process-suggest-remove-import-lines t) ;; Chris Done
   (setq haskell-process-type 'ghci)
 
@@ -1100,7 +1097,6 @@ Haskell setup courtesy [[http://tim.dysinger.net/posts/2014-02-18-haskell-with-e
 ;;(use-package shm
 ;;  :defer t
 ;;  :config (add-hook 'haskell-mode-hook 'structured-haskell-mode))
-)
 #+END_SRC
 
 ------------------------------------------------------------------------------
