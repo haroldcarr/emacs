@@ -220,9 +220,10 @@ Important (to me) directories.
   ;; TODO: Other code uses .emacs.d too.
   ;;       For now I have a symlink from ~/.emacs.d to here.
   ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
-  (add-to-list 'package-archives '("org"       . "http://orgmode.org/elpa/")             ) ;; put at front
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-  (add-to-list 'package-archives '("melpa"     . "http://melpa.org/packages/")  t)
+  (add-to-list 'package-archives '("org"          . "http://orgmode.org/elpa/")             ) ;; put at front
+  (add-to-list 'package-archives '("marmalade"    . "http://marmalade-repo.org/packages/") t)
+  (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")   t)
+  (add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/")          t) ;; last
   (package-initialize))
 
 (eval-and-compile
@@ -1508,9 +1509,15 @@ NOTE: home set via calendar-latitude/calendar-longitude
       (cider-repl-return))))
 
 (use-package cider-mode
-  :defer t
+  :defer nil ;; HC so cider can find 'clojure-project-dir'
+  :pin melpa-stable
   :config
   (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-and-eval-in-repl-no-switch))
+
+(use-package cider
+  :defer t
+  :pin melpa-stable)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; SLIME setup:
