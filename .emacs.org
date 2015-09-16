@@ -545,11 +545,11 @@ emacsclient -e '(client-save-kill-emacs)'
 (defun hcTagsCreate (dir-name &optional tags-dir-path-filename)
   "Create tags file."
   (interactive "DDirectory: ")
-  ;; ctags from brew
+  ;; ctags via nix
   (let* ((dir (directory-file-name dir-name))
          (ctags-filename (if (null tags-dir-path-filename) (concat dir "/TAGS") tags-dir-path-filename)))
     (shell-command
-     (format "/usr/local/bin/ctags -f %s -e -R %s" ctags-filename dir))))
+     (format "ctags -f %s -e -R %s" ctags-filename dir))))
 
 (defun        hcTagsDir       (x)    (concat (hcEsync)        "/TAGS/" x))
 (hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/src/"))
