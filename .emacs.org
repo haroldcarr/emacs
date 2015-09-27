@@ -2,7 +2,7 @@
 #+AUTHOR:      Harold Carr
 #+DESCRIPTION: literate version of my .emacs file.
 #+PROPERTY:    results silent
-#+PROPERTY:    tangle .emacs
+#+PROPERTY:    tangle .emacs.vanilla
 #+PROPERTY:    eval no-export
 #+PROPERTY:    comments org
 #+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
