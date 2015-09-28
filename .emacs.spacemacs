@@ -8,19 +8,21 @@
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
-   ;; List of configuration layers to load. If it is the symbol `all' instead
-   ;; of a list then all discovered layers will be installed.
+   ;; List of configuration layers to load.
+   ;; If symbol `all' instead of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
      ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
+     ;; Uncomment/add layer names
+     ;; - press <SPC f e R> (Vim style) or
+     ;; - <M-m f e R> (Emacs style)
+     ;; to install them.
      ;; ----------------------------------------------------------------
      auto-completion   ;; i.e., company-mode
      ;; better-defaults
      emacs-lisp
      git
+     haskell
      ;; markdown
      ;; org
      ;; (shell :variables
@@ -30,12 +32,11 @@
      version-control
      hc-config
      )
-   ;; List of additional packages that will be installed without being
-   ;; wrapped in a layer. If you need some configuration for these
-   ;; packages then consider to create a layer, you can also put the
-   ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
-   ;; A list of packages and/or extensions that will not be install and loaded.
+   ;; packages that will be installed without being wrapped in a layer.
+   ;; If configuration is needed, consider creating a layer.
+   ;; Configuration can also be put in `dotspacemacs/user-config'.
+   dotspacemacs-additional-packages '(google-c-style)
+   ;; packages/extensions that will not be installed/loaded.
    dotspacemacs-excluded-packages '(evil-escape)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
@@ -67,19 +68,21 @@ before layers configuration."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(solarized-light
+   dotspacemacs-themes '(tsdh-dark
+                         zenburn
+                         monokai
+                         solarized-light
                          solarized-dark
                          spacemacs-light
                          spacemacs-dark
                          leuven
-                         monokai
-                         zenburn)
+                         )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -157,10 +160,164 @@ before layers configuration."
   ;; User initialization goes here
   )
 
-(defun dotspacemacs/config ()
+(defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; HC
+
+  (defvar *hcSectionEnabled* nil)
+  (defvar *hcSection* "")
+
+  (defun hcSection (title)
+    "For debugging .emacs"
+    (cond (*hcSectionEnabled*
+           (setq *hcSection* title)
+           (message title))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Beans")
+
+  (defmacro hcDefineBean (name &rest body)
+    (let ((var-name (intern (concat "*" (format "%s" name) "*"))))
+      `(progn
+         (defvar ,var-name ,@body)
+         (defun ,name () ,var-name))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Predicates")
+
+  (defun hcIsVersionP    (x) (string-match x (emacs-version)))
+  (defun hcUnameContains (x) (string-match x (shell-command-to-string "uname -a")))
+
+
+  (defun hcOracleLinuxP  ()  (or (and (hcIsVersionP "redhat-linux")
+                                      (hcIsVersionP "us.oracle.com"))
+                                 (and (hcIsVersionP "x86_64-unknown-linux-gnu")
+                                      (hcIsVersionP "2013-03-26 on adc2100420"))
+                                 (and (hcUnameContains "Linux")
+                                      (or (hcUnameContains "slcn19cn15ib")
+                                          (hcUnameContains "slcn19cn16ib")
+                                          (hcUnameContains "adc00phv")))))
+  (defun hcDarwinP       ()  (hcIsVersionP "darwin"))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Top level misc stuff")
+
+  (setq confirm-kill-emacs
+        (lambda (e)
+          (y-or-n-p-with-timeout
+           "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
+
+  ;; Do NOT use tabs for indenting
+  (setq-default indent-tabs-mode nil)
+
+  ;; Why have extra do-nothing whitespace?
+  (setq-default show-trailing-whitespace     t)
+  (setq         default-indicate-empty-lines t)
+
+  ;; highlight text beyond nth column
+  (use-package whitespace
+    :config
+    (setq whitespace-style '(face lines-tail))
+    (setq whitespace-line-column 100)
+    (global-whitespace-mode t))
+
+  (setq frame-title-format
+        '((:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name))
+                   "%b"))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Key Bindings")
+  ;; disable spacemacs escape treatment (make it like regular emacs)
+  (define-key evil-emacs-state-map [escape] nil)
+  ;; C-x 5 o other-frame   "frame.el"
+  ;; C-x   o other-window "window.el"
+  (global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
+  (global-set-key "\M-g" 'goto-line)
+  ;; set-mark-command is \C-space
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Shell Commands")
+
+  (defun hcShExecCmd (name &rest args)
+    (shell-command-to-string
+     (concat (if (symbolp name) (symbol-name name) name)
+             " "
+             (apply #'concat
+                    (mapcar #'(lambda (arg) (format "%s " arg))
+                            args)))))
+
+  (defmacro hcShDefCmd (name args)
+    `(defun ,name ,args
+       (apply #'hcShExecCmd (list ',name ,@args))))
+
+  (defmacro hcShDefCmdMemo (name)
+    (let ((varName (intern (format "*%s*" name))))
+      `(progn
+         (defvar ,varName nil)
+         (defun ,name ()
+           (cond (,varName)
+                 (t (setq ,varName (hcShExecCmd ',name))))))))
+
+  (hcSection "Locations")
+
+  (defun hcLocation (name) (hcShExecCmd 'hcLocation name))
+  (hcDefineBean hcEmacsDir     (hcLocation 'emacs))
+
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Bookmarks")
+
+  (setq bookmark-save-flag 1)
+  (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Appearance")
+
+  (defun hc-h (n) (set-frame-height (selected-frame) n))
+  (defun hc-w (n) (set-frame-width (selected-frame) n))
+
+  (defun hcGreyBackground ()
+    (interactive)
+    (set-face-background 'default "grey")
+    )
+
+  (defun hcAppearance ()
+    (interactive)
+    (hcGreyBackground)
+    ;; (hcRightScrollBar)
+    )
+
+  (defun hcMacFont ()
+    (interactive)
+    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
+    (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+    ;;(set-frame-font "Source Code Pro-21" nil t)
+    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
+    )
+
+  (defun hcMacWidthHeight ()
+    (interactive)
+    (hc-w 100)
+    (hc-h 27)
+    )
+
+  (defun hcMacFW ()
+    (interactive)
+    (hcMacWidthHeight)
+    (hcMacFont)
+    )
+
+  (defun hcMacAppearance ()
+    (interactive)
+    (hcAppearance)
+    (hcMacFont)
+    (hcMacWidthHeight)
+    )
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
