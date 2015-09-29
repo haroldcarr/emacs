@@ -2,6 +2,7 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
+;; ------------------------------------------------------------------------------
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration."
   (setq-default
@@ -24,7 +25,7 @@
      git
      haskell
      ;; markdown
-     ;; org
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -43,6 +44,7 @@
    ;; the list `dotspacemacs-configuration-layers'
    dotspacemacs-delete-orphan-packages t))
 
+;; ------------------------------------------------------------------------------
 (defun dotspacemacs/init ()
   "Initialization function.
 This function is called at the very startup of Spacemacs initialization
@@ -79,10 +81,10 @@ before layers configuration."
                          )
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
-   ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
-   ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
-                               :size 18
+   ;; Default font.
+   ;; `powerline-scale' : mode-line size to make separators look better.
+   dotspacemacs-default-font '("Monaco"     ;; "Source Code Pro"
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -160,6 +162,7 @@ before layers configuration."
   ;; User initialization goes here
   )
 
+;; ------------------------------------------------------------------------------
 (defun dotspacemacs/user-config ()
   "Configuration function.
  This function is called at the very end of Spacemacs initialization after
@@ -191,8 +194,6 @@ layers configuration."
 
   (defun hcIsVersionP    (x) (string-match x (emacs-version)))
   (defun hcUnameContains (x) (string-match x (shell-command-to-string "uname -a")))
-
-
   (defun hcOracleLinuxP  ()  (or (and (hcIsVersionP "redhat-linux")
                                       (hcIsVersionP "us.oracle.com"))
                                  (and (hcIsVersionP "x86_64-unknown-linux-gnu")
@@ -210,6 +211,11 @@ layers configuration."
         (lambda (e)
           (y-or-n-p-with-timeout
            "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
+
+  ;; don't ask when killing shell buffer (and other processes)
+  (setq kill-buffer-query-functions
+        (remq 'process-kill-buffer-query-function
+              kill-buffer-query-functions))
 
   ;; Do NOT use tabs for indenting
   (setq-default indent-tabs-mode nil)
@@ -232,6 +238,7 @@ layers configuration."
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Key Bindings")
+
   ;; disable spacemacs escape treatment (make it like regular emacs)
   (define-key evil-emacs-state-map [escape] nil)
   ;; C-x 5 o other-frame   "frame.el"
@@ -263,16 +270,45 @@ layers configuration."
            (cond (,varName)
                  (t (setq ,varName (hcShExecCmd ',name))))))))
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Locations")
 
   (defun hcLocation (name) (hcShExecCmd 'hcLocation name))
   (hcDefineBean hcEmacsDir     (hcLocation 'emacs))
+  (add-to-list 'load-path      (hcEmacsDir))
+  (hcDefineBean hcEsync        (hcLocation  'esync))
+  (hcDefineBean hcFinance      (hcLocation  'finance))
+  (hcDefineBean hcFsync        (hcLocation  'fsync))
+  (hcDefineBean hcFtptmp       (hcLocation  'ftptmp))
+  (hcDefineBean hcHome         (hcLocation  'home))
+  (hcDefineBean hcM2Repository (hcShExecCmd 'hcM2Repository))
+  (hcDefineBean hcRpt          (hcLocation  'rpt))
+  (hcDefineBean hcSync         (hcLocation  'sync))
+  (hcDefineBean hcUlhcd        (hcLocation  'ulhcd))
+  (hcDefineBean hcWs           (hcLocation  'ws))
 
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "org-mode")
+
+  (use-package org :config (hcOrgMode))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Timestamp")
+
+  (load-library "hcTimestamp")
+  
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Bookmarks")
 
   (setq bookmark-save-flag 1)
   (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Java")
+
+  (defvar *hcJavaMode* 'google)
+  (add-hook 'java-mode-hook
+            (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")
@@ -318,7 +354,172 @@ layers configuration."
     (hcMacFont)
     (hcMacWidthHeight)
     )
+  )
+
+;; ------------------------------------------------------------------------------
+(defun hcOrgMode ()
+  (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
+  ;; So I can visit script links in org files (instead of execute them)
+  ;; I link to the real file: ln -s <some-script> <some-script>.hcScript
+  (add-to-list 'org-file-apps '("\\.hcScript\\'" . emacs))
+
+  ;; "Standard" key bindings (but not provided)
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cb" 'org-iswitchb)
+
+  ;;;
+  ;;; Org Misc
+  ;;;
+
+  ;; If you do not like transient-mark-mode, you can create an active
+  ;; region by using the mouse to select a region, or pressing C-<SPC>
+  ;; twice before moving the cursor.
+  (transient-mark-mode 1)
+
+  ;;(setq org-hide-leading-stars t)
+
+  ;; show the whole file when first visited
+  (setq org-startup-folded nil)
+
+  ;; don't fold when yanking
+  (setq org-yank-folded-subtrees nil)
+
+  ;; Org buffers only
+  ;;(add-hook 'org-mode-hook 'turn-on-font-lock)
+
+  ;; The default is 3
+  (setq org-export-headline-levels 6)
+
+  ;; Do not put the validate link at bottom of page
+  (setq org-export-html-validation-link nil) ; I think this is obsolete.
+  (setq org-html-postamble-format nil)       ; I think this is the replacement - does not seem to work.
+
+  ;; Do not put timestamp at bottom of page
+  (setq org-export-time-stamp-file nil)
+
+  ;; Do not put author at bottom of page
+  (setq org-export-author-info nil)
+
+  ;; Do not put in validation link in HTML export
+  (setq org-html-validation-link nil)
+
+  ;; let ME control org-mode font colors, etc.
+  (setq org-export-htmlize-output-type 'css)
+
+  ;;;
+  ;;; Agenda
+  ;;;
+
+  ;; Include entries from the emacs diary into =org-mode='s agenda.
+  (setq org-agenda-include-diary t)
+
+  ;; org-mode manages the =org-agenda-files= variable automatically using
+  ;; C-c [ and C-c ] to add/remove files respectively.
+  ;; Instead, disable those keys and replace with an explicit directory list.
+  ;; Any org files in those directories are automatically included in the agenda.
+  (setq org-agenda-files
+        (list
+         (concat (hcFsync)    "/TODO-ME.org")
+         (concat (hcFinance)  "/01-TODO.org")
+         (concat (hcRpt)      "/TODO-WORK.org")
+         ;; (hcRpt)
+         ;; (concat (hcRpt)   "/.past/2014")
+         ;; (concat (hcRpt)   "/.past/2013")
+         ;; (concat (hcRpt)   "/.past/2012")
+         ;; (concat (hcRpt)   "/.past/2011")
+         ;; "/tmp/google.org"
+         ))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (org-defkey org-mode-map "\C-c["    'undefined)
+              (org-defkey org-mode-map "\C-c]"    'undefined)))
+
+  (setq org-highest-priority ?A)
+  (setq org-lowest-priority ?E)
+  (setq org-default-priority ?E)
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "|" "DONE(d!/!)" "DELEGATED(D!/!)")
+          (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)" "SKIP" "PHONE")
+          (sequence "OPEN(O!)" "|" "CLOSED(C!)")
+          ))
+
+  (setq org-todo-keyword-faces
+        '(("TODO"       :foreground "yellow"         :weight bold)
+          ("NEXT"       :foreground "blue"           :weight bold)
+          ("STARTED"    :foreground "blue"           :weight bold)
+          ("DONE"       :foreground "forest green"   :weight bold)
+          ("DELEGATED"  :foreground "forest green"   :weight bold)
+
+          ("WAITING"    :foreground "white"          :weight bold)
+          ("SOMEDAY"    :foreground "orange"         :weight bold)
+          ("CANCELLED"  :foreground "forest green"   :weight bold)
+          ("SKIP"       :foreground "forest green"   :weight bold)
+          ("PHONE"      :foreground "forest green"   :weight bold)
+
+          ("OPEN"       :foreground "blue"           :weight bold)
+          ("CLOSED"     :foreground "forest green"   :weight bold)
+          ))
+
+  ;;;
+  ;;; Literate programming
+  ;;;
+
+  ;; Important: set this or it will remove space after editing code: C-c,C-c,'
+  ;; The default is 2.
+  (setq org-edit-src-content-indentation 4)
+
+  ;; When exporting code I want it to look like what I wrote.
+  (setq org-src-preserve-indentation t)
+
+  ;; When editing code, use the current window.
+  (setq org-src-window-setup (quote current-window))
+
+  ;;; see http://doc.norang.ca/org-mode.html
+  ;;; see http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html
+
+  ;; http://ditaa.org/ditaa/
+  ;; probably not needed since the jar comes with org-mode in contrib/scripts.
+  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
+
+  ;; http://plantuml.sourceforge.net/
+  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.7995.jar"))
+
+  (add-hook 'org-babel-after-execute-hook 'hc/display-inline-images 'append)
+
+  ;; Make babel results blocks lowercase
+  (setq org-babel-results-keyword "results")
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (dot        . t)
+     (ditaa      . t)
+     (gnuplot    . t)
+     (haskell    . t)
+     (latex      . t)
+     (plantuml   . t)
+     ))
+
+  ;; Do not prompt to confirm evaluation
+  ;; This may be dangerous - make sure you understand the consequences
+  ;; of setting this -- see the docstring for details
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Cache all babel results blocks by default
+  ;; For graphics generation, this is faster if nothing changes
+  (if (fboundp 'org-babel-default-header-args)
+      (setq org-babel-default-header-args
+            (cons '(:cache . "yes")
+                  (assq-delete-all :cache org-babel-default-header-args))))
 )
+
+(defun hc/display-inline-images ()
+  (condition-case nil
+      (org-display-inline-images)
+    (error nil)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

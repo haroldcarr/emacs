@@ -3,11 +3,14 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (setq hc-config-packages
-      '(emacs-eclim gud java-mode))
+      '(emacs-eclim
+        gud
+        ))
 
 ;; List of packages to exclude.
 (setq hc-config-excluded-packages '())
 
+;; ------------------------------------------------------------------------------
 (defun hc-config/init-emacs-eclim ()
   "eclim"
   (use-package eclim
@@ -70,18 +73,3 @@
       ;;(setq haskell-process-path-ghci "stack")
       ;;(setq haskell-process-type 'stack-ghci)
       )))
-
-(defun hc-config/init-java-mode ()
-  (defvar *hcJavaMode* 'google)
-  (add-hook 'java-mode-hook
-            (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style)))))
-
-;; For each package, define a function hc-config/init-<package-name>
-;;
-;; (defun hc-config/init-my-package ()
-;;   "Initialize my package"
-;;   )
-;;
-;; Often the body of an initialize function uses `use-package'
-;; For more info on `use-package', see readme:
-;; https://github.com/jwiegley/use-package
