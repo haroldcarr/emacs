@@ -250,6 +250,9 @@ layers configuration. You are free to put any user code."
         (remq 'process-kill-buffer-query-function
               kill-buffer-query-functions))
 
+  ;; just use regular undo
+  (global-undo-tree-mode -1)
+
   ;; Do NOT use tabs for indenting
   (setq-default indent-tabs-mode nil)
 
