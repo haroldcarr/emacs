@@ -27,7 +27,7 @@ values."
      ;; better-defaults
      emacs-lisp
      git
-     haskell
+     ;; haskell
      ;; markdown
      org
      ;; (shell :variables
@@ -336,7 +336,7 @@ layers configuration. You are free to put any user code."
   (hcSection "Timestamp")
 
   (load-library "hcTimestamp")
-  
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Bookmarks")
 

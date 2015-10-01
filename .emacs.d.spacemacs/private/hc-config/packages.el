@@ -62,9 +62,6 @@
       (define-key eclim-mode-map (kbd "C-c C-a C-c") 'gud-cont)
       (define-key eclim-mode-map (kbd "C-c C-a C-r") 'gud-run)
 
-      ;; misc stuff
-      ;;(global-set-key (kbd "C-s") 'helm-occur)
-
       ;; Haskell
       ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
       ;;(setq haskell-interactive-popup-errors nil)
