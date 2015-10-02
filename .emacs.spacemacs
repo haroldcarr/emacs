@@ -33,7 +33,8 @@ values."
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
-     syntax-checking
+     syntax-checking  ;; i.e., flycheck
+     themes-megapack
      version-control
      hc-config
      )
@@ -79,9 +80,12 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(tsdh-dark
-                         zenburn
+   dotspacemacs-themes '(zenburn
+                         tsdh-dark
+                         gruvbox
+                         tango-dark
                          monokai
+                         sunny-day
                          solarized-light
                          solarized-dark
                          spacemacs-light
@@ -205,7 +209,7 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; HC
 
-  (defvar *hcSectionEnabled* nil)
+  (defvar *hcSectionEnabled* t)
   (defvar *hcSection* "")
 
   (defun hcSection (title)
@@ -357,45 +361,14 @@ layers configuration. You are free to put any user code."
   (defun hc-h (n) (set-frame-height (selected-frame) n))
   (defun hc-w (n) (set-frame-width (selected-frame) n))
 
-  (defun hcGreyBackground ()
-    (interactive)
-    (set-face-background 'default "grey")
-    )
+  ;; WORKAROUND
+  ;; For some fonts, if size is specified > 16 then the first few lines of file do not show.
+  ;; So scale up this way.
+  (spacemacs/zoom-frm-in)
+  (spacemacs/zoom-frm-in)
 
-  (defun hcAppearance ()
-    (interactive)
-    (hcGreyBackground)
-    ;; (hcRightScrollBar)
-    )
-
-  (defun hcMacFont ()
-    (interactive)
-    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
-    (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
-    ;;(set-frame-font "Source Code Pro-21" nil t)
-    ;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
-    )
-
-  (defun hcMacWidthHeight ()
-    (interactive)
-    (hc-w 100)
-    (hc-h 27)
-    )
-
-  (defun hcMacFW ()
-    (interactive)
-    (hcMacWidthHeight)
-    (hcMacFont)
-    )
-
-  (defun hcMacAppearance ()
-    (interactive)
-    (hcAppearance)
-    (hcMacFont)
-    (hcMacWidthHeight)
-    )
-  )
+;; END OF user-config
+)
 
 ;; ------------------------------------------------------------------------------
 (defun hcOrgMode ()

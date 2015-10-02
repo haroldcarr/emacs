@@ -12,7 +12,6 @@
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-emacs-eclim ()
-  "eclim"
   (use-package eclim
     :config
     (progn
