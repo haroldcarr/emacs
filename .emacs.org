@@ -23,7 +23,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 - =tab= opens/close a particular section
 - Shift =tab= cycles between the outline and full text
 - Tangle it with:  =C-c C-v t=
-  - Creates:  =.emacs= in this directory (overwrites previous)
+  - Creates:  =.emacs.vanilla= in this directory (overwrites previous)
 #+END_COMMENT
 
 ------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Sep 15 (Tue) 19:07:46 by Harold Carr.
+;;;; Last Modified : 2015 Oct 01 (Thu) 18:18:34 by Harold Carr.
 ;;;;
 #+END_SRC
 
