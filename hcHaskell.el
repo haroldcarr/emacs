@@ -1,14 +1,17 @@
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Sep 15 (Tue) 20:30:15 by Harold Carr.
+;;;; Last Modified : 2015 Oct 01 (Thu) 17:42:58 by Harold Carr.
 ;;;;
 
 ;; Haskell setup courtesy [[http://ioctl.it/posts/2015-07-03-stack-flycheck.html]]
 
-(use-package flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+(use-package flycheck
+  :config
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
-(hcRequire haskell-mode
+(use-package haskell-mode
+  :config
+  (progn
 
 (flycheck-define-checker haskell-stack
   "A Haskell syntax and type checker using ghc.
@@ -82,7 +85,7 @@ See URL `http://www.haskell.org/ghc/'."
 
 (add-hook 'haskell-mode-hook 'haskell-mode-setup-hook)
 
-)
+))
 
 (provide 'hcHaskell)
 
