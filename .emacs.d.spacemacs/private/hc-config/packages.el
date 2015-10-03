@@ -5,6 +5,7 @@
 (setq hc-config-packages
       '(emacs-eclim
         gud
+        haskell-mode
         ))
 
 ;; List of packages to exclude.
@@ -69,3 +70,9 @@
       ;;(setq haskell-process-path-ghci "stack")
       ;;(setq haskell-process-type 'stack-ghci)
       )))
+
+;; ------------------------------------------------------------------------------
+(defun hc-config/init-haskell-mode ()
+  (use-package eclim
+    :config
+    (load-library "~/.sync/.esync/emacs/hcHaskell.el")))
