@@ -25,6 +25,7 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion   ;; i.e., company-mode
      ;; better-defaults
+     clojure
      emacs-lisp
      git
      ;; haskell
@@ -72,7 +73,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -209,7 +210,7 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; HC
 
-  (defvar *hcSectionEnabled* t)
+  (defvar *hcSectionEnabled* nil)
   (defvar *hcSection* "")
 
   (defun hcSection (title)
@@ -244,6 +245,8 @@ layers configuration. You are free to put any user code."
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Top level misc stuff")
+
+  (add-hook 'after-init-hook #'global-flycheck-mode)
 
   (setq confirm-kill-emacs
         (lambda (e)
@@ -354,6 +357,40 @@ layers configuration. You are free to put any user code."
   (defvar *hcJavaMode* 'google)
   (add-hook 'java-mode-hook
             (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "Clojure")
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; Cider/Clojure
+
+  ;; http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html
+
+  ;; modified from cider-interaction.el
+  (defun hc-cider-insert-in-repl (form)
+    "Insert FORM in the REPL buffer and switch to it.
+If EVAL is non-nil the form will also be evaluated."
+    (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
+      (setq form (replace-match "" t t form)))
+    (with-current-buffer (cider-current-connection)
+      (goto-char (point-max))
+      (let ((beg (point)))
+        (insert form)
+        (indent-region beg (point)))
+        (cider-repl-return)))
+
+  (defun hc-cider-insert-last-sexp-in-repl (&optional arg)
+    "Insert the expression preceding point in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+    (interactive "P")
+    (hc-cider-insert-in-repl (cider-last-sexp)))
+
+  (use-package cider-mode
+    :config
+    (progn
+      (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
+      (setq clojure-enable-fancify-symbols t)
+      ))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")
