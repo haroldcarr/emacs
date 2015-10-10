@@ -2,12 +2,68 @@
 #+AUTHOR:      Harold Carr
 #+DESCRIPTION: literate version of my .emacs file.
 #+PROPERTY:    results silent
-#+PROPERTY:    tangle hcVanilla.el
+#+PROPERTY:    tangle .emacs.vanilla
 #+PROPERTY:    eval no-export
 #+PROPERTY:    comments org
 #+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
 #+OPTIONS:     skip:nil author:nil email:nil creator:nil timestamp:nil
 #+INFOJS_OPT:  view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+
+------------------------------------------------------------------------------
+* SETUP
+
+;; (hcSection "Packages")
+
+;;- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
+;;- [[http://emacswiki.org/emacs/ELPA]]
+
+;; ELPA does not update the load path when new packages are installed.
+;; This will do that.
+
+#+NAME: setup
+#+BEGIN_SRC emacs-lisp :comments off
+(defun package-update-load-path ()
+  "Update the load path for newly installed packages."
+  (interactive)
+  (let ((package-dir (hcExpandFileName nil package-user-dir)))
+    (mapc (lambda (pkg)
+            (let ((stem (symbol-name (car pkg)))
+		  (version "")
+		  (first t)
+		  path)
+	      (mapc (lambda (num)
+		      (if first
+			  (setq first nil)
+			  (setq version (format "%s." version)))
+		      (setq version (format "%s%s" version num)))
+		    (aref (cdr pkg) 0))
+              (setq path (format "%s/%s-%s" package-dir stem version))
+              (add-to-list 'load-path path)))
+          package-alist)))
+
+(require 'package)
+;; TODO: Other code uses .emacs.d too.
+;;       For now I have a symlink from ~/.emacs.d to here.
+;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
+(add-to-list 'package-archives '("org"          . "http://orgmode.org/elpa/")             ) ;; put at front
+(add-to-list 'package-archives '("marmalade"    . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")   t)
+(add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/")          t) ;; last
+(package-initialize)
+
+(eval-and-compile
+  (defvar use-package-verbose t)
+  (require 'cl)
+  (require 'use-package)
+  (require 'bind-key))
+
+(require 'diminish nil t)
+
+(add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
+
+(require 'use-package)
+(require 'hcCommon)
+#+END_SRC
 
 ------------------------------------------------------------------------------
 * Top level misc
@@ -254,7 +310,7 @@ For extending it to work with Maven:
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Haskell")
 
-(use-package hcHaskell)
+(use-package hcInitHaskell)
 #+END_SRC
 
 ------------------------------------------------------------------------------

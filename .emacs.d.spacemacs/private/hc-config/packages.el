@@ -61,18 +61,10 @@
       (define-key eclim-mode-map (kbd "C-c C-a C-s") 'gud-step)
       (define-key eclim-mode-map (kbd "C-c C-a C-c") 'gud-cont)
       (define-key eclim-mode-map (kbd "C-c C-a C-r") 'gud-run)
-
-      ;; Haskell
-      ;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-      ;;(setq haskell-interactive-popup-errors nil)
-      ;;(setq haskell-indent-spaces 2)
-      ;;(setq haskell-process-args-ghci "ghci")
-      ;;(setq haskell-process-path-ghci "stack")
-      ;;(setq haskell-process-type 'stack-ghci)
       )))
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-haskell-mode ()
   (use-package eclim
     :config
-    (load-library "~/.sync/.esync/emacs/hcHaskell.el")))
+    (load-library (concat (hcEmacsDir) "/hcInitHaskell.el"))))

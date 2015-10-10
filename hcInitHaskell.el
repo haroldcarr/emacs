@@ -1,6 +1,6 @@
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Oct 01 (Thu) 17:42:58 by Harold Carr.
+;;;; Last Modified : 2015 Oct 10 (Sat) 11:35:17 by Harold Carr.
 ;;;;
 
 ;; Haskell setup courtesy [[http://ioctl.it/posts/2015-07-03-stack-flycheck.html]]
@@ -87,7 +87,7 @@ See URL `http://www.haskell.org/ghc/'."
 
 ))
 
-(provide 'hcHaskell)
+(provide 'hcInitHaskell)
 
 ;;; End of file.
 

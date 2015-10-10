@@ -200,6 +200,11 @@ values."
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
+
+  (defvar *hcEmacsDir* (shell-command-to-string "hcLocation emacs"))
+  (defun hcEmacsDir () *hcEmacsDir*)
+  (add-to-list 'load-path (hcEmacsDir))
+
   )
 
 (defun dotspacemacs/user-config ()
@@ -210,7 +215,6 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; HC
 
-  (add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
   (require 'hcCommon)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
