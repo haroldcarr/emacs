@@ -210,130 +210,22 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; HC
 
-  (defvar *hcSectionEnabled* nil)
-  (defvar *hcSection* "")
-
-  (defun hcSection (title)
-    "For debugging .emacs"
-    (cond (*hcSectionEnabled*
-           (setq *hcSection* title)
-           (message title))))
+  (add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
+  (require 'hcCommon)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (hcSection "Beans")
+  (hcSection "Key Bindings")
 
-  (defmacro hcDefineBean (name &rest body)
-    (let ((var-name (intern (concat "*" (format "%s" name) "*"))))
-      `(progn
-         (defvar ,var-name ,@body)
-         (defun ,name () ,var-name))))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (hcSection "Predicates")
-
-  (defun hcIsVersionP    (x) (string-match x (emacs-version)))
-  (defun hcUnameContains (x) (string-match x (shell-command-to-string "uname -a")))
-  (defun hcOracleLinuxP  ()  (or (and (hcIsVersionP "redhat-linux")
-                                      (hcIsVersionP "us.oracle.com"))
-                                 (and (hcIsVersionP "x86_64-unknown-linux-gnu")
-                                      (hcIsVersionP "2013-03-26 on adc2100420"))
-                                 (and (hcUnameContains "Linux")
-                                      (or (hcUnameContains "slcn19cn15ib")
-                                          (hcUnameContains "slcn19cn16ib")
-                                          (hcUnameContains "adc00phv")))))
-  (defun hcDarwinP       ()  (hcIsVersionP "darwin"))
+  ;; disable spacemacs escape treatment (make it like regular emacs)
+  (define-key evil-emacs-state-map [escape] nil)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Top level misc stuff")
 
   (add-hook 'after-init-hook #'global-flycheck-mode)
 
-  (setq confirm-kill-emacs
-        (lambda (e)
-          (y-or-n-p-with-timeout
-           "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
-
-  ;; don't ask when killing shell buffer (and other processes)
-  (setq kill-buffer-query-functions
-        (remq 'process-kill-buffer-query-function
-              kill-buffer-query-functions))
-
   ;; just use regular undo
   (global-undo-tree-mode -1)
-
-  ;; Do NOT use tabs for indenting
-  (setq-default indent-tabs-mode nil)
-
-  ;; Why have extra do-nothing whitespace?
-  (setq-default show-trailing-whitespace     t)
-  (setq         default-indicate-empty-lines t)
-
-  ;; highlight text beyond nth column
-  (use-package whitespace
-    :config
-    (setq whitespace-style '(face lines-tail))
-    (setq whitespace-line-column 100)
-    (global-whitespace-mode t))
-
-  (setq frame-title-format
-        '((:eval (if (buffer-file-name)
-                     (abbreviate-file-name (buffer-file-name))
-                   "%b"))))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (hcSection "Key Bindings")
-
-  ;; NOTE: set-mark-command is \C-space
-  ;; the following swaps the default - works better with the spacemacs set-mark-command binding
-  (global-set-key "\M-w" 'kill-region)
-  (global-set-key "\C-w" 'kill-ring-save)
-
-  ;; disable spacemacs escape treatment (make it like regular emacs)
-  (define-key evil-emacs-state-map [escape] nil)
-  ;; C-x 5 o other-frame   "frame.el"
-  ;; C-x   o other-window "window.el"
-  (global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
-  (global-set-key "\M-g" 'goto-line)
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (hcSection "Shell Commands")
-
-  (defun hcShExecCmd (name &rest args)
-    (shell-command-to-string
-     (concat (if (symbolp name) (symbol-name name) name)
-             " "
-             (apply #'concat
-                    (mapcar #'(lambda (arg) (format "%s " arg))
-                            args)))))
-
-  (defmacro hcShDefCmd (name args)
-    `(defun ,name ,args
-       (apply #'hcShExecCmd (list ',name ,@args))))
-
-  (defmacro hcShDefCmdMemo (name)
-    (let ((varName (intern (format "*%s*" name))))
-      `(progn
-         (defvar ,varName nil)
-         (defun ,name ()
-           (cond (,varName)
-                 (t (setq ,varName (hcShExecCmd ',name))))))))
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  (hcSection "Locations")
-
-  (defun hcLocation (name) (hcShExecCmd 'hcLocation name))
-  (hcDefineBean hcEmacsDir     (hcLocation 'emacs))
-  (add-to-list 'load-path      (hcEmacsDir))
-  (hcDefineBean hcEsync        (hcLocation  'esync))
-  (hcDefineBean hcFinance      (hcLocation  'finance))
-  (hcDefineBean hcFsync        (hcLocation  'fsync))
-  (hcDefineBean hcFtptmp       (hcLocation  'ftptmp))
-  (hcDefineBean hcHome         (hcLocation  'home))
-  (hcDefineBean hcM2Repository (hcShExecCmd 'hcM2Repository))
-  (hcDefineBean hcRpt          (hcLocation  'rpt))
-  (hcDefineBean hcSync         (hcLocation  'sync))
-  (hcDefineBean hcUlhcd        (hcLocation  'ulhcd))
-  (hcDefineBean hcWs           (hcLocation  'ws))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "org-mode")

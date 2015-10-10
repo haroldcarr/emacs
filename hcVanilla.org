@@ -2,238 +2,12 @@
 #+AUTHOR:      Harold Carr
 #+DESCRIPTION: literate version of my .emacs file.
 #+PROPERTY:    results silent
-#+PROPERTY:    tangle .emacs.vanilla
+#+PROPERTY:    tangle hcVanilla.el
 #+PROPERTY:    eval no-export
 #+PROPERTY:    comments org
 #+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
 #+OPTIONS:     skip:nil author:nil email:nil creator:nil timestamp:nil
 #+INFOJS_OPT:  view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
-
-Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
-
-- [[http://www.gnu.org/software/emacs/manual/index.html]]
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/index.html]]
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html#Init-File]]
-- [[http://emacswiki.org/]]
-
-#+BEGIN_COMMENT
--  Before you can build this on a new system, make sure that you put
-   the cursor over any of the above properties, and hit: =C-c C-c=
-
-- =tab= opens/close a particular section
-- Shift =tab= cycles between the outline and full text
-- Tangle it with:  =C-c C-v t=
-  - Creates:  =.emacs.vanilla= in this directory (overwrites previous)
-#+END_COMMENT
-
-------------------------------------------------------------------------------
-* Intro
-
-#+NAME: Note
-#+BEGIN_SRC emacs-lisp :comments off
-;;; | ====================================================== |
-;;; | DO NOT EDIT the generated *.el file.                   |
-;;; | It was generated from an org-mode "literate" version.  |
-;;; | ====================================================== |
-
-;;;;
-;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Oct 01 (Thu) 18:18:34 by Harold Carr.
-;;;;
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Sections
-
-Name each "section" in this .emacs file.
-
-Then, when an error occurs, you can tell what section it occurs in
-by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
-
-=debug-on-error= is finer grained, but this is still useful.
-
-#+NAME: hcsection
-#+BEGIN_SRC emacs-lisp :comments off
-(defvar *hcSectionEnabled* nil)
-(defvar *hcSection* "")
-
-(defun hcSection (title)
-  "For debugging .emacs"
-  (cond (*hcSectionEnabled*
-         (setq *hcSection* title)
-         (message title))))
-
-(setq debug-on-error nil)
-
-(defmacro comment (&rest x) nil)
-
-;; see: https://github.com/jwiegley/use-package
-(defmacro hcRequire (name &rest body)
-  `(if (require ',name nil t)
-       (progn ,@body)
-     (warn (concat (format "%s" ',name) " NOT FOUND"))))
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Beans
-
-Never access a variable directly.
-
-#+NAME: beans
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Beans")
-
-(defmacro hcDefineBean (name &rest body)
-  (let ((var-name (intern (concat "*" (format "%s" name) "*"))))
-    `(progn
-       (defvar ,var-name ,@body)
-       (defun ,name () ,var-name))))
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Predicates
-
-#+NAME: predicates
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Predicates")
-
-(defun hcIsVersionP    (x)(string-match x (emacs-version)))
-(defun hcUnameContains (x)(string-match x (shell-command-to-string "uname -a")))
-
-
-(defun hcLucidP        () (hcIsVersionP "Lucid"))
-(defun hcXEmacsP       () (hcIsVersionP "XEmacs"))
-(defun hcXP            () (equal window-system 'x))
-(defun hcOracleLinuxP  () (or (and (hcIsVersionP "redhat-linux")
-                                   (hcIsVersionP "us.oracle.com"))
-                              (and (hcIsVersionP "x86_64-unknown-linux-gnu")
-                                   (hcIsVersionP "2013-03-26 on adc2100420"))
-                              (and (hcUnameContains "Linux")
-                                   (or (hcUnameContains "slcn19cn15ib")
-                                       (hcUnameContains "slcn19cn16ib")
-                                       (hcUnameContains "adc00phv")))))
-(defun hcWin32P        () (or (equal window-system 'win32)
-			      (equal window-system 'w32)
-			      (equal window-system 'mswindows)
-                              (hcIsVersionP "cygwin")))
-(defun hcDarwinP       () (hcIsVersionP "darwin"))
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Executing shell commands
-
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Shell Commands")
-
-(defun hcShExecCmd (name &rest args)
-  (shell-command-to-string
-   (concat (if (symbolp name) (symbol-name name) name)
-           " "
-	   (apply #'concat
-		  (mapcar #'(lambda (arg) (format "%s " arg))
-			  args)))))
-
-(defmacro hcShDefCmd (name args)
-  `(defun ,name ,args
-     (apply #'hcShExecCmd (list ',name ,@args))))
-
-(defmacro hcShDefCmdMemo (name)
-  (let ((varName (intern (format "*%s*" name))))
-    `(progn
-       (defvar ,varName nil)
-       (defun ,name ()
-	 (cond (,varName)
-	       (t (setq ,varName (hcShExecCmd ',name))))))))
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Locations
-
-Important (to me) directories.
-
-#+NAME: locations
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Locations")
-
-(defun hcExpandFileName (forExternalProgramP path)
-  (if (hcWin32P)
-      (let ((result (shell-command-to-string (concat "cygpath " (if forExternalProgramP "-m " "-u " path)))))
-	;; Get rid of extra linefeed put in by shell-command-to-string.
-	(substring result 0 (- (length result) 1)))
-    (expand-file-name path)))
-
-(defun hcLocation (name) (hcShExecCmd 'hcLocation name))
-
-(hcDefineBean hcEmacsDir     (hcLocation 'emacs))
-(add-to-list 'load-path      (hcEmacsDir))
-
-(hcDefineBean hcEsync        (hcLocation  'esync))
-(hcDefineBean hcFinance      (hcLocation  'finance))
-(hcDefineBean hcFsync        (hcLocation  'fsync))
-(hcDefineBean hcFtptmp       (hcLocation  'ftptmp))
-(hcDefineBean hcHome         (hcLocation  'home))
-(hcDefineBean hcM2Repository (hcShExecCmd 'hcM2Repository))
-(hcDefineBean hcRpt          (hcLocation  'rpt))
-(hcDefineBean hcSync         (hcLocation  'sync))
-(hcDefineBean hcUlhcd        (hcLocation  'ulhcd))
-(hcDefineBean hcWs           (hcLocation  'ws))
-
-(hcShDefCmdMemo hcPathSep)
-(hcShDefCmd     hcLibClasspath ())
-(hcShDefCmd     hcFsToBs (string))
-(hcShDefCmd     hcLlavaMainClass ())
-#+END_SRC
-
-------------------------------------------------------------------------------
-* Packages
-
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
-- [[http://emacswiki.org/emacs/ELPA]]
-
-#+NAME: packages
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Packages")
-
-;; ELPA does not update the load path when new packages are installed.
-;; This will do that.
-
-(defun package-update-load-path ()
-  "Update the load path for newly installed packages."
-  (interactive)
-  (let ((package-dir (hcExpandFileName nil package-user-dir)))
-    (mapc (lambda (pkg)
-            (let ((stem (symbol-name (car pkg)))
-		  (version "")
-		  (first t)
-		  path)
-	      (mapc (lambda (num)
-		      (if first
-			  (setq first nil)
-			  (setq version (format "%s." version)))
-		      (setq version (format "%s%s" version num)))
-		    (aref (cdr pkg) 0))
-              (setq path (format "%s/%s-%s" package-dir stem version))
-              (add-to-list 'load-path path)))
-          package-alist)))
-
-(hcRequire package
-  ;; TODO: Other code uses .emacs.d too.
-  ;;       For now I have a symlink from ~/.emacs.d to here.
-  ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
-  (add-to-list 'package-archives '("org"          . "http://orgmode.org/elpa/")             ) ;; put at front
-  (add-to-list 'package-archives '("marmalade"    . "http://marmalade-repo.org/packages/") t)
-  (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")   t)
-  (add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/")          t) ;; last
-  (package-initialize))
-
-(eval-and-compile
-  (defvar use-package-verbose t)
-  (hcRequire cl)
-  (hcRequire use-package)
-  (hcRequire bind-key))
-
-(require 'diminish nil t)
-#+END_SRC
 
 ------------------------------------------------------------------------------
 * Top level misc
@@ -252,36 +26,11 @@ Important (to me) directories.
 ;; I have already seen it.
 (setq inhibit-startup-screen t)
 
-;; Ask before exit.
-(setq confirm-kill-emacs
-      (lambda (e)
-        (y-or-n-p-with-timeout
-         "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
-
-;; don't ask when killing shell buffer (and other processes)
-(setq kill-buffer-query-functions
-      (remq 'process-kill-buffer-query-function
-            kill-buffer-query-functions))
-
 ;; Do not want to destroy symbolic links.
 (setq backup-by-copying-when-linked t)
 
 ;; Enable ESC : to evaluate emacs Lisp commands.
 (put 'eval-expression 'disabled nil)
-
-;; Do NOT use tabs for indenting
-(setq-default indent-tabs-mode nil)
-
-;; Why have extra do-nothing whitespace?
-(setq-default show-trailing-whitespace     t)
-(setq         default-indicate-empty-lines t)
-
-;; highlight text beyond nth column
-(use-package whitespace
-  :config
-  (setq whitespace-style '(face lines-tail))
-  (setq whitespace-line-column 100)
-  (global-whitespace-mode t))
 #+END_SRC
 
 ** Mode line
@@ -294,17 +43,6 @@ Important (to me) directories.
 
 (line-number-mode)
 (column-number-mode)
-#+END_SRC
-
-** Display full filepath in title
-
-- [[http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/]]
-
-#+BEGIN_SRC emacs-lisp :comments off
-(setq frame-title-format
-      '((:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
 #+END_SRC
 
 ** Make buffer names unique
@@ -368,21 +106,6 @@ TODO
 ;; Somehow VNC is turning C-Y into M-v (I think)
 (if (hcOracleLinuxP)
   (global-set-key "\M-v" 'yank))
-
-; C-x 5 o other-frame "frame.el"
-; C-x o other-window "window.el"
-(global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
-
-;; (global-set-key "\C-h" 'backward-delete-char)
-(global-set-key "\M-g" 'goto-line)
-;; (global-set-key "\M-(" 'backward-sexp)
-;; (global-set-key "\M-)" 'forward-sexp)
-;; (global-set-key "\M-4" 'lower-frame)
-
-(autoload 'dabbrev "dabbrev" "dabbrev" t)
-(if (not (hcWin32P))
-  (global-set-key "\M-\ " 'dabbrev-expand)
-  (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
 
 (defvar *hcSetMarkCommandState* 'default)
 (defun hcSetMarkCommand ()
@@ -2100,9 +1823,10 @@ the value is \"\"."
 )
 #+END_SRC
 
-
 #+NAME: EOF
 #+BEGIN_SRC emacs-lisp :comments off
+(provide 'hcVanilla)
+
 ;;; End of file.
 #+END_SRC
 

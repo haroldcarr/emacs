@@ -1,0 +1,74 @@
+;;;;
+;;;; Created       : a long time ago ...        by Harold Carr.
+;;;; Last Modified : 2015 Oct 09 (Fri) 14:54:45 by Harold Carr.
+;;;;
+
+;; (hcSection "Packages")
+
+;;- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
+;;- [[http://emacswiki.org/emacs/ELPA]]
+
+;; ELPA does not update the load path when new packages are installed.
+;; This will do that.
+
+(defun package-update-load-path ()
+  "Update the load path for newly installed packages."
+  (interactive)
+  (let ((package-dir (hcExpandFileName nil package-user-dir)))
+    (mapc (lambda (pkg)
+            (let ((stem (symbol-name (car pkg)))
+		  (version "")
+		  (first t)
+		  path)
+	      (mapc (lambda (num)
+		      (if first
+			  (setq first nil)
+			  (setq version (format "%s." version)))
+		      (setq version (format "%s%s" version num)))
+		    (aref (cdr pkg) 0))
+              (setq path (format "%s/%s-%s" package-dir stem version))
+              (add-to-list 'load-path path)))
+          package-alist)))
+
+(require 'package)
+;; TODO: Other code uses .emacs.d too.
+;;       For now I have a symlink from ~/.emacs.d to here.
+;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
+(add-to-list 'package-archives '("org"          . "http://orgmode.org/elpa/")             ) ;; put at front
+(add-to-list 'package-archives '("marmalade"    . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")   t)
+(add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/")          t) ;; last
+(package-initialize)
+
+(eval-and-compile
+  (defvar use-package-verbose t)
+  (require 'cl)
+  (require 'use-package)
+  (require 'bind-key))
+
+(require 'diminish nil t)
+
+(print load-path)
+(add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
+(print load-path)
+(require 'use-package)
+(require 'hcCommon)
+(require 'hcVanilla)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("b06aaf5cefc4043ba018ca497a9414141341cb5a2152db84a9a80020d35644d1" default)))
+ '(load-home-init-file t t)
+ '(nxml-child-indent 4)
+ '(send-mail-function (quote smtpmail-send-it)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(proof-locked-face ((t (:background "#8d8d8d"))) t)
+ '(w3m-haddock-heading-face ((t (:background "selectedKnobColor")))))

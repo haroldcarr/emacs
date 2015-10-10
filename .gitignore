@@ -4,7 +4,7 @@
 .emacs.d.vanilla/
 .emacs.html
 .emacs.org-example
-.emacs.vanilla
+.emacs.spacemacs-update-steps.org
 .newsrc
 .newsrc-save
 .newsrc.eld
@@ -14,6 +14,9 @@ ProofGeneral-4.2/
 RCS/
 emacs-cheat-sheet.png
 emacsconf.org
+haskell-settings-vanilla.org
+hcCommon.el
+hcVanilla.el
 java-mode-indent-annotations.el
 javaone.org
 unicode.txt
