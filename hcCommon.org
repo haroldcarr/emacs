@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Oct 09 (Fri) 14:41:26 by Harold Carr.
+;;;; Last Modified : 2015 Oct 10 (Sat) 11:17:33 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -72,33 +72,6 @@ by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
   `(if (require ',name nil t)
        (progn ,@body)
      (warn (concat (format "%s" ',name) " NOT FOUND"))))
-#+END_SRC
-
-------------------------------------------------------------------------------
-
-* Key Bindings
-
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html#Key-Bindings]]
-- [[http://www.emacswiki.org/emacs/KeyBindingDiscussion]]
-
-#+NAME: keybindings
-#+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Key Bindings")
-
-;; NOTE: spacemacs set-mark-command is \C-space
-;; the following swaps the default - works better with the spacemacs set-mark-command binding
-(global-set-key "\M-w" 'kill-region)
-(global-set-key "\C-w" 'kill-ring-save)
-
-; C-x 5 o other-frame "frame.el"
-; C-x o other-window "window.el"
-(global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
-(global-set-key "\M-g" 'goto-line)
-
-(autoload 'dabbrev "dabbrev" "dabbrev" t)
-;;(if (not (hcWin32P))
-;;  (global-set-key "\M-\ " 'dabbrev-expand)
-;;  (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -144,6 +117,32 @@ Never access a variable directly.
 			      (equal window-system 'mswindows)
                               (hcIsVersionP "cygwin")))
 (defun hcDarwinP       () (hcIsVersionP "darwin"))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Key Bindings
+
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html#Key-Bindings]]
+- [[http://www.emacswiki.org/emacs/KeyBindingDiscussion]]
+
+#+NAME: keybindings
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Key Bindings")
+
+;; NOTE: set-mark-command is \C-space
+;; the following swaps the default kill/copy
+(global-set-key "\M-w" 'kill-region)
+(global-set-key "\C-w" 'kill-ring-save)
+
+; C-x 5 o other-frame "frame.el"
+; C-x o other-window "window.el"
+(global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
+(global-set-key "\M-g" 'goto-line)
+
+(autoload 'dabbrev "dabbrev" "dabbrev" t)
+(if (not (hcWin32P))
+  (global-set-key "\M-\ " 'dabbrev-expand)
+  (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
 #+END_SRC
 
 ------------------------------------------------------------------------------
@@ -255,9 +254,152 @@ Important (to me) directories.
                  "%b"))))
 #+END_SRC
 
-* END
+------------------------------------------------------------------------------
+* Registers and Bookmarks
+
+- Registers
+  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html#Registers]]
+  - [[http://emacswiki.org/emacs/Registers]]
+- Bookmarks (like registers, but persistent)
+  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html#Bookmarks]]
+  - [[http://emacswiki.org/emacs/BookMarks]]
+
+TODO
+- [[http://www.emacswiki.org/emacs-en/BookmarkPlus]]
+
+#+NAME: bookmarks
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Bookmarks")
+
+(setq bookmark-save-flag 1)
+(setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+#+END_SRC
 
 ------------------------------------------------------------------------------
+* Timestamp
+
+- [[ftp://202.5.194.21/SW_ebooks/EMAGAZINE/Writing_GNU_Emacs_Extensions.pdf]]
+  - starting on page 47
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Timestamp")
+
+; when running on samsun nc10; cygwin; startxwin; emacs; this is defined with
+; the computer name and my name and it screws up - so eval this by hand
+; TODO : it doesn't get redefined below because hcWin32P is false
+; because the window-system is x
+;(defun user-full-name () "Harold Carr")
+(use-package hcTimestamp)
+#+END_SRC
+
+------------------------------------------------------------------------------
+* org-mode
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "OrgMode")
+
+(use-package org
+  :defer t
+  :config
+  (progn (use-package hcInitOrgMode)
+         (hcOrgMode)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Tags
+
+- http://www.emacswiki.org/emacs/BuildTags
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags]]
+- [[http://emacswiki.org/emacs/EmacsTags]]
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Tags")
+
+; alternate way to create using etags
+; cd <...>
+; need a regex instead of "*" - also only files
+; find . -name "*" -print -o -name SCCS -name RCS -prune | .../bin/etags -
+
+(defun hcTagsCreate (dir-name &optional tags-dir-path-filename)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  ;; ctags via nix
+  (let* ((dir (directory-file-name dir-name))
+         (ctags-filename (if (null tags-dir-path-filename) (concat dir "/TAGS") tags-dir-path-filename)))
+    (shell-command
+     (format "ctags -f %s -e -R %s" ctags-filename dir))))
+
+(defun        hcTagsDir       (x)    (concat (hcEsync)        "/TAGS/" x))
+(hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/src/"))
+(hcDefineBean hcTagsCatalogDst       (hcTagsDir               "TAGS-CATALOG"))
+(hcDefineBean hcTagsJavaSrc          "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/src")
+(hcDefineBean hcTagsJavaDst          (hcTagsDir               "TAGS-JAVA"))
+(hcDefineBean hcTagsBuzzSrc          (concat (hcWs)           "/buzz-message-bus/src"))
+(hcDefineBean hcTagsBuzzDst          (hcTagsDir               "TAGS-BUZZ"))
+(hcDefineBean hcTagsMessageBusSrc    (concat (hcM2Repository) "/com/oracle/commons/fmw-commons/12.1.4-0-0-SNAPSHOT/sources/src"))
+(hcDefineBean hcTagsMessageBusDst    (hcTagsDir               "TAGS-MESSAGE-BUS"))
+(defun hcTagsCreateCatalog    () (interactive) (hcTagsCreate (hcTagsCatalogSrc)    (hcTagsCatalogDst)))
+(defun hcTagsCreateJava       () (interactive) (hcTagsCreate (hcTagsJavaSrc)       (hcTagsJavaDst)))
+(defun hcTagsCreateBuzz       () (interactive) (hcTagsCreate (hcTagsBuzzSrc)       (hcTagsBuzzDst)))
+(defun hcTagsCreateMessageBus () (interactive) (hcTagsCreate (hcTagsMessageBusSrc) (hcTagsMessageBusDst)))
+(defun hcTagsCreateAll ()
+  (interactive)
+  (hcTagsCreateCatalog)
+  (hcTagsCreateJava)
+  (hcTagsCreateBuzz)
+  (hcTagsCreateMessageBus))
+(defun hcVtc () (interactive) (visit-tags-table (hcTagsCatalogDst)))
+(defun hcVtj () (interactive) (visit-tags-table (hcTagsJavaDst)))
+(defun hcVtb () (interactive) (visit-tags-table (hcTagsBuzzDst)))
+(defun hcVtm () (interactive) (visit-tags-table (hcTagsMessageBusDst)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Version Control and Magit
+
+Version Control
+- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html#Version-Control]]
+- [[http://emacswiki.org/emacs/VersionControl]]
+GIT
+- [[http://magit.github.com/magit/magit.html]]
+- [[http://www.emacswiki.org/emacs/Magit]]
+- [[https://github.com/pidu/git-timemachine]]
+Magit and Ediff
+- [[http://dachary.org/?p=2893]]
+
+#+NAME: magit
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Version Control and Magit")
+
+(hcSection "git")
+(if (not (fboundp 'spacemacs-mode))
+    (use-package magit))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* Send diagram text to SDEDIT (UML sequence diagrams)
+
+- [[http://sdedit.sourceforge.net/]]
+
+When the current buffer contains SDEDIT diagram text, just do
+- =M-x sdedit=
+
+Be sure the sdedit program is up and running as a service.
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "SDEDIT")
+
+(defun hcSdedit ()
+  (interactive)
+  (let ((p (open-network-stream "*HC-SDEDIT*" "*HC-SDEDIT-CONNECTION*" "localhost" "60001")))
+    (process-send-string p (concat (buffer-name) "
+" (buffer-string)))
+    (delete-process p)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* END
+
 #+NAME: EOF
 #+BEGIN_SRC emacs-lisp :comments off
 (provide 'hcCommon)
