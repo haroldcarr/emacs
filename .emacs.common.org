@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Oct 10 (Sat) 11:59:32 by Harold Carr.
+;;;; Last Modified : 2015 Oct 10 (Sat) 14:13:09 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -377,6 +377,35 @@ Magit and Ediff
 #+END_SRC
 
 ------------------------------------------------------------------------------
+* Clojure/Cider
+
+- [[http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html]]
+
+#+NAME: clojure
+#+BEGIN_SRC emacs-lisp :comments off
+  (hcSection "Clojure")
+
+  ;; modified from cider-interaction.el
+  (defun hc-cider-insert-in-repl (form)
+    "Insert FORM in the REPL buffer and switch to it.
+If EVAL is non-nil the form will also be evaluated."
+    (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
+      (setq form (replace-match "" t t form)))
+    (with-current-buffer (cider-current-connection)
+      (goto-char (point-max))
+      (let ((beg (point)))
+        (insert form)
+        (indent-region beg (point)))
+        (cider-repl-return)))
+
+  (defun hc-cider-insert-last-sexp-in-repl (&optional arg)
+    "Insert the expression preceding point in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+    (interactive "P")
+    (hc-cider-insert-in-repl (cider-last-sexp)))
+#+END_SRC
+
+------------------------------------------------------------------------------
 * Send diagram text to SDEDIT (UML sequence diagrams)
 
 - [[http://sdedit.sourceforge.net/]]
@@ -395,6 +424,20 @@ Be sure the sdedit program is up and running as a service.
     (process-send-string p (concat (buffer-name) "
 " (buffer-string)))
     (delete-process p)))
+#+END_SRC
+
+------------------------------------------------------------------------------
+* SETUP
+
+#+BEGIN_SRC emacs-lisp :comments off
+(hcSection "Packages")
+
+;; C-U C-X = : shows current font
+
+(defun hc-h (n) (set-frame-height (selected-frame) n))
+(defun hc-w (n) (set-frame-width (selected-frame) n))
+(defun hc-hw (x y) (hc-h x) (hc-w y))
+(defun hc-hwd () (interactive) (hc-h 27) (hc-w 101))
 #+END_SRC
 
 ------------------------------------------------------------------------------

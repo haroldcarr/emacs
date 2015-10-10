@@ -1,2 +1,2 @@
-See [[.emacs.org]] -- literate version of my .emacs
+spac/emacs rocks
 

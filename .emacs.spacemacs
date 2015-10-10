@@ -241,29 +241,6 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Clojure")
 
-  ;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;; Cider/Clojure
-
-  ;; http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html
-
-  ;; modified from cider-interaction.el
-  (defun hc-cider-insert-in-repl (form)
-    "Insert FORM in the REPL buffer and switch to it.
-If EVAL is non-nil the form will also be evaluated."
-    (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
-      (setq form (replace-match "" t t form)))
-    (with-current-buffer (cider-current-connection)
-      (goto-char (point-max))
-      (let ((beg (point)))
-        (insert form)
-        (indent-region beg (point)))
-        (cider-repl-return)))
-
-  (defun hc-cider-insert-last-sexp-in-repl (&optional arg)
-    "Insert the expression preceding point in the REPL buffer.
-If invoked with a prefix ARG eval the expression after inserting it."
-    (interactive "P")
-    (hc-cider-insert-in-repl (cider-last-sexp)))
 
   (use-package cider-mode
     :config
@@ -275,15 +252,15 @@ If invoked with a prefix ARG eval the expression after inserting it."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")
 
-  (defun hc-h (n) (set-frame-height (selected-frame) n))
-  (defun hc-w (n) (set-frame-width (selected-frame) n))
-
   ;; WORKAROUND
   ;; For some fonts, if size is specified > 16 then the first few lines of file do not show.
   ;; So scale up this way.
   (spacemacs/zoom-frm-in)
   (spacemacs/zoom-frm-in)
+  (spacemacs/zoom-frm-in)
+  (spacemacs/zoom-frm-in)
 
+  (hc-hw 27 101)
 ;; END OF user-config
 )
 

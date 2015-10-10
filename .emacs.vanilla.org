@@ -45,10 +45,14 @@
 ;; TODO: Other code uses .emacs.d too.
 ;;       For now I have a symlink from ~/.emacs.d to here.
 ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
-(add-to-list 'package-archives '("org"          . "http://orgmode.org/elpa/")             ) ;; put at front
-(add-to-list 'package-archives '("marmalade"    . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/")   t)
-(add-to-list 'package-archives '("melpa"        . "http://melpa.org/packages/")          t) ;; last
+(setq package-archives
+      '(("melpa" . "http://melpa.org/packages/")
+        ("org"   . "http://orgmode.org/elpa/")
+        ("gnu"   . "http://elpa.gnu.org/packages/")))
+
+;;        ("marmalade"    . "http://marmalade-repo.org/packages/")
+;;        ("melpa-stable" . "http://stable.melpa.org/packages/")
+
 (package-initialize)
 
 (eval-and-compile
@@ -598,31 +602,11 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 (setq *compile-threshold* " -XX:CompileThreshold=2 ")
 
-(defun HC-BOOTDIR ()
-  (cond ((getenv "HC-ALT_BOOTDIR"))
-	(t (let ((HC-ALT_BOOTDIR (HC-ALT_BOOTDIR)))
-	     (message (concat "BOOTDIR not set - defaulting to: "
-			      HC-ALT_BOOTDIR))
-	     HC-ALT_BOOTDIR))))
-
-(defun HC-ALT_BOOTDIR ()
-  (let* ((jdir     (concat *hcUlhcd* "/java/jdk/"))
-	 (version  (cond ((hcWin32P)  "jdk1.3/win32")
-                         ((hcDarwinP) "jdk1.6.0_15/darwin")
-                         (t ("jdk1.2.2"))))
-	 (location (concat jdir "/" version)))
-    (cond ((file-directory-p location)
-	   location)
-	  (t
-	   (error "no default JDK")))))
-
-(defun set-HC-ALT_BOOTDIR (&optional location)
-  (interactive)
-  (setenv "HC-ALT_BOOTDIR"
-	  (cond (location) (t (HC-ALT_BOOTDIR)))))
-
-(defun HC-BOOTDIR-bin     () (concat (HC-BOOTDIR) "/bin"))
-(defun HC-BOOTDIR-classes () (concat (HC-BOOTDIR) "/jre/lib/rt.jar"))
+(defun HC-JAVA_HOME ()
+  (cond ((getenv "JAVA_HOME"))
+	(t (error "no default JDK"))))
+(defun HC-JAVA_HOME-bin     () (concat (HC-JAVA_HOME) "/bin"))
+(defun HC-JAVA_HOME-classes () (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Scala")
@@ -632,322 +616,27 @@ NOTE: home set via calendar-latitude/calendar-longitude
   :config
   (setq scala-indent:step 4))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "LISP and Scheme and Clojure")
-
-(add-to-list 'auto-mode-alist '("\\.el$"      . lisp-interaction-mode))
-
-(add-to-list 'auto-mode-alist '("\\.cl$"      . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.kawa$"    . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.llavarc$" . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.lva$"     . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.lisp$"    . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.lsp$"     . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.scm$"     . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.silk$"    . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.slk$"     . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.skij$"    . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.skj$"     . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.stk$"     . scheme-mode))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Cider/Clojure
-
-(defun hc-cider-insert-and-eval-in-repl-no-switch ()
-  "Insert FORM in the REPL buffer and evaluate it.  Do not switch to REPL buffer."
-  (interactive)
-  (let ((form (cider-last-sexp))
-        (start-pos (point)))
-    (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
-      (setq form (replace-match "" t t form)))
-    (with-current-buffer (cider-current-repl-buffer)
-      (insert form)
-      (indent-region start-pos (point))
-      (cider-repl-return))))
+(hcSection "Clojure")
 
 (use-package cider-mode
   :defer nil ;; HC so cider can find 'clojure-project-dir'
-  :pin melpa-stable
+;; :pin melpa-stable
   :config
-  (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-and-eval-in-repl-no-switch))
+  (progn
+    (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
+    (setq clojure-enable-fancify-symbols t)
+    ))
 
 (use-package cider
   :defer t
-  :pin melpa-stable)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;; SLIME setup:
-;; http://riddell.us/tutorial/slime_swank/slime_swank.html
-
-;; JSWAT usage:
-;; http://bc.tech.coop/blog/081023.html
-;; http://groups.google.com/group/clojure/browse_thread/thread/403e593c86c2893f
-;; /System/Library/Frameworks/JavaVM.framework/Versions/1.5/Home/
-;; /System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/
-;; /usr/local/hc/java/jswat/jswat-4.3/bin/jswat -jdkhome /System/Library/Frameworks/JavaVM.framework/Versions/1.6/Home/ &
-;; (slime-connection-port (slime-connection))
-;;
-
-(comment
-java -server \
-     -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8888 \
-     -jar /usr/local/hc/java/clojure/clojure_20090320/clojure.jar &
+;;  :pin melpa-stable
 )
 
-(cond (nil ;;(not (hcXEmacsP))
-       ;; clojure-mode
-       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/clojure-mode"))
-       (require 'clojure-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "LISP and Scheme and Clojure")
 
-       ;; swank-clojure
-       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/swank-clojure"))
-       (require 'swank-clojure-autoload)
-       (swank-clojure-config
-	;;(setq swank-clojure-jar-path (concat (hcUlhcd) "/java/clojure/clojure_20090320/clojure.jar"))
-	(setq swank-clojure-binary (concat (hcEsync) "/bin/hcClojure"))
-	;;(setq swank-clojure-extra-classpaths (list (concat (hcHome) "/.clojure/clojure-contrib.jar")))
-	)
-
-       ;; slime
-       (eval-after-load "slime"
-	 '(progn (slime-setup '(slime-repl))))
-
-       (add-to-list 'load-path (concat (hcUlhcd) "/java/clojure/emacs/slime"))
-       (require 'slime)
-       (slime-setup)
-      )
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package hcRunCommand)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package hcPomCommand)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcRunCommand clisp hcClispCmd)
-
-(defun hcClispCmd ()
-  (cond ((hcWin32P)
-	 (concat
-	  (hcUlhcd) "/lisp/clisp/clisp-1999-07-22/lisp -M "
-	  (hcUlhcd) "/lisp/clisp/clisp-1999-07-22/lispinit.mem"))
-	((hcDarwinP)
-	 ;;"clisp"
-	 "/sw/src/clisp-2.33.2-1/clisp-2.33.2/src/clisp"
-	 )
-	(t
-	 (concat
-	  (hcUlhcd) "/lisp/clisp/clisp-1999-01-08/base/lisp.run -M "
-	  (hcUlhcd) "/lisp/clisp/clisp-1999-01-08/base/lispinit.mem"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand clocc hcCloccCmd)
-
-(defun hcCloccCmd ()
-  (if (hcDarwinP)
-      (concat "clisp" " -M "
-	      " /Volumes/User/sw/lib/clocc/clocc-01-18-04/clocc/clocc-top.mem")
-    (error "only configured for darwin")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand sbcl hcSbclCmd)
-
-(defun hcSbclCmd ()
-    (if (hcDarwinP)
-      (concat
-       (hcUlhcd) "/lisp/sbcl/sbcl-0.8.2.7/src/runtime/sbcl --core "
-       (hcUlhcd) "/lisp/sbcl/sbcl-0.8.2.7/output/sbcl.core")
-      (error "only configured for darwin")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand j hcJCmd)
-
-(defun hcJCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   " -classpath "
-   (hcUlhcd) "/java/j/j-0.21.0/j.jar"
-   (hcPathSep)
-   (HC-BOOTDIR-classes)
-   (hcPathSep)
-   (hcLibClasspath)
-   " "
-   " -Xss512K "
-   " "
-   " org.armedbear.lisp.Main"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand jscheme hcJschemeCmd)
-
-(defun hcJschemeCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   *compile-threshold*
-   " -jar "
-   (hcUlhcd) "/java/jscheme/jscheme_6_1.jar"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand kawa hcKawaCmd)
-
-(defun hcKawaCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   *compile-threshold*
-   " -classpath "
-   (hcUlhcd) "/java/kawa/kawa-1.7.jar"
-   (hcPathSep)
-   (HC-BOOTDIR-classes)
-   (hcPathSep)
-   (hcLibClasspath)
-   " "
-   " kawa.repl"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcShDefCmd hcLlavaClasspath ())
-(hcShDefCmd ripClasspath (javaHome rmiIiopHome))
-
-;;; Hooks so you can add to classpath, vmargs and command line args.
-
-(defun hcLlavaCmdEnvExtras       (ps) "")
-(defun hcLlavaCmdClasspathExtras (ps) "")
-(defun hcLlavaCmdVmArgsExtras    (ps) "")
-(defun hcLlavaCmdMainClass       (ps) (hcLlavaMainClass))
-(defun hcLlavaCmdLineArgsExtras  (ps) "")
-
-;;------
-
-(hcRunCommand llava hcLlavaCmd)
-
-(defun hcLlavaCmd ()
-  (hcLlavaStartCmd (hcLlavaCmdMainClass (hcPathSep))))
-
-;;------
-
-(hcRunCommand jllava hcJLlavaCmd)
-
-(defun hcJLlavaCmd ()
-  (hcLlavaStartCmd
-   (concat "-jar " (hcSync) "/.llava.org/.system/jars/llava.jar")))
-
-;;------
-
-(hcRunCommand dljllava hcDLJLlavaCmd)
-
-(defun hcDLJLlavaCmd ()
-  (hcLlavaStartCmd
-   (concat "-jar " (hcFtptmp) "/llava.jar")))
-
-(defun hcLlavaStartCmd (startup)
-  (concat
-   (hcLlavaCmdEnvExtras (hcPathSep))
-   " "
-   (HC-BOOTDIR-bin) "/java "
-   *compile-threshold*
-   "-Xmx2024m"
-   " -classpath "
-   (hcLlavaCmdClasspathExtras (hcPathSep))
-   (hcPathSep)
-   "."
-   (hcPathSep)
-   (hcLlavaClasspath)
-   (hcPathSep)
-   (HC-BOOTDIR-classes)
-   (hcPathSep)
-   (hcLibClasspath)
-   (hcPathSep)
-   " "
-   " -Duser.home=" (hcHome)
-   " "
-;;   " -Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y "
-   " "
-   (hcLlavaCmdVmArgsExtras (hcPathSep))
-   " "
-   startup
-   " "
-   (hcLlavaCmdLineArgsExtras (hcPathSep))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcShDefCmd hcSkijClasspath ())
-
-(hcRunCommand skij hcSkijCmd)
-
-(defun hcSkijCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   " -classpath "
-   "."
-   (hcPathSep)
-   (hcSkijClasspath)
-   (hcPathSep)
-   (HC-BOOTDIR-classes)
-   (hcPathSep)
-   (hcLibClasspath)
-   (hcPathSep)
-   (hcLlavaCmdClasspathExtras (hcPathSep))
-   " "
-   " -Duser.home=" (hcHome)
-   " "
-   (hcLlavaCmdVmArgsExtras (hcPathSep))
-   " "
-   " com.ibm.jikes.skij.Scheme"
-   " "
-   (hcLlavaCmdLineArgsExtras (hcPathSep))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand silk hcSilkCmd)
-
-(defun hcSilkCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   " -classpath "
-   "."
-   (hcPathSep)
-   (hcUlhcd) "/java/silk/v3.0-99-10-31/silk/jar/scheme.jar"
-   (hcPathSep)
-   (HC-BOOTDIR-classes)
-   (hcPathSep)
-   (hcUlhcd) "\\java\\jdk1.2.1\\jre\\lib\\tools.jar"
-   (hcPathSep)
-   (hcLibClasspath)
-   (hcPathSep)
-   (hcLlavaCmdClasspathExtras (hcPathSep))
-   " "
-   " -Duser.home=" (hcHome)
-   " "
-   (hcLlavaCmdVmArgsExtras (hcPathSep))
-   " "
-   " silk.Scheme generic/load.scm"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand MzScheme hcMzSchemeCmd)
-
-(defun hcMzSchemeCmd ()
-  (concat (hcUlhcd) "/lisp/plt/202/plt/bin/mzscheme"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(hcRunCommand hcTelnetClient hcTelnetClientCmd)
-
-(defun hcTelnetClientCmd ()
-  (concat
-   (HC-BOOTDIR-bin) "/java "
-   " -classpath "
-   (concat (hcEsync) "/java/.classes")
-   (hcPathSep)
-   (hcUlhcd) "/java/jta/jta20/.classes"
-   " "
-   " hc.net.TelnetClient localhost 4444"))
+(use-package hcInitLisps)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "C")
@@ -971,217 +660,67 @@ java -server \
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Appearance")
 
-;; C-U C-X = : shows current font
-
-(defun hc-h (n) (set-frame-height (selected-frame) n))
-(defun hc-w (n) (set-frame-width (selected-frame) n))
-(defun hc-hw (x y) (hc-h x) (hc-w y))
-(defun hc-hwd () (interactive) (hc-h 38) (hc-w 80))
-
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 ;;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 ;;This turns of the mac os x menu bar
 ;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-(defun hcGreyBackground ()
+(defun hcMacFW ()
   (interactive)
-  (set-face-background 'default "grey")
-  )
-
-(defun hcRightScrollBar ()
-  (interactive)
-  ;(scroll-bar-mode -1) ;; turn off
-  (set-scroll-bar-mode 'right)
-  )
-
-(defun hcAppearance ()
-  (interactive)
-  (hcGreyBackground)
-  (hcRightScrollBar)
-  )
-
-(defun hcHostedFont ()
-  (interactive)
-  (set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-  )
-
-(defun hcHostedWidthHeight ()
-  (interactive)
-  (hc-w 160)
-  (hc-h 43)
+  (hc-w 100)
+  (hc-h 27)
+  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
   )
 
 (defun hcHostedAppearance ()
   (interactive)
-  (hcAppearance)
-  (hcHostedFont)
-  (hcHostedWidthHeight)
+  (set-face-background 'default "grey")
+  (set-scroll-bar-mode 'right)
+  (set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  (hc-w 160)
+  (hc-h 43)
   )
-
-(defun hcMacFont ()
-  (interactive)
-;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-18-*-*-*-m-0-iso10646-1")
-(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
-;;(set-frame-font "Source Code Pro-21" nil t)
-;;(set-face-font 'default "-apple-Monaco-medium-normal-normal-*-21-*-*-*-m-0-iso10646-1")
-  )
-
-(defun hcMacWidthHeight ()
-  (interactive)
-  (hc-w 100)
-  (hc-h 27)
-  )
-
-(defun hcMacFW ()
-  (interactive)
-  (hcMacWidthHeight)
-  (hcMacFont)
-  )
-
-(defun hcMacAppearance ()
-  (interactive)
-  (hcAppearance)
-  (hcMacFont)
-  (hcMacWidthHeight)
-  )
-
-;; Toggle buffer tabs
-(defun hcToggleBufferTabs ()
-  (interactive)
-  (if (eq emacs-version 21.4)
-      (customize-set-variable 'gutter-buffers-tab-visible-p
-			      (not gutter-buffers-tab-visible-p))))
-
-;; Toggle tool bar
-(setq *hc-toggle-toolbar-value* -1)
-(defun hcToggleToolbar ()
-  (interactive)
-  (if (eq emacs-major-version 21)
-      (cond ((string-match "XEmacs\\|Lucid" emacs-version)
-	     (set-specifier default-toolbar-visible-p
-			    (not (specifier-instance default-toolbar-visible-p))))
-	    ((string-match "sparc-sun-solaris2.10" (emacs-version))
-	     (tool-bar-mode *hc-toggle-toolbar-value*)
-	     (setq *hc-toggle-toolbar-value* (- *hc-toggle-toolbar-value*)))
-	    (t
-	     (tool-bar-mode (not toolbar-active))))))
-
-;; SHORTHAND
-(defun hctoggle () (interactive) (hcToggleBufferTabs) (hcToggleToolbar))
-
-(defun hcf ()
-  (set-default-font
-   "-Adobe-Courier-Bold-R-Normal--14-140-75-75-M-90-ISO8859-1"))
-
-;; Good for laptop lcd.
-;; Do (w32-select-font) to discover font names
-(defun hcLucidaBold10 ()
-  (interactive)
-  (set-default-font
-   ;; NT
-   ;;"-*-Lucida Console-normal-r-*-*-20-120-*-*-c-*-*-ansi-"
-   ;; Win95
-   "-*-Courier New-bold-r-*-*-20-100-*-*-c-*-*-ansi-"))
-
-;; Good for 21 inch monitor with laptop.
-(defun hcFixReg9-21 ()
-  (interactive)
-  (set-default-font "-*-Fixedsys-normal-r-*-*-12-90-*-*-c-*-*-ansi-"))
-
-;; Setting background from elisp under NT causes weird behavior.
-;; Instead I set using -fg and -bg in .bat file.
 
 ;; type fc-list on command line to see fonts installed
 
-(defun hcSetDisplay ()
-  (hc-h 32)
-  (hc-w 80)
-  (cond ((hcXP)
-         ;;(set-face-attribute 'default nil :family "courier" :height 140)
-         ;;(set-face-attribute 'default nil :family "courier" :height 160)
-         ;;(set-face-attribute 'default nil :family "courier" :height 170)
-         ;;(set-face-attribute 'default nil :family "courier" :height 180)
-         ;;(set-face-attribute 'default nil :family "courier" :height 200)
-         ;;(set-face-attribute 'default nil :family "courier" :height 220)
+;;(set-face-attribute 'default nil :family "courier" :height 140)
+;;(set-face-font 'default "-*-Lucida Sans Typewriter-Medium-R-*-*-*-200-*-*-*-*-iso8859-1")
+;;(set-face-font 'modeline "-*-Lucida Sans Typewriter-medium-R-*-*-*-200-*-*-*-*-iso8859-1")
 
-	 ;;(set-face-font 'default "-adobe-courier-medium-o-normal--18-180-75-75-m-110-iso8859-2")
+;;; Background
+;;(set-face-background 'default "#9900991b99fe") ; grey
+;;(set-face-background 'default "#900060006000") ; earthy red
+;;(set-face-background 'default "#de00b8008700") ; earthy orange
+;;(set-face-background 'default "#737373737373") ; grey
+;;(set-face-background 'default "#6a6a6a6a6a6a") ; grey
+;;(set-face-background 'default "DarkSlateGrey")
+;;(set-face-background 'default "grey")
+;;(defined-colors)
+;; ("snow" "ghost white" "GhostWhite" "white smoke" "WhiteSmoke" "gainsboro" "floral white" "FloralWhite" "old lace" "OldLace" "linen" "antique white" ...)
+;;(set-face-background 'default "antique white")
+;;(set-face-background 'default "grey99")
+;;(set-face-background 'default "White")
+;;(set-face-background 'default "#b9b9b9b9b9b9")
+;;(set-face-background 'default "#dddddddddddd")
+;;(set-face-background 'default "#68006f008200") ; blue
+;;(set-face-background 'default "Black")
 
-	 ;;(set-face-font 'default "-*-Courier-Medium-R-*-*-*-160-72-72-*-*-iso8859-1")
-	 ;;(set-face-font 'modeline "-*-Courier-medium-R-*-*-*-160-72-72-*-*-iso8859-1")
-	 ;; 9x15 bold
-	 ;;(set-face-font 'default "-misc-fixed-bold-r-normal-*-*-140-*-*-c-*-iso8859-1")
-	 (set-face-font 'default "-*-Lucida Sans Typewriter-Medium-R-*-*-*-200-*-*-*-*-iso8859-1")
-	 (set-face-font 'modeline "-*-Lucida Sans Typewriter-medium-R-*-*-*-200-*-*-*-*-iso8859-1")
+;;; Foreground
+;;(set-face-foreground 'default "Green")
+;;(set-face-foreground 'default "DarkSlateGrey")
+;;(set-face-foreground 'default "#de00b8008700") ; earthy orange
+;;(set-face-foreground 'default "Black")
+;;(set-face-foreground 'default "white")
 
-	 ;(set-face-font 'default "-apple-courier-bold-r-normal--18-180-72-72-m-180-iso10646-1")
-	 ;(set-face-font 'default "-apple-courier-bold-r-normal--18-0-72-72-m-0-iso10646-1")
+;;; Mark to region.
+;;(set-face-background 'primary-selection "grey")
+;;(set-face-foreground 'primary-selection "black")))
 
-         ;;; Background
-	 (set-face-background 'default "#9900991b99fe") ; grey
+;;; Incremental search.
+;;(set-face-foreground 'isearch "black")
+;;(set-face-background 'isearch "green")))
 
-	 ;; 90 = 144; 60 = 96; 60 = 96
-	 ;;(set-face-background 'default "#900060006000") ; earthy red
-	 ;; 222 = de; 184 = b8; 135= 87
-	 ;;(set-face-background 'default "#de00b8008700") ; earthy orange
-	 ;;(set-face-background 'default "#737373737373") ; grey
-	 (set-face-background 'default "#6a6a6a6a6a6a") ; grey
-	 ;;(set-face-background 'default "DarkSlateGrey")
-	 ;;(set-face-background 'default "grey")
-         ;;(defined-colors)
-         ;; ("snow" "ghost white" "GhostWhite" "white smoke" "WhiteSmoke" "gainsboro" "floral white" "FloralWhite" "old lace" "OldLace" "linen" "antique white" ...)
-	 ;;(set-face-background 'default "antique white")
-	 ;;(set-face-background 'default "grey99")
-	 ;;(set-face-background 'default "White")
-	 ;; this one:
-	 ;;(set-face-background 'default "#b9b9b9b9b9b9")
-	 ;;(set-face-background 'default "#dddddddddddd")
-	 ;; 68 = 104; 6f = 111; 82 = 130
-	 ;;(set-face-background 'default "#68006f008200") ; blue
-	 ;;(set-face-background 'default "Black")
-
-         ;;; Foreground
-	 ;;(set-face-foreground 'default "Green")
-	 ;;(set-face-foreground 'default "DarkSlateGrey")
-	 ;;(set-face-foreground 'default "#de00b8008700") ; earthy orange
-	 (set-face-foreground 'default "Black")
-	 ;;(set-face-foreground 'default "white")
-
-	 ;; Mark to region.
-	 (cond ((hcLucidP)
-		(set-face-background 'primary-selection "grey")
-		(set-face-foreground 'primary-selection "black")))
-
-	 ;; Incremental search.
-	 (cond ((hcLucidP)
-		(set-face-foreground 'isearch "black")
-		(set-face-background 'isearch "green")))
-	 ;; Toolbar.
-	 (cond ((hcLucidP)
-		(set-specifier default-toolbar-visible-p nil)))
-
-	 (cond ((hcLucidP)
-		(turn-off-font-lock)))
-	 )
-
-	((hcWin32P)
-	 ;(hcLucidaBold10)
-	 (hcFixReg9-21)
-	 )))
-
-;(hcSetDisplay)
-
-(comment
-(global-font-lock-mode -1)
-
-(setq font-lock-auto-fontify nil)
-(set-face-foreground 'default "Black")
-
-(cond ((hcLucidP)
-       (set-face-reverse-p 'modeline nil))
-      (t
-       (setq mode-line-inverse-video nil)))
-)
+;;; Toolbar.
 
 ;; Turn off font-lock?
 (defun hcFontLockModeHook ()
@@ -1191,64 +730,9 @@ java -server \
   (setq font-lock-mode-enable-list nil)
   (setq font-lock-maximum-size 0))
 
-
-(comment
-(cond ((fboundp 'global-font-lock-mode)
-            ;; Turn on font-lock in all modes that support it
-            (global-font-lock-mode t)
-	    (setq font-lock-support-mode 'lazy-lock-mode)
-            ;; maximum colors
-            ;(setq font-lock-maximum-decoration t)
-;; Customize face attributes
-            (setq font-lock-face-attributes
-                  ;; Symbol-for-Face Foreground Background Bold Italic
-Underline
-                  '((font-lock-comment-face       "DarkGreen")
-                    (font-lock-string-face        "Black")
-                    (font-lock-keyword-face       "RoyalBlue")
-                    (font-lock-function-name-face "Blue")
-                    (font-lock-variable-name-face "Black")
-                    (font-lock-type-face          "Black")
-                    (font-lock-reference-face     "Purple")))
-            ;; Create the faces from the attributes
-;           (font-lock-make-faces)
-            ))
-)
-
 (cond ((hcDarwinP)
        (load-theme 'zenburn)
        (hcMacFW)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "HC Commands")
-
-(defun hc-current-line ()
-  (interactive)
-  "Return line number containing point."
-  (let ((result 1))
-    (save-excursion
-      (beginning-of-line)
-      (while (not (bobp))
-	(forward-line -1)
-	(setq result (+ result 1))))
-    result))
-
-;; Modified from compile.
-(defun hc-grep-find-no-scc (command-args)
-  "Same as grep-find except skips source code control directories."
-  (interactive
-   (let ((grep-find-command
-	  (cons (format "find . -type d \\( -name SCCS -o -name RCS -o -name .svn \\) -prune -o -type f -exec %s {} /dev/null \\;"
-			grep-command)
-		(+ 70 (length grep-command)))))
-     (progn
-       (unless grep-find-command
-	 (grep-compute-defaults))
-       (list (read-from-minibuffer "Run find (like this): "
-				   grep-find-command nil nil
-				   'grep-find-history)))))
-  (let ((null-device nil))		; see grep
-    (grep command-args)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Syntax")
@@ -1280,58 +764,9 @@ Underline
        (modify-syntax-entry ?. "w" (standard-syntax-table))
        (modify-syntax-entry ?* "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Portability")
-
-(if (not (boundp 'directory-sep-char))
-    (setq directory-sep-char 47))
-
-(if (not (fboundp 'file-name-extension))
-    (defun file-name-extension (filename &optional period)
-      "Return FILENAME's final \"extension\".
-The extension, in a file name, is the part that follows the last `.'.
-Return nil for extensionless file names such as `foo'.
-Return the empty string for file names such as `foo.'.
-
-If PERIOD is non-nil, then the returned value includes the period
-that delimits the extension, and if FILENAME has no extension,
-the value is \"\"."
-      (save-match-data
-        (let ((file (file-name-sans-versions (file-name-nondirectory filename))))
-          (if (string-match "\\.[^.]*\\'" file)
-              (substring file (+ (match-beginning 0) (if period 0 1)))
-            (if period
-                ""))))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "custom-set-variables/faces")
-
-;; IMPORTANT: Init file should contain only ONE custom-set-faces and ONE custom-set-variables
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(load-home-init-file t t)
- '(nxml-child-indent 4)
- '(send-mail-function (quote smtpmail-send-it))
-)
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
-
- '(proof-locked-face ((t (:background "#8d8d8d"))) t)
- '(w3m-haddock-heading-face ((t (:background "selectedKnobColor"))))
-;; '(w3m-haddock-heading-face ((t (:background "controlDarkShadowColor"))))
-)
 #+END_SRC
 
+------------------------------------------------------------------------------
 #+NAME: EOF
 #+BEGIN_SRC emacs-lisp :comments off
 (provide 'hcVanilla)
