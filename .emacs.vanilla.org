@@ -62,7 +62,7 @@
 (add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
 
 (require 'use-package)
-(require 'hcCommon)
+(require '.emacs.common)
 #+END_SRC
 
 ------------------------------------------------------------------------------

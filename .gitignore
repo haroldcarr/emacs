@@ -1,8 +1,8 @@
 .emacs-HASKELL-*
 .emacs.bmk
+.emacs.common.el
 .emacs.d.spacemacs/.cache
 .emacs.d.vanilla/
-.emacs.html
 .emacs.org-example
 .emacs.spacemacs-update-steps.org
 .newsrc
@@ -15,8 +15,6 @@ RCS/
 emacs-cheat-sheet.png
 emacsconf.org
 haskell-settings-vanilla.org
-hcCommon.el
-hcVanilla.el
 java-mode-indent-annotations.el
 javaone.org
 unicode.txt

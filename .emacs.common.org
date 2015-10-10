@@ -2,7 +2,7 @@
 #+AUTHOR:      Harold Carr
 #+DESCRIPTION: literate version of my .emacs file.
 #+PROPERTY:    results silent
-#+PROPERTY:    tangle hcCommon.el
+#+PROPERTY:    tangle .emacs.common.el
 #+PROPERTY:    eval no-export
 #+PROPERTY:    comments org
 #+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
@@ -23,7 +23,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 - =tab= opens/close a particular section
 - Shift =tab= cycles between the outline and full text
 - Tangle it with:  =C-c C-v t=
-  - Creates:  =hcCommon.el= in this directory (overwrites previous)
+  - Creates:  =.emacs.common.el= in this directory (overwrites previous)
 #+END_COMMENT
 
 ------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Oct 10 (Sat) 11:17:33 by Harold Carr.
+;;;; Last Modified : 2015 Oct 10 (Sat) 11:59:32 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -402,7 +402,7 @@ Be sure the sdedit program is up and running as a service.
 
 #+NAME: EOF
 #+BEGIN_SRC emacs-lisp :comments off
-(provide 'hcCommon)
+(provide '.emacs.common)
 
 ;;; End of file.
 #+END_SRC
