@@ -45,7 +45,6 @@
       (define-key eclim-mode-map (kbd "M-,") 'pop-global-mark)
 
       ;; paredit for java
-      (add-hook 'java-mode-hook 'my-config-paredit-nonlisp)
       (add-hook 'java-mode-hook
                 (lambda () (setq eclim-project-name (eclim-project-name))))
 

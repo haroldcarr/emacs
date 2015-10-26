@@ -73,9 +73,9 @@
   ;; Any org files in those directories are automatically included in the agenda.
   (setq org-agenda-files
         (list
-         (concat (hcFsync)    "/TODO-ME.org")
-         (concat (hcFinance)  "/01-TODO.org")
          (concat (hcRpt)      "/TODO-WORK.org")
+         (concat (hcFinance)  "/01-TODO.org")
+         (concat (hcFsync)    "/TODO-ME.org")
          ;; (hcRpt)
          ;; (concat (hcRpt)   "/.past/2014")
          ;; (concat (hcRpt)   "/.past/2013")
@@ -101,13 +101,13 @@
 
   (setq org-todo-keyword-faces
         '(("TODO"       :foreground "yellow"         :weight bold)
-          ("NEXT"       :foreground "blue"           :weight bold)
-          ("STARTED"    :foreground "blue"           :weight bold)
+          ("NEXT"       :foreground "white"          :weight bold)
+          ("STARTED"    :foreground "orange"         :weight bold)
           ("DONE"       :foreground "forest green"   :weight bold)
           ("DELEGATED"  :foreground "forest green"   :weight bold)
 
-          ("WAITING"    :foreground "white"          :weight bold)
-          ("SOMEDAY"    :foreground "orange"         :weight bold)
+          ("WAITING"    :foreground "blue"           :weight bold)
+          ("SOMEDAY"    :foreground "blue"           :weight bold)
           ("CANCELLED"  :foreground "forest green"   :weight bold)
           ("SKIP"       :foreground "forest green"   :weight bold)
           ("PHONE"      :foreground "forest green"   :weight bold)
