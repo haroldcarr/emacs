@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Oct 10 (Sat) 14:13:09 by Harold Carr.
+;;;; Last Modified : 2015 Nov 02 (Mon) 09:55:35 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -427,12 +427,17 @@ Be sure the sdedit program is up and running as a service.
 #+END_SRC
 
 ------------------------------------------------------------------------------
-* SETUP
+* frame/font size
 
 #+BEGIN_SRC emacs-lisp :comments off
-(hcSection "Packages")
+(hcSection "frame/font size")
 
-;; C-U C-X = : shows current font
+;; C-U C-X : shows current font
+
+;; C-x C-- : decrease font size
+;; C-x C-+ : increase font size
+;; C-x C-0 : reset to default size
+;; these run text-scale-adjust
 
 (defun hc-h (n) (set-frame-height (selected-frame) n))
 (defun hc-w (n) (set-frame-width (selected-frame) n))
