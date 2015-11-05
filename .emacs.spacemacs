@@ -260,7 +260,7 @@ layers configuration. You are free to put any user code."
   (spacemacs/zoom-frm-in)
   (spacemacs/zoom-frm-in)
 
-  (hc-hw 27 101)
+  (hc-hw 27 104)
 ;; END OF user-config
 )
 
