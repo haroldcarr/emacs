@@ -261,6 +261,29 @@ layers configuration. You are free to put any user code."
   (spacemacs/zoom-frm-in)
 
   (hc-hw 27 104)
+
+  (setq spacemacs-mode-line-left
+        '(((workspace-number window-number)
+           :fallback state-tag :separator "|" :face state-face)
+          anzu
+          (buffer-modified buffer-id remote-host)
+          ((point-position line-column buffer-position hud buffer-size buffer-encoding-abbrev)
+           :separator " | ")
+          ((flycheck-errors flycheck-warnings flycheck-infos)
+           :when active)
+          ((minor-modes process)
+           :when active)
+          ))
+
+  (setq spacemacs-mode-line-right
+        '(selection-info
+          (erc-track :when active)
+          major-mode
+          (version-control :when active)
+          ((global-mode new-version)
+           :when active)
+          ))
+
 ;; END OF user-config
 )
 
