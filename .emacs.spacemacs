@@ -284,6 +284,8 @@ layers configuration. You are free to put any user code."
            :when active)
           ))
 
+  (menu-bar-mode)
+
 ;; END OF user-config
 )
 
