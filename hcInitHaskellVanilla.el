@@ -1,10 +1,10 @@
-;;; hcInitHaskell --- Summary
+;;; hcInitHaskellVanilla --- Summary
 
 ;;; Commentary:
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Nov 26 (Thu) 10:16:43 by Harold Carr.
+;;;; Last Modified : 2015 Nov 26 (Thu) 13:51:45 by Harold Carr.
 ;;;;
 
 ;; Haskell setup courtesy [[http://ioctl.it/posts/2015-07-03-stack-flycheck.html]]
@@ -94,7 +94,7 @@ See URL `http://www.haskell.org/ghc/'."
 
 ))
 
-(provide 'hcInitHaskell)
+(provide 'hcInitHaskellVanilla)
 
-;;; hcInitHaskell.el ends here
+;;; hcInitHaskellVanilla.el ends here
 

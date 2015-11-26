@@ -251,29 +251,7 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Haskell")
 
-  (custom-set-variables
-   ;; put a version of ghc on path: see: https://github.com/kazu-yamamoto/ghc-mod/issues/660
-   '(haskell-process-type 'stack-ghci)
-   '(haskell-indent-spaces 4)
-   '(haskell-indentation-layout-offset 4)
-   '(haskell-indentation-left-offset 4)
-   '(haskell-indentation-ifte-offset 4)
-   '(haskell-process-auto-import-loaded-modules t)
-   '(haskell-process-suggest-remove-import-lines t)
-   '(haskell-tags-on-save t)
-   '(haskell-process-log t)
-   )
-
-  (add-hook 'haskell-mode-hook
-            (lambda ()
-              (custom-set-variables
-               ;; This doesn't get set if put in above
-               '(haskell-stylish-on-save t))
-              (turn-on-haskell-indent)
-              (turn-on-haskell-doc)
-              (turn-on-haskell-decl-scan)
-              ;;(interactive-haskell-mode)
-              ))
+  (use-package hcInitHaskellSpacemacs)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")
