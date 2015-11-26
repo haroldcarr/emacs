@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Nov 25 (Wed) 12:21:35 by Harold Carr.
+;;;; Last Modified : 2015 Nov 26 (Thu) 10:16:43 by Harold Carr.
 ;;;;
 
 ;; Haskell setup courtesy [[http://ioctl.it/posts/2015-07-03-stack-flycheck.html]]
@@ -75,9 +75,10 @@ See URL `http://www.haskell.org/ghc/'."
   (setq haskell-process-auto-import-loaded-modules t)
   (setq haskell-process-suggest-remove-import-lines t)
 
-;; cabal update
-;; cabal install stylish-haskell
-;; HC: put link to it in my bin
+  ;; OLD: cabal update
+  ;;      cabal install stylish-haskell
+  ;; CURRENT: stack install stylish-haskell
+  ;;          put .local/bin in PATH
   (setq haskell-stylish-on-save t)
 
   (setq haskell-tags-on-save t)

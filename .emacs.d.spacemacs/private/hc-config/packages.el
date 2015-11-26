@@ -5,7 +5,7 @@
 (setq hc-config-packages
       '(emacs-eclim
         gud
-        haskell-mode
+;;        haskell-mode
         ))
 
 ;; List of packages to exclude.
@@ -63,7 +63,7 @@
       )))
 
 ;; ------------------------------------------------------------------------------
-(defun hc-config/init-haskell-mode ()
-  (use-package haskell-mode
-    :config
-    (load-library (concat (hcEmacsDir) "/hcInitHaskell.el"))))
+;;(defun hc-config/init-haskell-mode ()
+;;  (use-package haskell-mode
+;;    :config
+;;    (load-library (concat (hcEmacsDir) "/hcInitHaskell.el"))))
