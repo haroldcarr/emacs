@@ -226,7 +226,8 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Top level misc stuff")
 
-  ;;(add-hook 'after-init-hook #'global-flycheck-mode)
+  (use-package flycheck
+    :config (global-flycheck-mode 1))
 
   ;; just use regular undo
   (global-undo-tree-mode -1)
