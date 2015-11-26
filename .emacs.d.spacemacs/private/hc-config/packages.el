@@ -64,6 +64,6 @@
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-haskell-mode ()
-  (use-package eclim
+  (use-package haskell-mode
     :config
     (load-library (concat (hcEmacsDir) "/hcInitHaskell.el"))))

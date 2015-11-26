@@ -241,7 +241,6 @@ layers configuration. You are free to put any user code."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Clojure")
 
-
   (use-package cider-mode
     :config
     (progn
@@ -259,6 +258,7 @@ layers configuration. You are free to put any user code."
   (spacemacs/zoom-frm-in)
   (spacemacs/zoom-frm-in)
   (spacemacs/zoom-frm-in)
+  ;;(spacemacs/zoom-frm-out)
 
   (hc-hw 27 104)
 
@@ -282,6 +282,21 @@ layers configuration. You are free to put any user code."
           (version-control :when active)
           ((global-mode new-version)
            :when active)
+          ))
+
+  ;; HACK: I want some of these to be ON, but not to appear in mode line.
+  (setq spacemacs--diminished-minor-modes
+        '((evil-org-mode "" "")
+          (yas-minor-mode " ⓨ" " y")
+          (global-whitespace-mode "" "")
+          (whitespace-mode "" "")
+          (which-key-mode "" "")
+          (smartparens-mode "" "")
+          (flycheck-mode " ⓢ" " s")
+          (company-mode "" "")
+          (hybrid-mode "" "")
+          (holy-mode "" "")
+          (auto-fill-function " Ⓕ" " F")
           ))
 
   (menu-bar-mode)

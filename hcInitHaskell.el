@@ -1,9 +1,15 @@
+;;; hcInitHaskell --- Summary
+
+;;; Commentary:
+
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Oct 10 (Sat) 11:35:17 by Harold Carr.
+;;;; Last Modified : 2015 Nov 25 (Wed) 12:21:35 by Harold Carr.
 ;;;;
 
 ;; Haskell setup courtesy [[http://ioctl.it/posts/2015-07-03-stack-flycheck.html]]
+
+;;; Code:
 
 (use-package flycheck
   :config
@@ -89,5 +95,5 @@ See URL `http://www.haskell.org/ghc/'."
 
 (provide 'hcInitHaskell)
 
-;;; End of file.
+;;; hcInitHaskell.el ends here
 
