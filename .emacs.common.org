@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Nov 02 (Mon) 09:55:35 by Harold Carr.
+;;;; Last Modified : 2015 Nov 27 (Fri) 09:53:33 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -216,6 +216,10 @@ Important (to me) directories.
 #+NAME: toplevelmisc
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Top level misc stuff")
+
+;; This must be ON for haskell-mode to work.
+(use-package flycheck
+             :config (global-flycheck-mode 1))
 
 ;; Ask before exit.
 (setq confirm-kill-emacs
