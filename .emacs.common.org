@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Nov 27 (Fri) 09:53:33 by Harold Carr.
+;;;; Last Modified : 2015 Nov 27 (Fri) 14:02:03 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -72,6 +72,8 @@ by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
   `(if (require ',name nil t)
        (progn ,@body)
      (warn (concat (format "%s" ',name) " NOT FOUND"))))
+
+(hcRequire use-package)
 #+END_SRC
 
 ------------------------------------------------------------------------------
