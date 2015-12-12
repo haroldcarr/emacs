@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Dec 11 (Fri) 18:56:37 by Harold Carr.
+;;;; Last Modified : 2015 Dec 12 (Sat) 11:52:23 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -267,6 +267,7 @@ https://whereofwecannotspeak.wordpress.com/2009/07/15/getting-gnus-to-read-mail-
 https://support.google.com/accounts/answer/185833
 
 #+BEGIN_SRC emacs-lisp :comments off
+;;;; RECEIVE
 (setq gnus-select-method
       '(nntp "news.gmane.org"))
 
@@ -279,8 +280,17 @@ https://support.google.com/accounts/answer/185833
                 (nnimap-stream ssl))))
 
 ;; Original value was  "%U%R%z%I%(%[%4L: %-23,23f%]%) %s\n"
-(setq gnus-summary-line-format "%&%b %d %Y;%U%R%z%I%(%[%4L: %-23,23f%]%) %s
-")
+(setq gnus-summary-line-format "%&user-date;%U%R%z%I%(%[%4L: %-23,23f%]%) %s\n"
+      gnus-user-date-format-alist '((t . "%Y-%m-%d")))
+
+;;;; SEND
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
+      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "harold.carr@gmail.com" nil))
+      smtpmail-default-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-server "smtp.gmail.com"
+      smtpmail-smtp-service 587
+      mail-host-address "harold.carr@gmail.com") ;; gets rid of "tickle me"
 #+END_SRC
 
 Outgoing Mail (SMTP) Server - Requires TLS
