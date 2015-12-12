@@ -1,10 +1,10 @@
-;;; hcInitHaskellSpacemacs --- Summary
+;;; hcInitHaskell --- Summary
 
 ;;; Commentary:
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Nov 26 (Thu) 13:51:59 by Harold Carr.
+;;;; Last Modified : 2015 Dec 11 (Fri) 09:01:00 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -34,7 +34,7 @@
               (turn-on-haskell-decl-scan)
               )))
 
-(provide 'hcInitHaskellSpacemacs)
+(provide 'hcInitHaskell)
 
-;;; hcInitHaskellSpacemacs.el ends here
+;;; hcInitHaskell.el ends here
 
