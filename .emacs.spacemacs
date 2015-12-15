@@ -223,8 +223,6 @@ layers configuration. You are free to put any user code."
   ;; disable spacemacs escape treatment (make it like regular emacs)
   (define-key evil-emacs-state-map [escape] nil)
 
-  (define-key global-map (kbd "C-x C-b") #'helm-mini) ;; replace #'list-buffers
-
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Top level misc stuff")
 

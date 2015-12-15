@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Dec 12 (Sat) 11:52:23 by Harold Carr.
+;;;; Last Modified : 2015 Dec 15 (Tue) 08:49:23 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -247,6 +247,9 @@ Important (to me) directories.
   (setq whitespace-style '(face lines-tail))
   (setq whitespace-line-column 100)
   (global-whitespace-mode t))
+
+;; so list-buffers won't jump back to top
+(setq global-auto-revert-non-file-buffers nil)
 #+END_SRC
 
 ** Display full filepath in title
@@ -264,8 +267,10 @@ Important (to me) directories.
 * GNUS
 
 https://whereofwecannotspeak.wordpress.com/2009/07/15/getting-gnus-to-read-mail-over-imap/
-https://support.google.com/accounts/answer/185833
 
+Get an app-specific password: https://support.google.com/accounts/answer/185833
+
+Add this to config:
 #+BEGIN_SRC emacs-lisp :comments off
 ;;;; RECEIVE
 (setq gnus-select-method
@@ -293,12 +298,10 @@ https://support.google.com/accounts/answer/185833
       mail-host-address "harold.carr@gmail.com") ;; gets rid of "tickle me"
 #+END_SRC
 
-Outgoing Mail (SMTP) Server - Requires TLS
-smtp.gmail.com
-Port: 465 or 587
-Requires SSL: Yes
-Requires authentication: Yes
-Use same settings as incoming mail server
+Then =M-x gnus=
+
+when it prompts for your password, give app-specific password
+- (and optionally let it store that password ---unprotected--- in =~/.authinfo=)
 
 ------------------------------------------------------------------------------
 * Registers and Bookmarks
