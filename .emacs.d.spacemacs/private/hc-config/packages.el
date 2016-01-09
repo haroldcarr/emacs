@@ -5,7 +5,6 @@
 (setq hc-config-packages
       '(emacs-eclim
         gud
-        sx
         ))
 
 ;; List of packages to exclude.
@@ -61,8 +60,3 @@
       (define-key eclim-mode-map (kbd "C-c C-a C-c") 'gud-cont)
       (define-key eclim-mode-map (kbd "C-c C-a C-r") 'gud-run)
       )))
-
-;; ----------------------------------------------------------------------------
-
-(defun hc-config/init-sx ()
-  (use-package sx))

@@ -265,27 +265,40 @@ layers configuration. You are free to put any user code."
 
   (hc-hw 27 104)
 
-  (setq spacemacs-mode-line-left
-        '(((workspace-number window-number)
-           :fallback state-tag :separator "|" :face state-face)
-          anzu
-          (buffer-modified buffer-id remote-host)
-          ((point-position line-column buffer-position hud buffer-size buffer-encoding-abbrev)
+  (setq hc-spaceline-left
+        '(((persp-name workspace-number window-number)
+           :fallback evil-tag
+           :separator "|"
+           :face highlight-face)
+          anzu                                ;; current match/number of matches
+          (buffer-modified                    ;; asterisk when modified
+           buffer-id                          ;; the name
+           remote-host)                       ;; the host for remote buffers
+          ((buffer-size                       ;; total size
+            line-column                       ;; L:C
+            buffer-position                   ;; Top | percentage | Bottom
+            hud                               ;; graphic that shows position in buffer (when not at Top or Bottom)
+            buffer-encoding-abbrev)           ;; e.g., 'unix', 'utf-8'
            :separator " | ")
-          ((flycheck-errors flycheck-warnings flycheck-infos)
+          input-method                        ;; ??
+          selection-info                      ;; number of characters or lines selected
+          major-mode                          ;; current major mode e.g., Emacs-Lisp, LitHaskell
+          ((flycheck-error                    ;; number of errors
+            flycheck-warning                  ;; number of warnings
+            flycheck-info)                    ;; number of notifications
            :when active)
-          ((minor-modes process)
-           :when active)
+          (((minor-modes                      ;; currently enabled minor modes
+             :separator spaceline-minor-modes-separator) process) :when active)
+          (version-control :when active)      ;; e.g., GIT, ...
           ))
 
-  (setq spacemacs-mode-line-right
-        '(selection-info
-          (erc-track :when active)
-          major-mode
-          (version-control :when active)
-          ((global-mode new-version)
-           :when active)
-          ))
+  (setq hc-spaceline-right
+        '(which-function
+          (erc-track :when active)            ;; new messages in IRC channel
+          (global :when active)               ;; ??
+          (new-version :when active)))        ;; new version of spacemacs available
+
+  (spaceline-install hc-spaceline-left hc-spaceline-right)
 
   ;; HACK: I want some of these to be ON, but not to appear in mode line.
   (setq spacemacs--diminished-minor-modes
