@@ -265,9 +265,11 @@ layers configuration. You are free to put any user code."
 
   (hc-hw 27 104)
 
+  (setq neo-theme 'arrow)
+  (setq neo-window-width 10)
+
   (setq hc-spaceline-left
         '(((persp-name workspace-number window-number)
-           :fallback evil-tag
            :separator "|"
            :face highlight-face)
           anzu                                ;; current match/number of matches
