@@ -11,6 +11,9 @@
 (setq hc-config-excluded-packages '())
 
 ;; ------------------------------------------------------------------------------
+;; start Eclipse via CLI:
+;; /Applications/eclipse-with-eclim/Contents/MacOS/eclipse &
+
 (defun hc-config/init-emacs-eclim ()
   (use-package eclim
     :config
@@ -20,8 +23,8 @@
 
       (global-eclim-mode)
       (custom-set-variables
-       '(eclim-eclipse-dirs '("/Applications/Eclipse.app/Contents/Eclipse/"))
-       '(eclim-executable     "/Applications/Eclipse.app/Contents/Eclipse/eclim"))
+       '(eclim-eclipse-dirs '("/Applications/eclipse-with-eclim/Contents/Eclipse/"))
+       '(eclim-executable     "/Applications/eclipse-with-eclim/Contents/Eclipse/eclim"))
       (setq help-at-pt-display-when-idle t)
       (setq help-at-pt-timer-delay 0.1)
       (help-at-pt-set-timer)

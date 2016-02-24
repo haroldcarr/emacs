@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2015 Dec 11 (Fri) 09:01:00 by Harold Carr.
+;;;; Last Modified : 2016 Feb 17 (Wed) 14:44:15 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -17,7 +17,7 @@
               (custom-set-variables
                ;; put a version of ghc on path:
                ;; see: https://github.com/kazu-yamamoto/ghc-mod/issues/660
-               '(haskell-process-type 'stack-ghci)
+               '(haskell-process-type 'auto)
                '(haskell-indent-spaces 4)
                '(haskell-indentation-layout-offset 4)
                '(haskell-indentation-left-offset 4)

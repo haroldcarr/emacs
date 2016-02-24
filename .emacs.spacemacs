@@ -275,6 +275,18 @@ layers configuration. You are free to put any user code."
   ;; just use regular undo
   (global-undo-tree-mode -1)
 
+  (setq flycheck-pos-tip-timeout 60)
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "GIT")
+
+  (use-package magit
+    :config
+    (progn
+      (setq git-commit-summary-max-length 80)
+      (setq git-commit-fill-column        80)
+      ))
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Java")
 
@@ -369,6 +381,3 @@ layers configuration. You are free to put any user code."
 
 ;; END OF user-config
 )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.

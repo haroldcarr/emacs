@@ -38,7 +38,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2015 Dec 15 (Tue) 08:49:23 by Harold Carr.
+;;;; Last Modified : 2016 Feb 23 (Tue) 18:07:00 by Harold Carr.
 ;;;;
 #+END_SRC
 
@@ -379,7 +379,7 @@ TODO
      (format "ctags -f %s -e -R %s" ctags-filename dir))))
 
 (defun        hcTagsDir       (x)    (concat (hcEsync)        "/TAGS/" x))
-(hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/src/"))
+(hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/subprojects/catalog-core/src/"))
 (hcDefineBean hcTagsCatalogDst       (hcTagsDir               "TAGS-CATALOG"))
 (hcDefineBean hcTagsJavaSrc          "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/src")
 (hcDefineBean hcTagsJavaDst          (hcTagsDir               "TAGS-JAVA"))
@@ -422,7 +422,12 @@ Magit and Ediff
 
 (hcSection "git")
 (if (not (fboundp 'spacemacs-mode))
-    (use-package magit))
+    (use-package magit
+     :config
+     (progn
+       (setq git-commit-summary-max-length 80)
+       (setq git-commit-fill-column        80)
+       )))
 #+END_SRC
 
 ------------------------------------------------------------------------------
