@@ -4,11 +4,24 @@
 ;; which require an initialization must be listed explicitly in the list.
 (setq hc-config-packages
       '(emacs-eclim
+        peep-dired
         gud
         ))
 
 ;; List of packages to exclude.
 (setq hc-config-excluded-packages '())
+
+;; ------------------------------------------------------------------------------
+(defun hc-config/init-peep-dired ()
+  ;; http://pragmaticemacs.com/emacs/quickly-preview-images-and-other-files-with-peep-dired/
+
+  ;;preview files in dired
+  (use-package peep-dired
+    :ensure t
+    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+    :bind (:map dired-mode-map
+                ("P" . peep-dired)))
+  )
 
 ;; ------------------------------------------------------------------------------
 ;; start Eclipse via CLI:

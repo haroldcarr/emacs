@@ -95,7 +95,7 @@
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "|" "DONE(d!/!)" "DELEGATED(D!/!)")
-          (sequence "WAITING(w@/!)" "SOMEDAY(S!)" "|" "CANCELLED(c@/!)" "SKIP" "PHONE")
+          (sequence "CURRENT(c)" "AVAILABLE(a)" "|" "PHONE")
           (sequence "OPEN(O!)" "|" "CLOSED(C!)")
           ))
 
@@ -106,13 +106,11 @@
           ("DONE"       :foreground "forest green"   :weight bold)
           ("DELEGATED"  :foreground "forest green"   :weight bold)
 
-          ("WAITING"    :foreground "blue"           :weight bold)
-          ("SOMEDAY"    :foreground "blue"           :weight bold)
-          ("CANCELLED"  :foreground "forest green"   :weight bold)
-          ("SKIP"       :foreground "forest green"   :weight bold)
-          ("PHONE"      :foreground "forest green"   :weight bold)
+          ("CURRENT"    :foreground "white"          :weight bold)
+          ("AVAILABLE"  :foreground "magenta"        :weight bold)
+          ("PHONE"      :foreground "yellow"         :weight bold)
 
-          ("OPEN"       :foreground "blue"           :weight bold)
+          ("OPEN"       :foreground "brown"          :weight bold)
           ("CLOSED"     :foreground "forest green"   :weight bold)
           ))
 
