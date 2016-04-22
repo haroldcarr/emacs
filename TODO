@@ -1,0 +1,75 @@
+http://pragmaticemacs.com/emacs/quickly-move-a-file-to-the-current-directory/
+https://gist.github.com/benmaughan/b86ae9ad4cf5b59a99109f7788b3468b
+https://github.com/magnars/dash.el
+https://github.com/abo-abo/swiper
+
+
+From: Ben Maughan <post@gwene.org>
+Subject: Pragmatic Emacs: Quickly move a file to the current directory
+Newsgroups: gwene.org.emacsen.planet
+Date: Fri, 22 Apr 2016 00:56:00 +0200 (15 hours, 56 minutes, 32 seconds ago)
+
+Often I’ll download a file in my browser, and then want to move that file to the
+directory in which I am working in emacs. I wrote a little helper function to
+streamline this, called bjm/move-file-here, given below or at this github gist.
+Call the function and it will prompt you with a list of files in your starting
+directory (defaulting to ~/downloads, but configurable with
+bjm/move-file-here-start-dir) sorted to have the most recent first. The chosen
+file will then be moved to the current directory if you are in dired, or else
+the directory of the current buffer. 
+
+The function needs the packages dash.el and swiper installed. Here is the code –
+comments are welcome. 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; move file here                                                         ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'dash)
+(require 'swiper)
+
+;; start directory
+(defvar bjm/move-file-here-start-dir (expand-file-name "~/downloads"))
+
+(defun bjm/move-file-here ()
+  "Move file from somewhere else to here.
+The file is taken from a start directory set by `bjm/move-file-here-start-dir' and moved to the current directory if invoked in dired, or else the directory containing current buffer. The user is presented with a list of files in the start directory, from which to select the file to move, sorted by most recent first."
+  (interactive)
+  (let (
+        ;; clean directories from list but keep times
+        (file-list (-remove (lambda (x) (nth 1 x))
+                            (directory-files-and-attributes bjm/move-file-here-start-dir)))
+
+        ;; get target directory
+        ;; http://ergoemacs.org/emacs/emacs_copy_file_path.html
+        (target-dir
+         (if (equal major-mode 'dired-mode)
+             (expand-file-name default-directory)
+           (if (null (buffer-file-name))
+               (user-error "Current buffer is not associated with a file.")
+             (file-name-directory (buffer-file-name))))))
+
+    ;; sort list by most recent
+    ;;http://stackoverflow.com/questions/26514437/emacs-sort-list-of-directories-files-by-modification-date
+    (let ((file-list-sort
+           (mapcar #'car
+                   (sort file-list
+                         #'(lambda (x y) (time-less-p (nth 6 y) (nth 6 x)))))))
+
+      ;; use ivy to select start-file
+      (let ((start-file (ivy-read
+                         (concat "Move selected file to " target-dir " :")
+                         file-list-sort
+                         :re-builder #'ivy--regex
+                         :sort nil
+                         :initial-input nil)))
+
+        ;; add full path to start file and end-file
+        (let ((start-file-full
+               (concat bjm/move-file-here-start-dir "/" start-file))
+              (end-file
+               (concat target-dir (file-name-nondirectory start-file))))
+          (rename-file start-file-full end-file)
+          (message "moved %s to %s" start-file-full end-file))))))
+
+
+
