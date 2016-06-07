@@ -35,6 +35,7 @@ values."
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      restclient
+     scala            ;; ensime
      syntax-checking  ;; i.e., flycheck
      themes-megapack
      version-control
