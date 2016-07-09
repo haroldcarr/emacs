@@ -23,15 +23,14 @@
 
 ;;; Code:
 
-
 (defvar juno-home (concat (getenv "HOME") "/ws/juno-orahub"))
 
 (defun sjc (clientPort)
   (interactive)
-  (cd juno-home)
   (let ((cmd (concat "stack exec junoclient --"
                      " -c  /tmp/" (number-to-string clientPort) "-client.yaml")))
     (pop-to-buffer (get-buffer-create (generate-new-buffer-name "*juno-client*")))
+    (cd juno-home)
     (shell (current-buffer))
     (insert cmd)))
 
@@ -54,11 +53,12 @@
 
 (defun spawn-junoserver (n port)
   "Spawn a single server N."
-  (cd juno-home)
-  (let* ((nS      (number-to-string n))
+  (let* ((here    default-directory)
+         (nS      (number-to-string n))
          (portS   (number-to-string port))
          (apiPort (concat "800" nS))
          (pname   (concat "*" apiPort "*")))
+    (cd juno-home)
     (start-process
      pname pname
      "stack"
@@ -66,7 +66,8 @@
      "--" "junoserver" "+RTS" "-N4" "-T" "-RTS"
      "-c" (concat "/tmp/" portS "-cluster.yaml")
      "--apiPort"
-     apiPort)))
+     apiPort)
+    (cd here)))
 
 (defun kill-all-junoservers ()
   "Kill all buffers and processes with names that start with '*800'."
