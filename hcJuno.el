@@ -4,37 +4,64 @@
 ;;; Code:
 ;;; Commentary:
 
-(defun sjss ()
+;; TODO
+;; Generalize to N servers (rather than always 4).
+
+;; OPERATION
+;; (gc   20001)
+;; (sjc  20005)
+;; (sjss 20001)
+(comment
+ CreateAccount foo
+ ObserveAccounts
+ ObserveAccount foo
+ CreateAccount bar
+ AdjustAccount foo (1%1)
+ transfer(foo->bar,101%100)
+ ;;(#transfer "foo" "bar" (% 110 100) "baz")
+)
+;; (kajs)
+
+(defun sjc (clientPort)
+  (interactive)
+  (let ((cmd (concat "stack exec junoclient --"
+                     " -c  /tmp/" (number-to-string clientPort) "-client.yaml")))
+    (pop-to-buffer (get-buffer-create (generate-new-buffer-name "*juno-client*")))
+    (shell (current-buffer))
+    (insert cmd)))
+
+(defun sjss (startPort)
   "Shorthand: spawn all servers."
   (interactive)
-  (spawn-junoservers))
+  (spawn-junoservers startPort))
 
-(defun spawn-junoservers ()
+(defun spawn-junoservers (startPort)
   "Spawn all servers."
-  (mapc #'(lambda (n)
-            (spawn-junoserver n)
+  (mapc #'(lambda (i)
+            (spawn-junoserver (1st i) (2nd i))
             (sleep-for 1))
-        '(1 2 3)))
+        `((1 ,startPort) (2 ,(+ startPort 1)) (3 ,(+ startPort 2)) (4 ,(+ startPort 3)))))
 
-(defun sjs (n)
+(defun sjs (n port)
   "Shorthand: spawn a single server N."
   (interactive)
-  (spawn-junoserver n))
+  (spawn-junoserver n port))
 
-(defun spawn-junoserver (n)
+(defun spawn-junoserver (n port)
   "Spawn a single server N."
   (cd (concat (getenv "HOME") "/ws/juno-orahub"))
-  (let* ((ns    (number-to-string n))
-         (port  (concat "800" ns))
-         (pname (concat "*" port "*")))
+  (let* ((nS      (number-to-string n))
+         (portS   (number-to-string port))
+         (apiPort (concat "800" nS))
+         (pname   (concat "*" apiPort "*")))
     (start-process
      pname pname
      "stack"
      "exec"
      "--" "junoserver" "+RTS" "-N4" "-T" "-RTS"
-     "-c" (concat "conf/1000" ns "-cluster.yaml")
+     "-c" (concat "/tmp/" portS "-cluster.yaml")
      "--apiPort"
-     port)))
+     apiPort)))
 
 (defun kill-all-junoservers ()
   "Kill all buffers and processes with names that start with '*800'."
@@ -81,6 +108,7 @@
               (with-temp-file
                   (concat "/tmp/" serverPort "-cluster.yaml")
                 (insert serverConf))
+              ;; TODO: this creates and (overwrites) the client conf multiple times
               (with-temp-file
                   (concat "/tmp/" clientPort "-client.yaml")
                 (insert clientConf))))
@@ -283,7 +311,7 @@ batchTimeDelta: 1 % 100
     (cons (funcall f all seen (car upcoming) (cdr upcoming))
           (mapT-aux f
                     all
-                    (append seen (list (car upcoming)))
+                    (append seen (list (car upcoming))) ;; TODO
                     (cdr upcoming)))))
 
 (defun zip (lists)
