@@ -28,7 +28,7 @@ values."
      clojure
      emacs-lisp
      git
-     haskell
+     intero ;; haskell
      ;; markdown
      org
      ;; (shell :variables
@@ -313,7 +313,7 @@ you should place you code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Haskell")
 
-  (use-package hcInitHaskell)
+  ;; (use-package hcInitHaskell)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")
