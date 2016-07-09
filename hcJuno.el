@@ -1,7 +1,6 @@
 ;; -*- lexical-binding: t-*-
 
 ;;; package --- Summary
-;;; Code:
 ;;; Commentary:
 
 ;; TODO
@@ -22,8 +21,14 @@
 )
 ;; (kajs)
 
+;;; Code:
+
+
+(defvar juno-home (concat (getenv "HOME") "/ws/juno-orahub"))
+
 (defun sjc (clientPort)
   (interactive)
+  (cd juno-home)
   (let ((cmd (concat "stack exec junoclient --"
                      " -c  /tmp/" (number-to-string clientPort) "-client.yaml")))
     (pop-to-buffer (get-buffer-create (generate-new-buffer-name "*juno-client*")))
@@ -49,7 +54,7 @@
 
 (defun spawn-junoserver (n port)
   "Spawn a single server N."
-  (cd (concat (getenv "HOME") "/ws/juno-orahub"))
+  (cd juno-home)
   (let* ((nS      (number-to-string n))
          (portS   (number-to-string port))
          (apiPort (concat "800" nS))
