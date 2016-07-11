@@ -4,7 +4,8 @@
 ;;; Commentary:
 
 ;; TODO
-;; Generalize to N servers (rather than always 4).
+;; - Generalize to N servers (rather than always 4).
+;; - Refactor templates
 
 ;; OPERATION
 ;; (gc   20001)
@@ -165,6 +166,17 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun public-keys-template (portKeyPairs)
+  "Turn PORTKEYPAIRS into YAML fragment."
+  (apply #'concat
+         (mapcar (cl-function (lambda ((port key)) (concat
+"- - fullAddr: tcp://127.0.0.1:"port"
+    host: '127.0.0.1'
+    port: "port"
+  - "key"
+")))
+                 portKeyPairs)))
+
 (defun server-config-template (clientPort clientPubKey
                                portA pubKeyA
                                portB pubKeyB
@@ -178,47 +190,14 @@ MYPUBLICKEY MYPORT MYPRIVATEKEY are my stuff."
 (concat
 "clientTimeoutLimit: 50000
 publicKeys:
-- - fullAddr: tcp://127.0.0.1:"portA"
-    host: '127.0.0.1'
-    port: "portA"
-  - "pubKeyA"
-- - fullAddr: tcp://127.0.0.1:"portB"
-    host: '127.0.0.1'
-    port: "portB"
-  - "pubKeyB"
-- - fullAddr: tcp://127.0.0.1:"portC"
-    host: '127.0.0.1'
-    port: "portC"
-  - "pubKeyC"
-- - fullAddr: tcp://127.0.0.1:"portD"
-    host: '127.0.0.1'
-    port: "portD"
-  - "pubKeyD"
-heartbeatTimeout: 50000
+" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)))
+"heartbeatTimeout: 50000
 dontDebugFollower: false
 apiPort: 8000
 clientPublicKeys:
-- - fullAddr: tcp://127.0.0.1:"portA"
-    host: '127.0.0.1'
-    port: "portA"
-  - "pubKeyA"
-- - fullAddr: tcp://127.0.0.1:"portB"
-    host: '127.0.0.1'
-    port: "portB"
-  - "pubKeyB"
-- - fullAddr: tcp://127.0.0.1:"portC"
-    host: '127.0.0.1'
-    port: "portC"
-  - "pubKeyC"
-- - fullAddr: tcp://127.0.0.1:"portD"
-    host: '127.0.0.1'
-    port: "portD"
-  - "pubKeyD"
-- - fullAddr: tcp://127.0.0.1:"clientPort"
-    host: '127.0.0.1'
-    port: "clientPort"
-  - "clientPubKey"
-electionTimeoutRange:
+" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)
+                          (,clientPort ,clientPubKey)))
+"electionTimeoutRange:
 - 100000
 - 200000
 otherNodes:
@@ -323,8 +302,6 @@ batchTimeDelta: 1 % 100
 (defun zip (lists)
   "Zip the lists inside LISTS."
   (apply #'cl-mapcar #'list lists))
-
-;; (zip '((Franz Lisp) (is a) (rich language)))
 
 (provide 'hcJuno)
 ;;; hcJuno.el ends here
