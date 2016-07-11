@@ -6,6 +6,7 @@
 ;; OPERATION
 ;; (gc   20001 4)
 ;; (sjc  20005)
+;; (sjss 20001)
 ;; (sjss 20001 4)
 (comment
  CreateAccount foo
@@ -38,9 +39,10 @@
 
 (defun spawn-junoservers (startPort)
   "Spawn all servers."
-  (mapc #'(lambda (i)
-            (spawn-junoserver (1st i) (2nd i))
-            (sleep-for 1))
+  (mapc (cl-function
+         (lambda ((n port))
+           (spawn-junoserver n port)
+           (sleep-for 1)))
         `((1 ,startPort) (2 ,(+ startPort 1)) (3 ,(+ startPort 2)) (4 ,(+ startPort 3)))))
 
 (defun sjs (n port)
@@ -56,7 +58,7 @@
          (apiPort (concat "800" nS))
          (pname   (concat "*" apiPort "*")))
     (cd juno-home)
-    (start-process
+    (my-start-process
      pname pname
      "stack"
      "exec"
@@ -65,6 +67,8 @@
      "--apiPort"
      apiPort)
     (cd here)))
+
+(cl-defun my-start-process (&rest all) (message (format "ALL: %s" all)))
 
 (defun kill-all-junoservers ()
   "Kill all buffers and processes with names that start with '*800'."
