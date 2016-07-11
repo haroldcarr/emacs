@@ -166,8 +166,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun address-template (ports)
+  (apply #'concat
+         (mapcar #'(lambda (port) (concat
+"- fullAddr: tcp://127.0.0.1:"port"
+  host: '127.0.0.1'
+  port: "port"
+"))
+                 ports)))
+
 (defun public-keys-template (portKeyPairs)
-  "Turn PORTKEYPAIRS into YAML fragment."
   (apply #'concat
          (mapcar (cl-function (lambda ((port key)) (concat
 "- - fullAddr: tcp://127.0.0.1:"port"
@@ -201,16 +209,8 @@ clientPublicKeys:
 - 100000
 - 200000
 otherNodes:
-- fullAddr: tcp://127.0.0.1:"otherNode1Port"
-  host: '127.0.0.1'
-  port: "otherNode1Port"
-- fullAddr: tcp://127.0.0.1:"otherNode2Port"
-  host: '127.0.0.1'
-  port: "otherNode2Port"
-- fullAddr: tcp://127.0.0.1:"otherNode3Port"
-  host: '127.0.0.1'
-  port: "otherNode3Port"
-myPublicKey: "myPublicKey"
+" (address-template `(,otherNode1Port ,otherNode2Port ,otherNode3Port))
+"myPublicKey: "myPublicKey"
 nodeId:
   fullAddr: tcp://127.0.0.1:"myPort"
   host: '127.0.0.1'
