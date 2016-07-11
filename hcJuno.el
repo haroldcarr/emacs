@@ -6,7 +6,7 @@
 ;; OPERATION
 ;; (gc   20001 4)
 ;; (sjc  20005)
-;; (sjss 20001)
+;; (sjss 20001 5)
 ;; (sjss 20001 4)
 (comment
  CreateAccount foo
@@ -32,18 +32,19 @@
     (shell (current-buffer))
     (insert cmd)))
 
-(defun sjss (startPort)
+(defun sjss (startPort numServers)
   "Shorthand: spawn all servers."
   (interactive)
-  (spawn-junoservers startPort))
+  (spawn-junoservers startPort numServers))
 
-(defun spawn-junoservers (startPort)
+(defun spawn-junoservers (startPort numServers)
   "Spawn all servers."
   (mapc (cl-function
          (lambda ((n port))
            (spawn-junoserver n port)
            (sleep-for 1)))
-        `((1 ,startPort) (2 ,(+ startPort 1)) (3 ,(+ startPort 2)) (4 ,(+ startPort 3)))))
+        (zip `(,(number-sequence 0 (- numServers 1))
+               ,(mkStartPorts startPort numServers)))))
 
 (defun sjs (n port)
   "Shorthand: spawn a single server N."
@@ -88,21 +89,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar server-public-private-keys
-  '(("9b58735cb5f329c49fe7922177ab8947b6d615f9bfadb1967c79cf211a219eab"
-     "f1d41018daf0e140347888e9e7d4260ec5e3a351cb3c7da85a2a10729f1bf3c9")
-    ("9e0f7aba65edab698a726c88249a8ff3079b11e2d905dce3416a0dc73a223343"
-     "6d2703126ecc4f267a1f49f7b395ee4ed2e8b8b39c7748248e7ae9692751ea86")
-    ("97f4ff8d9aab8492e872a394a3aecfc7c25dd990c234df14677670cdfdec3f1f"
-     "afcd83f5089c6b6bf3fb144ef3f50c975e7df4b5f115855e246e7fe1ca8b654a")
-    ("0bd04e4049684b4201319c3b4371cf25587cb69c5d2ae638beb9ffe9c16cf99d"
-     "8a8bea0e250ef166b86bcbfa1565af95bc8525b71b289b53b5494ee04754b202")
-    ))
-
-(defvar client-public-private-keys
-  '("0d697028fee9ca00a395c25d489f877ef68cd3725d5aa134e1f1fe98cc0b3922"
-    "c8f0c17e4a8d14d0f4f7173630414c0f9497d6e5d9dc2c5c334bd183bc67fe21"))
-
 (defun gc (startPort numServers)
   "STARTPORT."
   (mapc (cl-function
@@ -120,10 +106,8 @@
 (defun gc1 (startPort numServers)
   "STARTPORT."
   (let* ((portPubKeyPairs
-          (zip (list (mapcar #'number-to-string
-                             (mapcar #'(lambda (x) (+ x startPort))
-                                     (number-sequence 0 (- numServers 1))))
-                     server-public-private-keys)))
+          (zip `(,(mapcar #'number-to-string (mkStartPorts startPort numServers))
+                 ,server-public-private-keys)))
          (clientPort       (number-to-string (+ startPort 4)))
          (clientPubKey     (1st client-public-private-keys))
          (clientPrivateKey (2nd client-public-private-keys))
@@ -226,6 +210,25 @@ nodeId:
 myPrivateKey: "clientPrivateKey"
 batchTimeDelta: 1 % 100
 "))
+
+(defvar server-public-private-keys
+  '(("9b58735cb5f329c49fe7922177ab8947b6d615f9bfadb1967c79cf211a219eab"
+     "f1d41018daf0e140347888e9e7d4260ec5e3a351cb3c7da85a2a10729f1bf3c9")
+    ("9e0f7aba65edab698a726c88249a8ff3079b11e2d905dce3416a0dc73a223343"
+     "6d2703126ecc4f267a1f49f7b395ee4ed2e8b8b39c7748248e7ae9692751ea86")
+    ("97f4ff8d9aab8492e872a394a3aecfc7c25dd990c234df14677670cdfdec3f1f"
+     "afcd83f5089c6b6bf3fb144ef3f50c975e7df4b5f115855e246e7fe1ca8b654a")
+    ("0bd04e4049684b4201319c3b4371cf25587cb69c5d2ae638beb9ffe9c16cf99d"
+     "8a8bea0e250ef166b86bcbfa1565af95bc8525b71b289b53b5494ee04754b202")
+    ))
+
+(defvar client-public-private-keys
+  '("0d697028fee9ca00a395c25d489f877ef68cd3725d5aa134e1f1fe98cc0b3922"
+    "c8f0c17e4a8d14d0f4f7173630414c0f9497d6e5d9dc2c5c334bd183bc67fe21"))
+
+(defun mkStartPorts (startPort numServers)
+  (mapcar #'(lambda (x) (+ x startPort))
+          (number-sequence 0 (- numServers 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
