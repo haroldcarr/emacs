@@ -3,14 +3,10 @@
 ;;; package --- Summary
 ;;; Commentary:
 
-;; TODO
-;; - Generalize to N servers (rather than always 4).
-;; - Refactor templates
-
 ;; OPERATION
-;; (gc   20001)
+;; (gc   20001 4)
 ;; (sjc  20005)
-;; (sjss 20001)
+;; (sjss 20001 4)
 (comment
  CreateAccount foo
  ObserveAccounts
@@ -103,7 +99,7 @@
   '("0d697028fee9ca00a395c25d489f877ef68cd3725d5aa134e1f1fe98cc0b3922"
     "c8f0c17e4a8d14d0f4f7173630414c0f9497d6e5d9dc2c5c334bd183bc67fe21"))
 
-(defun gc (startPort)
+(defun gc (startPort numServers)
   "STARTPORT."
   (mapc (cl-function
          (lambda (((serverPort serverConf)
@@ -115,13 +111,14 @@
            (with-temp-file
                (concat "/tmp/" clientPort "-client.yaml")
              (insert clientConf))))
-        (gc1 startPort)))
+        (gc1 startPort numServers)))
 
-(defun gc1 (startPort)
+(defun gc1 (startPort numServers)
   "STARTPORT."
   (let* ((portPubKeyPairs
           (zip (list (mapcar #'number-to-string
-                             (list startPort (+ startPort 1) (+ startPort 2) (+ startPort 3)))
+                             (mapcar #'(lambda (x) (+ x startPort))
+                                     (number-sequence 0 (- numServers 1))))
                      server-public-private-keys)))
          (clientPort       (number-to-string (+ startPort 4)))
          (clientPubKey     (1st client-public-private-keys))
