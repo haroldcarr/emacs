@@ -233,31 +233,13 @@ batchTimeDelta: 1 % 100
 (concat
 "clientTimeoutLimit: 50000
 publicKeys:
-- - fullAddr: tcp://127.0.0.1:"portA"
-    host: '127.0.0.1'
-    port: "portA"
-  - "pubKeyA"
-- - fullAddr: tcp://127.0.0.1:"portB"
-    host: '127.0.0.1'
-    port: "portB"
-  - "pubKeyB"
-- - fullAddr: tcp://127.0.0.1:"portC"
-    host: '127.0.0.1'
-    port: "portC"
-  - "pubKeyC"
-- - fullAddr: tcp://127.0.0.1:"portD"
-    host: '127.0.0.1'
-    port: "portD"
-  - "pubKeyD"
-heartbeatTimeout: 1500000
+" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)))
+"heartbeatTimeout: 1500000
 dontDebugFollower: false
 apiPort: 8000
 clientPublicKeys:
-- - fullAddr: tcp://127.0.0.1:"clientPort"
-    host: '127.0.0.1'
-    port: "clientPort"
-  - "clientPubKey"
-electionTimeoutRange:
+" (public-keys-template `((,clientPort ,clientPubKey)))
+"electionTimeoutRange:
 - 3000000
 - 6000000
 otherNodes:
