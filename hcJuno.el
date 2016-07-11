@@ -3,28 +3,35 @@
 ;;; package --- Summary
 ;;; Commentary:
 
+;; TODO:
+;; - `server-public-private-keys` is a list of public/private keys to be used by juno servers.
+;;   It only contains 4 pairs.
+;;   Add more pairs to generate configuration for more than 4 servers.
+
 ;; OPERATION
-;; (gc   20001 4)
-;; (sjc  20005)
-;; (sjss 20001 5)
-;; (sjss 20001 4)
+;; (generate-config    20001 4)
+;; (spawn-juno-servers 20001 4)
+;; (juno-client-shell  20005)
 (comment
  CreateAccount foo
- ObserveAccounts
- ObserveAccount foo
  CreateAccount bar
  AdjustAccount foo (1%1)
  transfer(foo->bar,101%100)
  ;;(#transfer "foo" "bar" (% 110 100) "baz")
+ ObserveAccounts
+ ObserveAccount foo
 )
-;; (kajs)
+;; (kill-all-juno-servers)
+;; manually kill juno client shell
 
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Spawn servers and a client shell.
+
 (defvar juno-home (concat (getenv "HOME") "/ws/juno-orahub"))
 
-(defun sjc (clientPort)
-  (interactive)
+(defun juno-client-shell (clientPort)
   (let ((cmd (concat "stack exec junoclient --"
                      " -c  /tmp/" (number-to-string clientPort) "-client.yaml")))
     (pop-to-buffer (get-buffer-create (generate-new-buffer-name "*juno-client*")))
@@ -32,26 +39,26 @@
     (shell (current-buffer))
     (insert cmd)))
 
+(defun jcshell (clientPort)
+  "Shorthand: juno-client-shell."
+  (interactive)
+  (juno-client-shell clientPort))
+
+(defun spawn-juno-servers (startPort numServers)
+  "Spawn all servers."
+  (mapc (cl-function
+         (lambda ((n port))
+           (spawn-juno-server n port)
+           (sleep-for 1)))
+        (zip `(,(number-sequence 0 (- numServers 1))
+               ,(mkStartPorts startPort numServers)))))
+
 (defun sjss (startPort numServers)
   "Shorthand: spawn all servers."
   (interactive)
   (spawn-junoservers startPort numServers))
 
-(defun spawn-junoservers (startPort numServers)
-  "Spawn all servers."
-  (mapc (cl-function
-         (lambda ((n port))
-           (spawn-junoserver n port)
-           (sleep-for 1)))
-        (zip `(,(number-sequence 0 (- numServers 1))
-               ,(mkStartPorts startPort numServers)))))
-
-(defun sjs (n port)
-  "Shorthand: spawn a single server N."
-  (interactive)
-  (spawn-junoserver n port))
-
-(defun spawn-junoserver (n port)
+(defun spawn-juno-server (n port)
   "Spawn a single server N."
   (let* ((here    default-directory)
          (nS      (number-to-string n))
@@ -59,7 +66,7 @@
          (apiPort (concat "800" nS))
          (pname   (concat "*" apiPort "*")))
     (cd juno-home)
-    (my-start-process
+    (start-process
      pname pname
      "stack"
      "exec"
@@ -69,9 +76,15 @@
      apiPort)
     (cd here)))
 
+(defun sjs (n port)
+  "Shorthand: spawn a single server N."
+  (interactive)
+  (spawn-juno-server n port))
+
+;; For debug/development : replace start-process above with this.
 (cl-defun my-start-process (&rest all) (message (format "ALL: %s" all)))
 
-(defun kill-all-junoservers ()
+(defun kill-all-juno-servers ()
   "Kill all buffers and processes with names that start with '*800'."
   (mapc #'(lambda (p)
             (let ((pname (process-name p)))
@@ -85,12 +98,12 @@
 (defun kajs ()
   "Shorthand: kill-all-junoservers."
   (interactive)
-  (kill-all-junoservers))
+  (kill-all-juno-servers))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generate config files.
 
-(defun gc (startPort numServers)
-  "STARTPORT."
+(defun generate-config (startPort numServers)
   (mapc (cl-function
          (lambda (((serverPort serverConf)
                    (clientPort clientConf)))
@@ -103,12 +116,15 @@
              (insert clientConf))))
         (gc1 startPort numServers)))
 
+(defun gc (startPort numServers)
+  "Shorthand: generate-config."
+  (generate-config startPort numServers))
+
 (defun gc1 (startPort numServers)
-  "STARTPORT."
   (let* ((portPubKeyPairs
           (zip `(,(mapcar #'number-to-string (mkStartPorts startPort numServers))
                  ,server-public-private-keys)))
-         (clientPort       (number-to-string (+ startPort 4)))
+         (clientPort       (number-to-string (+ startPort numServers)))
          (clientPubKey     (1st client-public-private-keys))
          (clientPrivateKey (2nd client-public-private-keys))
          (gcf #'(lambda (a s c u) (gc2 clientPort clientPubKey clientPrivateKey a s c u))))
@@ -116,7 +132,9 @@
 
 (defun gc2 (clientPort clientPubKey clientPrivateKey all s current u)
   "ALL S CURRENT U."
-  (let* ((allPortPubKeys (mapcar (cl-function (lambda ((port (pubKey priKey))) `(,port ,pubKey))) all))
+  (let* ((allPortPubKeys (mapcar (cl-function (lambda ((port (pubKey priKey-ignore)))
+                                                `(,port ,pubKey)))
+                                 all))
          (others (mapcar #'1st (append s u)))
          (myPublicKey (1st (2nd current)))
          (myPort (1st current))
@@ -130,6 +148,10 @@
                      clientPort clientPubKey clientPrivateKey
                      allPortPubKeys)))
     ))
+
+(defun mkStartPorts (startPort numServers)
+  (mapcar #'(lambda (x) (+ x startPort))
+          (number-sequence 0 (- numServers 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -226,16 +248,10 @@ batchTimeDelta: 1 % 100
   '("0d697028fee9ca00a395c25d489f877ef68cd3725d5aa134e1f1fe98cc0b3922"
     "c8f0c17e4a8d14d0f4f7173630414c0f9497d6e5d9dc2c5c334bd183bc67fe21"))
 
-(defun mkStartPorts (startPort numServers)
-  (mapcar #'(lambda (x) (+ x startPort))
-          (number-sequence 0 (- numServers 1))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun 1st (x) "X[0]." (car x))
 (defun 2nd (x) "X[1]." (cadr x))
-(defun 3rd (x) "X[3]." (caddr x))
-(defun 4th (x) "X[4]." (cadddr x))
 
 (defun mapT (f l)
   "Map F over L."
