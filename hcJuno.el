@@ -166,6 +166,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun node-id-template (port)
+  (concat
+"  fullAddr: tcp://127.0.0.1:"port"
+  host: '127.0.0.1'
+  port: "port"
+"))
+
 (defun address-template (ports)
   (apply #'concat
          (mapcar #'(lambda (port) (concat
@@ -212,10 +219,8 @@ otherNodes:
 " (address-template `(,otherNode1Port ,otherNode2Port ,otherNode3Port))
 "myPublicKey: "myPublicKey"
 nodeId:
-  fullAddr: tcp://127.0.0.1:"myPort"
-  host: '127.0.0.1'
-  port: "myPort"
-enableDebug: true
+" (node-id-template myPort)
+"enableDebug: true
 myPrivateKey: "myPrivateKey"
 batchTimeDelta: 1 % 100
 "))
