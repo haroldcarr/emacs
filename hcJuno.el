@@ -1,18 +1,15 @@
 ;; -*- lexical-binding: t-*-
 
-;;; package --- Summary
+;;; package --- generate server and client configuration files; spawn servers; start a client shell.
 ;;; Commentary:
 
-;; TODO:
-;; - `server-public-private-keys` is a list of public/private keys to be used by juno servers.
-;;   It only contains 4 pairs.
-;;   Add more pairs to generate configuration for more than 4 servers.
-
 ;; OPERATION
-;; (generate-config    20001 4)
-;; (spawn-juno-servers 20001 4)
-;; (juno-client-shell  20005)
 (comment
+ ;; evaluate elisp:
+ (generate-config    20001 4)
+ (juno-client-shell  20005)
+ (spawn-juno-servers 20001 4)
+ ;; in client shell:
  CreateAccount foo
  CreateAccount bar
  AdjustAccount foo (1%1)
@@ -20,9 +17,19 @@
  ;;(#transfer "foo" "bar" (% 110 100) "baz")
  ObserveAccounts
  ObserveAccount foo
+ ;; evaluate elisp:
+ (kill-all-juno-servers)
+ ;; manually kill juno client shell
 )
-;; (kill-all-juno-servers)
-;; manually kill juno client shell
+
+;; TODO:
+;; - `server-public-private-keys` is a list of public/private keys to be used by juno servers.
+;;   It only contains 4 pairs.
+;;   Add more pairs to generate configuration for more than 4 servers.
+;;
+;; - Factor of templates.
+;;
+;; - More parameterization of generation/templates.
 
 ;;; Code:
 
