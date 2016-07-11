@@ -243,24 +243,11 @@ clientPublicKeys:
 - 3000000
 - 6000000
 otherNodes:
-- fullAddr: tcp://127.0.0.1:"portA"
-  host: '127.0.0.1'
-  port: "portA"
-- fullAddr: tcp://127.0.0.1:"portB"
-  host: '127.0.0.1'
-  port: "portB"
-- fullAddr: tcp://127.0.0.1:"portC"
-  host: '127.0.0.1'
-  port: "portC"
-- fullAddr: tcp://127.0.0.1:"portD"
-  host: '127.0.0.1'
-  port: "portD"
-myPublicKey: "clientPubKey"
+" (address-template `(,portA ,portB ,portC ,portD))
+"myPublicKey: "clientPubKey"
 nodeId:
-  fullAddr: tcp://127.0.0.1:"clientPort"
-  host: '127.0.0.1'
-  port: "clientPort"
-enableDebug: false
+" (node-id-template clientPort)
+"enableDebug: false
 myPrivateKey: "clientPrivateKey"
 batchTimeDelta: 1 % 100
 "))
