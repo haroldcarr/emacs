@@ -123,7 +123,7 @@
 
 (defun gc1 (startPort)
   "STARTPORT."
-  (let* ((portKeyPairs
+  (let* ((portPubKeyPairs
           (zip (list (mapcar #'number-to-string
                              (list startPort (+ startPort 1) (+ startPort 2) (+ startPort 3)))
                      server-public-private-keys)))
@@ -131,37 +131,23 @@
          (clientPubKey     (1st client-public-private-keys))
          (clientPrivateKey (2nd client-public-private-keys))
          (gcf #'(lambda (a s c u) (gc2 clientPort clientPubKey clientPrivateKey a s c u))))
-    (mapT gcf portKeyPairs)))
+    (mapT gcf portPubKeyPairs)))
 
 (defun gc2 (clientPort clientPubKey clientPrivateKey all s current u)
   "ALL S CURRENT U."
-  (let* ((a  (1st all))
-         (portA (1st a))
-         (pubKeyA (1st (2nd a)))
-         (b  (2nd all))
-         (portB (1st b))
-         (pubKeyB (1st (2nd b)))
-         (c  (3rd all))
-         (portC (1st c))
-         (pubKeyC (1st (2nd c)))
-         (d  (4th all))
-         (portD (1st d))
-         (pubKeyD (1st (2nd d)))
-         (others (append s u))
-         (o1 (1st (1st others)))
-         (o2 (1st (2nd others)))
-         (o3 (1st (3rd others)))
+  (let* ((allPortPubKeys (mapcar (cl-function (lambda ((port (pubKey priKey))) `(,port ,pubKey))) all))
+         (others (mapcar #'1st (append s u)))
          (myPublicKey (1st (2nd current)))
          (myPort (1st current))
          (myPrivateKey (2nd (2nd current))))
     `((,myPort ,(server-config-template
                  clientPort clientPubKey
-                 portA pubKeyA portB pubKeyB portC pubKeyC portD pubKeyD
-                 o1 o2 o3
+                 allPortPubKeys
+                 others
                  myPublicKey myPort myPrivateKey))
       (,clientPort ,(client-config-template
                      clientPort clientPubKey clientPrivateKey
-                     portA pubKeyA portB pubKeyB portC pubKeyC portD pubKeyD)))
+                     allPortPubKeys)))
     ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -193,11 +179,8 @@
                  portKeyPairs)))
 
 (defun server-config-template (clientPort clientPubKey
-                               portA pubKeyA
-                               portB pubKeyB
-                               portC pubKeyC
-                               portD pubKeyD
-                               otherNode1Port otherNode2Port otherNode3Port
+                               all
+                               others
                                myPublicKey myPort myPrivateKey)
   "PORTA PUBKEYA PORTB PUBKEYB PORTC PUBKEYC PORTD PUBKEYD are the servers.
 OTHERNODE1PORT OTHERNODE2PORT OTHERNODE3PORT are the other nodes.
@@ -205,18 +188,17 @@ MYPUBLICKEY MYPORT MYPRIVATEKEY are my stuff."
 (concat
 "clientTimeoutLimit: 50000
 publicKeys:
-" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)))
+" (public-keys-template all)
 "heartbeatTimeout: 50000
 dontDebugFollower: false
 apiPort: 8000
 clientPublicKeys:
-" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)
-                          (,clientPort ,clientPubKey)))
+" (public-keys-template `(,@all (,clientPort ,clientPubKey)))
 "electionTimeoutRange:
 - 100000
 - 200000
 otherNodes:
-" (address-template `(,otherNode1Port ,otherNode2Port ,otherNode3Port))
+" (address-template others)
 "myPublicKey: "myPublicKey"
 nodeId:
 " (node-id-template myPort)
@@ -225,15 +207,11 @@ myPrivateKey: "myPrivateKey"
 batchTimeDelta: 1 % 100
 "))
 
-(defun client-config-template (clientPort clientPubKey clientPrivateKey
-                               portA pubKeyA
-                               portB pubKeyB
-                               portC pubKeyC
-                               portD pubKeyD)
+(defun client-config-template (clientPort clientPubKey clientPrivateKey all)
 (concat
 "clientTimeoutLimit: 50000
 publicKeys:
-" (public-keys-template `((,portA ,pubKeyA) (,portB ,pubKeyB) (,portC ,pubKeyC) (,portD ,pubKeyD)))
+" (public-keys-template all)
 "heartbeatTimeout: 1500000
 dontDebugFollower: false
 apiPort: 8000
@@ -243,7 +221,7 @@ clientPublicKeys:
 - 3000000
 - 6000000
 otherNodes:
-" (address-template `(,portA ,portB ,portC ,portD))
+" (address-template (mapcar #'1st all))
 "myPublicKey: "clientPubKey"
 nodeId:
 " (node-id-template clientPort)
