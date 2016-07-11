@@ -52,7 +52,6 @@
   (juno-client-shell clientPort))
 
 (defun spawn-juno-servers (startPort numServers)
-  "Spawn all servers."
   (mapc (cl-function
          (lambda ((n port))
            (spawn-juno-server n port)
@@ -138,7 +137,6 @@
     (mapT gcf portPubKeyPairs)))
 
 (defun gc2 (clientPort clientPubKey clientPrivateKey all s current u)
-  "ALL S CURRENT U."
   (let* ((allPortPubKeys (mapcar (cl-function (lambda ((port (pubKey priKey-ignore)))
                                                 `(,port ,pubKey)))
                                  all))
@@ -192,9 +190,6 @@
                                all
                                others
                                myPublicKey myPort myPrivateKey)
-  "PORTA PUBKEYA PORTB PUBKEYB PORTC PUBKEYC PORTD PUBKEYD are the servers.
-OTHERNODE1PORT OTHERNODE2PORT OTHERNODE3PORT are the other nodes.
-MYPUBLICKEY MYPORT MYPRIVATEKEY are my stuff."
 (concat
 "clientTimeoutLimit: 50000
 publicKeys:
@@ -257,11 +252,10 @@ batchTimeDelta: 1 % 100
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun 1st (x) "X[0]." (car x))
-(defun 2nd (x) "X[1]." (cadr x))
+(defun 1st (x) (car x))
+(defun 2nd (x) (cadr x))
 
 (defun mapT (f l)
-  "Map F over L."
   (mapT-aux f l '() l))
 
 (defun mapT-aux (f all seen upcoming)
