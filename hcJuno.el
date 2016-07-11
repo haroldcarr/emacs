@@ -105,20 +105,16 @@
 
 (defun gc (startPort)
   "STARTPORT."
-  (mapc #'(lambda (portAndContents)
-            (let* ((serverInfo (1st portAndContents))
-                   (serverPort (1st serverInfo))
-                   (serverConf (2nd serverInfo))
-                   (clientInfo (2nd portAndContents))
-                   (clientPort (1st clientInfo))
-                   (clientConf (2nd clientInfo)))
-              (with-temp-file
-                  (concat "/tmp/" serverPort "-cluster.yaml")
-                (insert serverConf))
-              ;; TODO: this creates and (overwrites) the client conf multiple times
-              (with-temp-file
-                  (concat "/tmp/" clientPort "-client.yaml")
-                (insert clientConf))))
+  (mapc (cl-function
+         (lambda (((serverPort serverConf)
+                   (clientPort clientConf)))
+           (with-temp-file
+               (concat "/tmp/" serverPort "-cluster.yaml")
+             (insert serverConf))
+           ;; TODO: this creates and (overwrites) the client conf multiple times
+           (with-temp-file
+               (concat "/tmp/" clientPort "-client.yaml")
+             (insert clientConf))))
         (gc1 startPort)))
 
 (defun gc1 (startPort)
