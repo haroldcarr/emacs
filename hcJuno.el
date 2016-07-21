@@ -5,18 +5,20 @@
 
 ;; OPERATION
 (comment
+ ;; in shell
+ stack exec genconfs
  ;; evaluate elisp:
- (generate-config    20001 4)
- (juno-client-shell  20005)
- (spawn-juno-servers 20001 4)
+ (cp-config)
+ (juno-client-shell  10004)
+ (spawn-juno-servers 10000 4)
  ;; in client shell:
- CreateAccount foo
- CreateAccount bar
- AdjustAccount foo (1%1)
- transfer(foo->bar,101%100)
+ 0: CreateAccount foo
+ 0: CreateAccount bar
+ 0: AdjustAccount foo (1%1)
+ 0: transfer(foo->bar,101%100)
  ;;(#transfer "foo" "bar" (% 110 100) "baz")
- ObserveAccounts
- ObserveAccount foo
+ 0: ObserveAccounts
+ 0: ObserveAccount foo
  ;; evaluate elisp:
  (kill-all-juno-servers)
  ;; manually kill juno client shell
@@ -36,7 +38,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Spawn servers and a client shell.
 
-(defvar juno-home (concat (getenv "HOME") "/ws/juno-orahub"))
+(defvar juno-home (concat (getenv "HOME") "/ws/OLABS/juno-orahub"))
 
 (defun juno-client-shell (clientPort)
   (let ((cmd (concat "stack exec junoclient --"
@@ -106,167 +108,18 @@
   (interactive)
   (kill-all-juno-servers))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generate config files.
-
-(defun generate-config (startPort numServers)
-  (mapc (cl-function
-         (lambda (((serverPort serverConf)
-                   (clientPort clientConf)))
-           (with-temp-file
-               (concat "/tmp/" serverPort "-cluster.yaml")
-             (insert serverConf))
-           ;; TODO: this creates and (overwrites) the client conf multiple times
-           (with-temp-file
-               (concat "/tmp/" clientPort "-client.yaml")
-             (insert clientConf))))
-        (gc1 startPort numServers)))
-
-(defun gc (startPort numServers)
-  "Shorthand: generate-config."
-  (generate-config startPort numServers))
-
-(defun gc1 (startPort numServers)
-  (let* ((portPubKeyPairs
-          (zip `(,(mapcar #'number-to-string (mkStartPorts startPort numServers))
-                 ,server-public-private-keys)))
-         (clientPort       (number-to-string (+ startPort numServers)))
-         (clientPubKey     (1st client-public-private-keys))
-         (clientPrivateKey (2nd client-public-private-keys))
-         (gcf #'(lambda (a s c u) (gc2 clientPort clientPubKey clientPrivateKey a s c u))))
-    (mapT gcf portPubKeyPairs)))
-
-(defun gc2 (clientPort clientPubKey clientPrivateKey all s current u)
-  (let* ((allPortPubKeys (mapcar (cl-function (lambda ((port (pubKey priKey-ignore)))
-                                                `(,port ,pubKey)))
-                                 all))
-         (others (mapcar #'1st (append s u)))
-         (myPublicKey (1st (2nd current)))
-         (myPort (1st current))
-         (myPrivateKey (2nd (2nd current))))
-    `((,myPort ,(server-config-template
-                 clientPort clientPubKey
-                 allPortPubKeys
-                 others
-                 myPublicKey myPort myPrivateKey))
-      (,clientPort ,(client-config-template
-                     clientPort clientPubKey clientPrivateKey
-                     allPortPubKeys)))
-    ))
-
 (defun mkStartPorts (startPort numServers)
   (mapcar #'(lambda (x) (+ x startPort))
           (number-sequence 0 (- numServers 1))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Generate config files.
 
-(defun node-id-template (port)
-  (concat
-"  fullAddr: tcp://127.0.0.1:"port"
-  host: '127.0.0.1'
-  port: "port"
-"))
-
-(defun address-template (ports)
-  (apply #'concat
-         (mapcar #'(lambda (port) (concat
-"- fullAddr: tcp://127.0.0.1:"port"
-  host: '127.0.0.1'
-  port: "port"
-"))
-                 ports)))
-
-(defun public-keys-template (portKeyPairs)
-  (apply #'concat
-         (mapcar (cl-function (lambda ((port key)) (concat
-"- - fullAddr: tcp://127.0.0.1:"port"
-    host: '127.0.0.1'
-    port: "port"
-  - "key"
-")))
-                 portKeyPairs)))
-
-(defun server-config-template (clientPort clientPubKey
-                               all
-                               others
-                               myPublicKey myPort myPrivateKey)
-(concat
-"clientTimeoutLimit: 50000
-publicKeys:
-" (public-keys-template all)
-"heartbeatTimeout: 50000
-dontDebugFollower: false
-apiPort: 8000
-clientPublicKeys:
-" (public-keys-template `(,@all (,clientPort ,clientPubKey)))
-"electionTimeoutRange:
-- 100000
-- 200000
-otherNodes:
-" (address-template others)
-"myPublicKey: "myPublicKey"
-nodeId:
-" (node-id-template myPort)
-"enableDebug: true
-myPrivateKey: "myPrivateKey"
-batchTimeDelta: 1 % 100
-"))
-
-(defun client-config-template (clientPort clientPubKey clientPrivateKey all)
-(concat
-"clientTimeoutLimit: 50000
-publicKeys:
-" (public-keys-template all)
-"heartbeatTimeout: 1500000
-dontDebugFollower: false
-apiPort: 8000
-clientPublicKeys:
-" (public-keys-template `((,clientPort ,clientPubKey)))
-"electionTimeoutRange:
-- 3000000
-- 6000000
-otherNodes:
-" (address-template (mapcar #'1st all))
-"myPublicKey: "clientPubKey"
-nodeId:
-" (node-id-template clientPort)
-"enableDebug: false
-myPrivateKey: "clientPrivateKey"
-batchTimeDelta: 1 % 100
-"))
-
-(defvar server-public-private-keys
-  '(("9b58735cb5f329c49fe7922177ab8947b6d615f9bfadb1967c79cf211a219eab"
-     "f1d41018daf0e140347888e9e7d4260ec5e3a351cb3c7da85a2a10729f1bf3c9")
-    ("9e0f7aba65edab698a726c88249a8ff3079b11e2d905dce3416a0dc73a223343"
-     "6d2703126ecc4f267a1f49f7b395ee4ed2e8b8b39c7748248e7ae9692751ea86")
-    ("97f4ff8d9aab8492e872a394a3aecfc7c25dd990c234df14677670cdfdec3f1f"
-     "afcd83f5089c6b6bf3fb144ef3f50c975e7df4b5f115855e246e7fe1ca8b654a")
-    ("0bd04e4049684b4201319c3b4371cf25587cb69c5d2ae638beb9ffe9c16cf99d"
-     "8a8bea0e250ef166b86bcbfa1565af95bc8525b71b289b53b5494ee04754b202")
-    ))
-
-(defvar client-public-private-keys
-  '("0d697028fee9ca00a395c25d489f877ef68cd3725d5aa134e1f1fe98cc0b3922"
-    "c8f0c17e4a8d14d0f4f7173630414c0f9497d6e5d9dc2c5c334bd183bc67fe21"))
+(defun cp-config ()
+  (shell-command (concat "cp " juno-home "/conf/clients/* /tmp"))
+  (shell-command (concat "cp " juno-home "/conf/servers/* /tmp")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun 1st (x) (car x))
-(defun 2nd (x) (cadr x))
-
-(defun mapT (f l)
-  (mapT-aux f l '() l))
-
-(defun mapT-aux (f all seen upcoming)
-  "F is given ALL, SEEN, the current element, and UPCOMING."
-  (if (null upcoming)
-      nil
-    (cons (funcall f all seen (car upcoming) (cdr upcoming))
-          (mapT-aux f
-                    all
-                    (append seen (list (car upcoming))) ;; TODO
-                    (cdr upcoming)))))
 
 (defun zip (lists)
   "Zip the lists inside LISTS."
