@@ -24,6 +24,9 @@
  ;; manually kill juno client shell
 )
 
+;; When running emacs in Docker and sharing host/container directories, need this so emacs can exit.
+;; (setq ido-save-directory-list-file "~/ido-last.JUNK")
+
 ;; TODO:
 ;; - `server-public-private-keys` is a list of public/private keys to be used by juno servers.
 ;;   It only contains 4 pairs.

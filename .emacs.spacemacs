@@ -27,6 +27,7 @@ values."
      ;; better-defaults
      clojure
      emacs-lisp
+     finance ;; ledger-mode
      git
      intero ;; haskell
      ;; markdown
@@ -383,6 +384,3 @@ you should place you code here."
 
   (menu-bar-mode)
   )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
