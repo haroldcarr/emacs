@@ -29,7 +29,7 @@ values."
      emacs-lisp
      finance ;; ledger-mode
      git
-     intero ;; haskell
+     ;; haskell - see hc-config where I load intero
      ;; markdown
      org
      ;; (shell :variables

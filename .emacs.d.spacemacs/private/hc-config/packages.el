@@ -4,7 +4,8 @@
 ;; which require an initialization must be listed explicitly in the list.
 (setq hc-config-packages
       '(
-        ;;        emacs-eclim
+        ;;emacs-eclim
+        hindent
         intero
         gud
         markdown-preview-mode
@@ -70,6 +71,21 @@
 
 ;; ------------------------------------------------------------------------------
 
+(defun hc-config/init-hindent ()
+  (use-package hindent
+    :config (progn (add-hook 'haskell-mode-hook 'hindent-mode)
+                   (custom-set-variables
+                    '(haskell-stylish-on-save t)
+                    '(hindent-indent-size 4)
+                    '(hindent-line-length 120)
+                    '(hindent-reformat-buffer-on-save t)
+                    '(hindent-style "johan-tibell")
+                   )
+            )
+  ))
+
+;; ------------------------------------------------------------------------------
+
 (defun hc-config/init-intero ()
   (use-package intero
     :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
@@ -82,8 +98,7 @@
   (use-package markdown-preview-mode
     :ensure t
     :defer t
-    )
-  )
+  ))
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-peep-dired ()
@@ -94,6 +109,6 @@
     :ensure t
     :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
     :bind (:map dired-mode-map
-                ("P" . peep-dired)))
-  )
+                ("P" . peep-dired))
+  ))
 
