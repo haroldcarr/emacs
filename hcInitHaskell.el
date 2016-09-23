@@ -4,35 +4,36 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2016 Feb 17 (Wed) 14:44:15 by Harold Carr.
+;;;; Last Modified : 2016 Sep 23 (Fri) 11:02:09 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
 ;; COMMON
-(use-package haskell-mode
-  :config
-  (add-hook 'haskell-mode-hook
-            (lambda ()
-              (custom-set-variables
-               ;; put a version of ghc on path:
-               ;; see: https://github.com/kazu-yamamoto/ghc-mod/issues/660
-               '(haskell-process-type 'auto)
-               '(haskell-indent-spaces 4)
-               '(haskell-indentation-layout-offset 4)
-               '(haskell-indentation-left-offset 4)
-               '(haskell-indentation-ifte-offset 4)
-               '(haskell-process-auto-import-loaded-modules t)
-               '(haskell-process-suggest-remove-import-lines t)
-               ;; CURRENT: stack install stylish-haskell
-               ;;          put .local/bin in PATH
-               '(haskell-stylish-on-save t)
-               '(haskell-tags-on-save t)
-               '(haskell-process-log t)
-               )
-              (turn-on-haskell-doc)
-              (turn-on-haskell-decl-scan)
-              )))
+(defvar hc-haskell-format-on-save nil) ;; nil turns to t when loaded
+
+(defun hc-toggle-haskell-format-on-save ()
+  (interactive)
+  (setq hc-haskell-format-on-save (not hc-haskell-format-on-save))
+  (custom-set-variables
+   '(haskell-stylish-on-save hc-haskell-format-on-save)
+   '(hindent-reformat-buffer-on-save hc-haskell-format-on-save))
+  (message "save is: %s" hc-haskell-format-on-save))
+
+(use-package hindent
+  :config (progn (add-hook 'haskell-mode-hook 'hindent-mode)
+                 (custom-set-variables
+                  '(hindent-indent-size 4)
+                  '(hindent-line-length 120)
+                  '(hindent-style "johan-tibell"))
+                 (hc-toggle-haskell-format-on-save)))
+
+;; ------------------------------------------------------------------------------
+
+(use-package intero
+  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
+                 ;; https://github.com/commercialhaskell/intero/issues/208
+                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 
 (provide 'hcInitHaskell)
 

@@ -72,26 +72,10 @@
 ;; ------------------------------------------------------------------------------
 
 (defun hc-config/init-hindent ()
-  (use-package hindent
-    :config (progn (add-hook 'haskell-mode-hook 'hindent-mode)
-                   (custom-set-variables
-                    '(haskell-stylish-on-save t)
-                    '(hindent-indent-size 4)
-                    '(hindent-line-length 120)
-                    '(hindent-reformat-buffer-on-save t)
-                    '(hindent-style "johan-tibell")
-                   )
-            )
-  ))
-
-;; ------------------------------------------------------------------------------
+  (use-package hcInitHaskell))
 
 (defun hc-config/init-intero ()
-  (use-package intero
-    :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
-                   ;; https://github.com/commercialhaskell/intero/issues/208
-                   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
-  ))
+  (use-package hcInitHaskell))
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-markdown-preview-mode ()
