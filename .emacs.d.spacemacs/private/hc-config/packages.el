@@ -3,25 +3,16 @@
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
 (setq hc-config-packages
-      '(emacs-eclim
-        peep-dired
+      '(
+        ;;        emacs-eclim
+        intero
         gud
+        markdown-preview-mode
+        peep-dired
         ))
 
 ;; List of packages to exclude.
 (setq hc-config-excluded-packages '())
-
-;; ------------------------------------------------------------------------------
-(defun hc-config/init-peep-dired ()
-  ;; http://pragmaticemacs.com/emacs/quickly-preview-images-and-other-files-with-peep-dired/
-
-  ;;preview files in dired
-  (use-package peep-dired
-    :ensure t
-    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
-    :bind (:map dired-mode-map
-                ("P" . peep-dired)))
-  )
 
 ;; ------------------------------------------------------------------------------
 ;; start Eclipse via CLI:
@@ -76,3 +67,33 @@
       (define-key eclim-mode-map (kbd "C-c C-a C-c") 'gud-cont)
       (define-key eclim-mode-map (kbd "C-c C-a C-r") 'gud-run)
       )))
+
+;; ------------------------------------------------------------------------------
+
+(defun hc-config/init-intero ()
+  (use-package intero
+    :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
+                   ;; https://github.com/commercialhaskell/intero/issues/208
+                   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+  ))
+
+;; ------------------------------------------------------------------------------
+(defun hc-config/init-markdown-preview-mode ()
+  (use-package markdown-preview-mode
+    :ensure t
+    :defer t
+    )
+  )
+
+;; ------------------------------------------------------------------------------
+(defun hc-config/init-peep-dired ()
+  ;; http://pragmaticemacs.com/emacs/quickly-preview-images-and-other-files-with-peep-dired/
+
+  ;;preview files in dired
+  (use-package peep-dired
+    :ensure t
+    :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+    :bind (:map dired-mode-map
+                ("P" . peep-dired)))
+  )
+

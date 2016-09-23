@@ -41,7 +41,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Spawn servers and a client shell.
 
-(defvar juno-home (concat (getenv "HOME") "/ws/OLABS/juno-orahub"))
+(defvar juno-home (concat (getenv "HOME") "/ws/OLABS/juno"))
+;;(defvar juno-home (concat (getenv "HOME") "/.sync/.esync/openhc/pept/z-juno"))
 
 (defun juno-client-shell (clientPort)
   (let ((cmd (concat "stack exec junoclient --"
@@ -119,6 +120,7 @@
 ;; Generate config files.
 
 (defun cp-config ()
+  (shell-command (concat "cp " juno-home "/conf/*.yaml /tmp"))
   (shell-command (concat "cp " juno-home "/conf/clients/* /tmp"))
   (shell-command (concat "cp " juno-home "/conf/servers/* /tmp")))
 

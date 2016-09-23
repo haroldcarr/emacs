@@ -314,7 +314,7 @@ For extending it to work with Maven:
 #+BEGIN_SRC emacs-lisp :comments off
 (hcSection "Haskell")
 
-(use-package hcInitHaskellVanilla)
+;; (use-package hcInitHaskell)
 #+END_SRC
 
 ------------------------------------------------------------------------------
