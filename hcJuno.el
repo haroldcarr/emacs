@@ -9,8 +9,10 @@
  stack exec genconfs
  ;; evaluate elisp:
  (cp-config)
- (juno-client-shell  10004)
- (spawn-juno-servers 10000 4)
+ (setq ledger-type "juno")
+ (setq ledger-type "altledger")
+ (juno-client-shell  ledger-type 10005)
+ (spawn-juno-servers ledger-type 10000 5)
  ;; in client shell:
  0: CreateAccount foo
  0: CreateAccount bar
@@ -41,36 +43,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Spawn servers and a client shell.
 
+(defvar ledger-type "altledger")
+
 (defvar juno-home (concat (getenv "HOME") "/ws/OLABS/juno"))
 ;;(defvar juno-home (concat (getenv "HOME") "/.sync/.esync/openhc/pept/z-juno"))
 
-(defun juno-client-shell (clientPort)
-  (let ((cmd (concat "stack exec junoclient --"
+(defun juno-client-shell (ltype clientPort)
+  (let ((cmd (concat "stack exec " ltype "client --"
                      " -c  /tmp/" (number-to-string clientPort) "-client.yaml")))
     (pop-to-buffer (get-buffer-create (generate-new-buffer-name "*juno-client*")))
     (cd juno-home)
     (shell (current-buffer))
     (insert cmd)))
 
-(defun jcshell (clientPort)
-  "Shorthand: juno-client-shell."
-  (interactive)
-  (juno-client-shell clientPort))
-
-(defun spawn-juno-servers (startPort numServers)
+(defun spawn-juno-servers (ltype startPort numServers)
   (mapc (cl-function
          (lambda ((n port))
-           (spawn-juno-server n port)
+           (spawn-juno-server ltype n port)
            (sleep-for 1)))
         (zip `(,(number-sequence 0 (- numServers 1))
                ,(mkStartPorts startPort numServers)))))
 
-(defun sjss (startPort numServers)
-  "Shorthand: spawn all servers."
-  (interactive)
-  (spawn-junoservers startPort numServers))
-
-(defun spawn-juno-server (n port)
+(defun spawn-juno-server (ltype n port)
   "Spawn a single server N."
   (let* ((here    default-directory)
          (nS      (number-to-string n))
@@ -82,16 +76,11 @@
      pname pname
      "stack"
      "exec"
-     "--" "junoserver" "+RTS" "-N4" "-T" "-RTS"
+     "--" (concat ltype "server") "+RTS" "-N4" "-T" "-RTS"
      "-c" (concat "/tmp/" portS "-cluster.yaml")
      "--apiPort"
      apiPort)
     (cd here)))
-
-(defun sjs (n port)
-  "Shorthand: spawn a single server N."
-  (interactive)
-  (spawn-juno-server n port))
 
 ;; For debug/development : replace start-process above with this.
 (cl-defun my-start-process (&rest all) (message (format "ALL: %s" all)))

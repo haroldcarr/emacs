@@ -315,6 +315,11 @@ For extending it to work with Maven:
 (hcSection "Haskell")
 
 (use-package hcInitHaskell)
+
+(use-package intero
+  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
+                 ;; https://github.com/commercialhaskell/intero/issues/208
+                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 #+END_SRC
 
 ------------------------------------------------------------------------------

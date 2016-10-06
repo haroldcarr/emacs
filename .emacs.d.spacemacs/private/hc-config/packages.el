@@ -75,7 +75,10 @@
   (use-package hcInitHaskell))
 
 (defun hc-config/init-intero ()
-  (use-package hcInitHaskell))
+  (use-package intero
+    :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
+                   ;; https://github.com/commercialhaskell/intero/issues/208
+                   (setq flycheck-check-syntax-automatically '(mode-enabled save)))))
 
 ;; ------------------------------------------------------------------------------
 (defun hc-config/init-markdown-preview-mode ()
