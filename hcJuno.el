@@ -7,6 +7,7 @@
 (comment
  ;; in shell
  stack exec genconfs
+ (load-library "hcJuno.el")
  ;; evaluate elisp:
  (cp-config)
  (setq ledger-type "juno")
