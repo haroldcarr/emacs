@@ -7,7 +7,7 @@
         ;;emacs-eclim
         hindent
         intero
-        gud
+        ;;gud
         markdown-preview-mode
         peep-dired
         ))
