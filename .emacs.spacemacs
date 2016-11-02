@@ -44,14 +44,16 @@ values."
      git
      html
      ;; haskell - see hc-config where I load intero
-     ;; markdown
+     idris
+     javascript
+     markdown
      org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      restclient
      scala            ;; ensime
-     syntax-checking  ;; i.e., flycheck
+     syntax-checking  ;; flycheck
      themes-megapack
      version-control
      hc-config
