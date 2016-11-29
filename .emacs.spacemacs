@@ -324,6 +324,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;;(spacemacs/zoom-frm-out)
   (hc-hw 27 104))
 
+(defun hc-appearance-small ()
+  (interactive)
+  (hc-hw 35 126))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -337,6 +341,27 @@ you should place you code here."
 
   (require '.emacs.common)
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (hcSection "helm")
+
+  ;; https://www.reddit.com/r/emacs/comments/3f55nm/how_to_remove_2_first_dot_files_from_helmfindfiles/?st=ivcsl4jp&sh=58c276a3
+  ;; This gets in the way of copy/rename so make it easy to toggle
+  (defvar hc-helm-filter-enabled nil)
+  (defvar hc-helm-filter-function
+    (lambda (fcn file)
+      (unless (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)
+        (funcall fcn file))))
+  (defun hc-helm-filter-toggle ()
+    (interactive)
+    (setq hc-helm-filter-enabled (not hc-helm-filter-enabled))
+    (if hc-helm-filter-enabled
+        (advice-add 'helm-ff-filter-candidate-one-by-one
+                    :around hc-helm-filter-function)
+      (advice-remove 'helm-ff-filter-candidate-one-by-one
+                     hc-helm-filter-function))
+    (message "hc-helm-filter : %s" hc-helm-filter-enabled))
+  (hc-helm-filter-toggle)
+  
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Key Bindings")
 
@@ -391,7 +416,7 @@ you should place you code here."
   ;;(hc-appearance) ;; this goes into effect then gets "overwritten" by something in spacemacs
 
   (setq neo-theme 'arrow)
-  (setq neo-window-width 10)
+  (setq neo-window-width 60)
 
   (setq hc-spaceline-left
         '(((persp-name workspace-number window-number)
