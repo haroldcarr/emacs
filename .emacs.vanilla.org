@@ -21,7 +21,7 @@
 ;; This will do that.
 
 #+NAME: setup
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (defun package-update-load-path ()
   "Update the load path for newly installed packages."
   (interactive)
@@ -73,7 +73,7 @@
 * Top level misc
 
 #+NAME: toplevelmisc
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Top level misc stuff")
 
 ;; rather than highlight or off
@@ -97,7 +97,7 @@
 
 - [[http://www.emacswiki.org/emacs/DisplayTime]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (load "time")
 (display-time)
 
@@ -112,7 +112,7 @@ Use part of the path name for buffer name when visiting two different files with
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Uniquify.html#Uniquify]]
 - [[http://emacswiki.org/emacs/uniquify]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'post-forward)
@@ -132,7 +132,7 @@ I used to use =iswitchb-mode= for switching buffers, but find =ido-mode= to be b
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Iswitchb.html#Iswitchb]]
 - [[http://www.emacswiki.org/emacs/IswitchBuffers]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (use-package ido
   :config
   (ido-mode t)
@@ -157,7 +157,7 @@ TODO
 * daemon / emacsclient
 
 #+NAME: shell
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "daemon / emacsclient")
 #+END_SRC
 
@@ -180,7 +180,7 @@ or
 emacsclient -e '(client-save-kill-emacs)'
 #+END_EXAMPLE
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (if (functionp 'window-system)
     (when (and (window-system)
            (>= emacs-major-version 24))
@@ -198,7 +198,7 @@ emacsclient -e '(client-save-kill-emacs)'
 - Go to history     : "C-c . g h" ;; window 3
 - Main buffer       : "C-c . g 1"
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "ECB")
 
 (use-package ecb
@@ -224,7 +224,7 @@ For extending it to work with Maven:
 - [[http://praveen.kumar.in/2011/03/09/making-gnu-emacs-detect-custom-error-messages-a-maven-example/]]
 
 #+NAME: compilation
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Compilation")
 
 (use-package compile
@@ -243,7 +243,7 @@ For extending it to work with Maven:
 - [[http://emacswiki.org/emacs/CalendarMode]]
 
 #+NAME: calendar
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Calendar and Diary")
 
 (defun hcCalendar ()
@@ -289,7 +289,7 @@ For extending it to work with Maven:
 - [[https://github.com/kiwanami/emacs-calfw]]
 
 #+NAME: calendar
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 ;; M-x cfw:open-diary-calendar
 (use-package calfw-cal :defer t)
 #+END_SRC
@@ -299,7 +299,7 @@ For extending it to work with Maven:
 
 - [[http://www.emacswiki.org/LineNumbers]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Line Numbers")
 
 (use-package linum :defer t
@@ -311,7 +311,7 @@ For extending it to work with Maven:
 # <<HASKELL>>
 * Haskell
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Haskell")
 
 (use-package hcInitHaskell)
@@ -327,7 +327,7 @@ For extending it to work with Maven:
 
 - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Images")
 
 (setq image-dired-dir "/tmp/emacs-image-dired/")
@@ -341,7 +341,7 @@ For extending it to work with Maven:
 - uses [[http://www.emacswiki.org/emacs/rx]]
 
 #+NAME: calendar
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Align")
 
 (defmacro hcMakeAlignCmd (name char)
@@ -370,7 +370,7 @@ For extending it to work with Maven:
 - [[http://emacsredux.com/blog/2013/03/28/google/]]
 
 #+NAME: calendar
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Google Search")
 
 (defun hcGoogle ()
@@ -389,7 +389,7 @@ For extending it to work with Maven:
 
 - [[http://julien.danjou.info/projects/emacs-packages#google-contacts]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Google Contacts")
 
 ;; uses oauth2 (in ELPA)
@@ -460,7 +460,7 @@ Advanced: look at google-maps-static-show and google-maps-geocode-request functi
 NOTE: home set via calendar-latitude/calendar-longitude
 #+END_COMMENT
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Google Maps")
 (use-package google-maps :defer t)
 #+END_SRC
@@ -470,7 +470,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 - [[http://www.emacswiki.org/emacs/TwitteringMode]]
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Twitter")
 (use-package twittering-mode :defer t)
 #+END_SRC
@@ -478,7 +478,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 ------------------------------------------------------------------------------
 * Misc
 
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (hcSection "Misc")
 (use-package httpcode :defer t)
 #+END_SRC
@@ -512,7 +512,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 * Non Literate
 
 #+NAME: NonLiterate
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; XML/HTML
@@ -773,7 +773,7 @@ NOTE: home set via calendar-latitude/calendar-longitude
 
 ------------------------------------------------------------------------------
 #+NAME: EOF
-#+BEGIN_SRC emacs-lisp :comments off
+#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.vanilla
 (provide 'hcVanilla)
 
 ;;; End of file.
