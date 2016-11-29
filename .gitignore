@@ -1,12 +1,10 @@
 .authinfo
 .emacs-HASKELL-*
 .emacs.bmk
-.emacs.common.el
 .emacs.d.spacemacs/.cache
 .emacs.d.vanilla/
 .emacs.org-example
 .emacs.spacemacs-update-steps.org
-.emacs.vanilla
 .newsrc
 .newsrc-save
 .newsrc.eld

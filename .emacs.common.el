@@ -1,36 +1,3 @@
-#+TITLE:       =.emacs=
-#+AUTHOR:      Harold Carr
-#+DESCRIPTION: literate version of my .emacs file.
-#+PROPERTY:    results silent
-#+PROPERTY:    tangle .emacs.common.el
-#+PROPERTY:    eval no-export
-#+PROPERTY:    comments org
-#+OPTIONS:     num:nil toc:t todo:nil tasks:nil tags:nil
-#+OPTIONS:     skip:nil author:nil email:nil creator:nil timestamp:nil
-#+INFOJS_OPT:  view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
-
-Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
-
-- [[http://www.gnu.org/software/emacs/manual/index.html]]
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/index.html]]
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Init-File.html#Init-File]]
-- [[http://emacswiki.org/]]
-
-#+BEGIN_COMMENT
--  Before you can build this on a new system, make sure that you put
-   the cursor over any of the above properties, and hit: =C-c C-c=
-
-- =tab= opens/close a particular section
-- Shift =tab= cycles between the outline and full text
-- Tangle it with:  =C-c C-v t=
-  - Creates:  =.emacs.common.el= in this directory (overwrites previous)
-#+END_COMMENT
-
-------------------------------------------------------------------------------
-* Intro
-
-#+NAME: Note
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 ;;; | ====================================================== |
 ;;; | DO NOT EDIT the generated *.el file.                   |
 ;;; | It was generated from an org-mode "literate" version.  |
@@ -40,20 +7,7 @@ Harold Carr's =.emacs= file, written using [[http://www.orgmode.org][org-mode]].
 ;;;; Created       : a long time ago ...        by Harold Carr.
 ;;;; Last Modified : 2016 Nov 28 (Mon) 18:25:01 by Harold Carr.
 ;;;;
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Sections
-
-Name each "section" in this .emacs file.
-
-Then, when an error occurs, you can tell what section it occurs in
-by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
-
-=debug-on-error= is finer grained, but this is still useful.
-
-#+NAME: hcsection
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (defvar *hcSectionEnabled* t)
 (defvar *hcSection* "")
 
@@ -74,15 +28,7 @@ by looking in the =*Messages*= buffer or examining the =*hcSection*= variable.
      (warn (concat (format "%s" ',name) " NOT FOUND"))))
 
 (hcRequire use-package)
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Beans
-
-Never access a variable directly.
-
-#+NAME: beans
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Beans")
 
 (defmacro hcDefineBean (name &rest body)
@@ -90,13 +36,7 @@ Never access a variable directly.
     `(progn
        (defvar ,var-name ,@body)
        (defun ,name () ,var-name))))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Predicates
-
-#+NAME: predicates
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Predicates")
 
 (defun hcIsVersionP    (x)(string-match x (emacs-version)))
@@ -119,16 +59,7 @@ Never access a variable directly.
 			      (equal window-system 'mswindows)
                               (hcIsVersionP "cygwin")))
 (defun hcDarwinP       () (hcIsVersionP "darwin"))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Key Bindings
-
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html#Key-Bindings]]
-- [[http://www.emacswiki.org/emacs/KeyBindingDiscussion]]
-
-#+NAME: keybindings
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Key Bindings")
 
 ;; NOTE: set-mark-command is \C-space
@@ -145,12 +76,7 @@ Never access a variable directly.
 (if (not (hcWin32P))
   (global-set-key "\M-\ " 'dabbrev-expand)
   (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Executing shell commands
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Shell Commands")
 
 (defun hcShExecCmd (name &rest args)
@@ -172,15 +98,7 @@ Never access a variable directly.
        (defun ,name ()
 	 (cond (,varName)
 	       (t (setq ,varName (hcShExecCmd ',name))))))))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Locations
-
-Important (to me) directories.
-
-#+NAME: locations
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Locations")
 
 (defun hcExpandFileName (forExternalProgramP path)
@@ -210,13 +128,7 @@ Important (to me) directories.
 (hcShDefCmd     hcLibClasspath ())
 (hcShDefCmd     hcFsToBs (string))
 (hcShDefCmd     hcLlavaMainClass ())
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Top level misc
-
-#+NAME: toplevelmisc
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Top level misc stuff")
 
 ;; This must be ON for haskell-mode to work.
@@ -250,28 +162,12 @@ Important (to me) directories.
 
 ;; so list-buffers won't jump back to top
 (setq global-auto-revert-non-file-buffers nil)
-#+END_SRC
 
-** Display full filepath in title
-
-- [[http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/]]
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* GNUS
-
-https://whereofwecannotspeak.wordpress.com/2009/07/15/getting-gnus-to-read-mail-over-imap/
-
-Get an app-specific password: https://support.google.com/accounts/answer/185833
-
-Add this to config:
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 ;;;; RECEIVE
 (setq gnus-select-method
       '(nntp "news.gmane.org"))
@@ -296,41 +192,12 @@ Add this to config:
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
       mail-host-address "harold.carr@gmail.com") ;; gets rid of "tickle me"
-#+END_SRC
 
-Then =M-x gnus=
-
-when it prompts for your password, give app-specific password
-- (and optionally let it store that password ---unprotected--- in =~/.authinfo=)
-
-------------------------------------------------------------------------------
-* Registers and Bookmarks
-
-- Registers
-  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html#Registers]]
-  - [[http://emacswiki.org/emacs/Registers]]
-- Bookmarks (like registers, but persistent)
-  - [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html#Bookmarks]]
-  - [[http://emacswiki.org/emacs/BookMarks]]
-
-TODO
-- [[http://www.emacswiki.org/emacs-en/BookmarkPlus]]
-
-#+NAME: bookmarks
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Bookmarks")
 
 (setq bookmark-save-flag 1)
 (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Timestamp
-
-- [[ftp://202.5.194.21/SW_ebooks/EMAGAZINE/Writing_GNU_Emacs_Extensions.pdf]]
-  - starting on page 47
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Timestamp")
 
 ; when running on samsun nc10; cygwin; startxwin; emacs; this is defined with
@@ -339,12 +206,7 @@ TODO
 ; because the window-system is x
 ;(defun user-full-name () "Harold Carr")
 (use-package hcTimestamp)
-#+END_SRC
 
-------------------------------------------------------------------------------
-* org-mode
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "OrgMode")
 
 (use-package org
@@ -352,16 +214,7 @@ TODO
   :config
   (progn (use-package hcInitOrgMode)
          (hcOrgMode)))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Tags
-
-- http://www.emacswiki.org/emacs/BuildTags
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags]]
-- [[http://emacswiki.org/emacs/EmacsTags]]
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Tags")
 
 ; alternate way to create using etags
@@ -401,23 +254,7 @@ TODO
 (defun hcVtj () (interactive) (visit-tags-table (hcTagsJavaDst)))
 (defun hcVtb () (interactive) (visit-tags-table (hcTagsBuzzDst)))
 (defun hcVtm () (interactive) (visit-tags-table (hcTagsMessageBusDst)))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Version Control and Magit
-
-Version Control
-- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html#Version-Control]]
-- [[http://emacswiki.org/emacs/VersionControl]]
-GIT
-- [[http://magit.github.com/magit/magit.html]]
-- [[http://www.emacswiki.org/emacs/Magit]]
-- [[https://github.com/pidu/git-timemachine]]
-Magit and Ediff
-- [[http://dachary.org/?p=2893]]
-
-#+NAME: magit
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "Version Control and Magit")
 
 (hcSection "git")
@@ -428,15 +265,7 @@ Magit and Ediff
        (setq git-commit-summary-max-length 80)
        (setq git-commit-fill-column        80)
        )))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Clojure/Cider
-
-- [[http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html]]
-
-#+NAME: clojure
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
   (hcSection "Clojure")
 
   ;; modified from cider-interaction.el
@@ -457,19 +286,7 @@ If EVAL is non-nil the form will also be evaluated."
 If invoked with a prefix ARG eval the expression after inserting it."
     (interactive "P")
     (hc-cider-insert-in-repl (cider-last-sexp)))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* Send diagram text to SDEDIT (UML sequence diagrams)
-
-- [[http://sdedit.sourceforge.net/]]
-
-When the current buffer contains SDEDIT diagram text, just do
-- =M-x sdedit=
-
-Be sure the sdedit program is up and running as a service.
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "SDEDIT")
 
 (defun hcSdedit ()
@@ -478,12 +295,7 @@ Be sure the sdedit program is up and running as a service.
     (process-send-string p (concat (buffer-name) "
 " (buffer-string)))
     (delete-process p)))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* frame/font size
-
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (hcSection "frame/font size")
 
 ;; C-U C-X : shows current font
@@ -497,16 +309,7 @@ Be sure the sdedit program is up and running as a service.
 (defun hc-w (n) (set-frame-width (selected-frame) n))
 (defun hc-hw (x y) (hc-h x) (hc-w y))
 (defun hc-hwd () (interactive) (hc-h 27) (hc-w 101))
-#+END_SRC
 
-------------------------------------------------------------------------------
-* END
-
-#+NAME: EOF
-#+BEGIN_SRC emacs-lisp :comments off :tangle .emacs.common.el
 (provide '.emacs.common)
 
 ;;; End of file.
-#+END_SRC
-
-# End of file.
