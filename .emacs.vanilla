@@ -498,3 +498,22 @@
 (provide 'hcVanilla)
 
 ;;; End of file.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-stylish-on-save hc-haskell-format-on-save)
+ '(hindent-indent-size 4)
+ '(hindent-line-length 120)
+ '(hindent-reformat-buffer-on-save nil)
+ '(hindent-style "johan-tibell")
+ '(package-selected-packages
+   (quote
+    (zenburn-theme vkill use-package twittering-mode sunny-day-theme solarized-theme shm scala-mode2 rainbow-mode projectile paradox org-plus-contrib neotree memory-usage magit ledger-mode js2-mode intero httpcode htmlize hindent hi2 google-contacts google-c-style gnuplot-mode gnuplot git-timemachine ghci-completion ghc geiser fuzzy flymake-hlint flymake-haskell-multi flycheck-hdevtools flycheck-haskell f epresent ecb dic-lookup-w3m cryptol-mode color-theme cider calfw auto-complete))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

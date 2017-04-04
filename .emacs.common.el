@@ -5,7 +5,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2016 Nov 28 (Mon) 18:25:01 by Harold Carr.
+;;;; Last Modified : 2017 Mar 31 (Fri) 10:12:59 by Harold Carr.
 ;;;;
 
 (defvar *hcSectionEnabled* t)
@@ -309,6 +309,28 @@ If invoked with a prefix ARG eval the expression after inserting it."
 (defun hc-w (n) (set-frame-width (selected-frame) n))
 (defun hc-hw (x y) (hc-h x) (hc-w y))
 (defun hc-hwd () (interactive) (hc-h 27) (hc-w 101))
+
+(defun hcFonts (default-height variable-pitch-height)
+  (interactive)
+  (set-face-attribute 'default nil
+                      :family "Monaco"
+                      :height default-height)
+  (set-face-attribute 'variable-pitch nil
+                      :family "Monaco"
+                      :height variable-pitch-height
+                      :weight 'regular))
+
+(defun hcDoFonts ()
+  (interactive)
+  (when window-system
+    (cond ((> (x-display-pixel-width) 1800)
+           (hcFonts 200 300))
+          (t (hcFonts 175 200)))))
+
+(use-package neotree
+  :config (progn (setq neo-theme 'arrow)
+                 (setq neo-window-width 25)
+                 (setq neo-buffer--show-hidden-file-p t)))
 
 (provide '.emacs.common)
 
