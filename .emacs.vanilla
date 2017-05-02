@@ -1,3 +1,25 @@
+;;; .emacs.vanilla --- init file
+
+;;; Commentary:
+
+;;; Code:
+
+;; two flycheck warnings : 1st I understand; no idea where 2nd comes from
+;; 57   1 warning         cl package required at runtime (emacs-lisp)
+;; 734   1 warning         the following functions might not be defined at runtime: neo-buffer--unlock-width, neo-buffer--lock-width (emacs-lisp)
+
+;; ------------------------------------------------------------------------------
+;; * SETUP
+
+;; (hcSection "Packages")
+
+;;- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
+;;- [[http://emacswiki.org/emacs/ELPA]]
+
+;; ELPA does not update the load path when new packages are installed.
+;; This will do that.
+
+(defvar package-alist)
 (defun package-update-load-path ()
   "Update the load path for newly installed packages."
   (interactive)
@@ -31,9 +53,13 @@
 
 (package-initialize)
 
+;; can't get rid of warning
+;; https://stackoverflow.com/questions/5019724/in-emacs-what-does-this-error-mean-warning-cl-package-required-at-runtime
+(eval-and-compile
+  (require 'cl))
+
 (eval-and-compile
   (defvar use-package-verbose t)
-  (require 'cl)
   (require 'use-package)
   (require 'bind-key))
 
@@ -43,6 +69,9 @@
 
 (require 'use-package)
 (require '.emacs.common)
+
+;; ------------------------------------------------------------------------------
+;; * Top level misc
 
 (hcSection "Top level misc stuff")
 
@@ -62,37 +91,94 @@
 ;; Enable ESC : to evaluate emacs Lisp commands.
 (put 'eval-expression 'disabled nil)
 
+;; ** Mode line
+
+;; http://www.emacswiki.org/emacs/DisplayTime
+
 (load "time")
 (display-time)
 
 (line-number-mode)
 (column-number-mode)
 
+;; ** Make buffer names unique
+
+;; Use part of the path name for buffer name when visiting two different files with same name.
+
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Uniquify.html#Uniquify
+;; http://emacswiki.org/emacs/uniquify
+
 (use-package uniquify
   :config
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator ":"))
+
+;; ** Incremental/Interactively switching buffers or finding files
+
+;; http://emacswiki.org/emacs/InteractivelyDoThings
+
+;; Note:
+;; - C-x C-f     : "interactively" finds a file
+;; - C-x C-f C-f : uses the old find-file
 
 (use-package ido
   :config
   (ido-mode t)
   (setq ido-enable-flex-matching t))
 
-;; fall back if necessary
-(if (not (fboundp 'ido-mode))
-  (use-package iswitchb
-    :config
-    (iswitchb-mode t)))
+;; TODO
+;; http://www.emacswiki.org/emacs-en/kill-ring-ido.el
+
+;; ** Recently visited files
+
+;; TODO
+;; http://emacsredux.com/blog/2013/04/05/recently-visited-files/
+
+;; ------------------------------------------------------------------------------
+;; * daemon / emacsclient
 
 (hcSection "daemon / emacsclient")
+
+;; See (I could not get C-c e to work in IntelliJ)
+;; http://spin.atomicobject.com/2014/08/07/intellij-emacs/
+
+;; # manual start
+;; ./bin-hosted/emacs --daemon
+;; # manual use
+;; ./bin-hosted/emacsclient -c <any file/dir name>
+;; # manual kill
+;; # - from within emacs
+;; M-x kill-emacs
+;; or
+;; M-x save-buffers-kill-emacs
+;; # from outside of emacs
+;; emacsclient -e '(kill-emacs)'
+;; or
+;; emacsclient -e '(client-save-kill-emacs)'
 
 (if (functionp 'window-system)
     (when (and (window-system)
            (>= emacs-major-version 24))
       (server-start)))
 
+;; ------------------------------------------------------------------------------
+;; * Emacs Code Browser (ECB)
+
+;; http://www.emacswiki.org/emacs/EmacsCodeBrowser
+
+;; - Go to directories : "C-c . g d" ;; window 0
+;; - Go to sources     : "C-c . g s" ;; window 1
+;; - Go to methods     : "C-c . g m" ;; window 2
+;; - Go to history     : "C-c . g h" ;; window 3
+;; - Main buffer       : "C-c . g 1"
+
 (hcSection "ECB")
 
+(defvar ecb-options-version)
+(defvar ecb-source-path)
+(defvar ecb-tip-of-the-day)
+(defvar ecb-windows-width)
+(defvar ecb-layout-name)
 (use-package ecb
   :defer t
   :config
@@ -102,6 +188,17 @@
   (setq ecb-windows-width   0.15)
   (setq ecb-layout-name     "left9") ;; only the methods window
 )
+
+;; ------------------------------------------------------------------------------
+;; * Compilation
+
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Building.html#Building
+;; - see Compilation, Compilation Mode and Compilation Shell
+;; http://emacswiki.org/emacs/CompilationMode
+
+;; For extending it to work with Maven:
+
+;; http://praveen.kumar.in/2011/03/09/making-gnu-emacs-detect-custom-error-messages-a-maven-example/
 
 (hcSection "Compilation")
 
@@ -113,9 +210,20 @@
                '(maven "\\[ERROR\\] \\(.+?\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\].*"
                        1 2 3)))
 
+;; ------------------------------------------------------------------------------
+;; * Calendar and Diary
+
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Calendar_002fDiary.html#Calendar_002fDiary
+;; http://emacswiki.org/emacs/CalendarMode
+
 (hcSection "Calendar and Diary")
 
-(defun hcCalendar ()
+(defvar view-diary-entries-initially)
+(defvar number-of-diary-entries)
+(defvar calendar-latitude)
+(defvar calendar-longitude)
+(defvar diary-list-include-blanks)
+(defun hcCalendar () "."
   (setq diary-file (concat (hcFsync) "/.emacs.diary"))
   ;(setq calendar-week-start-day 1) ; monday
   (setq calendar-offset -1)
@@ -152,14 +260,26 @@
 
 (use-package calendar :defer t :config (hcCalendar))
 
+;; ** Calendar Framework
+
+;; https://github.com/kiwanami/emacs-calfw
+
 ;; M-x cfw:open-diary-calendar
 (use-package calfw-cal :defer t)
+
+;; ------------------------------------------------------------------------------
+;; * Line Numbers
+
+;; http://www.emacswiki.org/LineNumbers
 
 (hcSection "Line Numbers")
 
 (use-package linum :defer t
 ;;  :config (setq global-linum-mode t) ;; always on
 )
+
+;; ------------------------------------------------------------------------------
+;; * Haskell
 
 (hcSection "Haskell")
 
@@ -170,13 +290,26 @@
                  ;; https://github.com/commercialhaskell/intero/issues/208
                  (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 
+;; ------------------------------------------------------------------------------
+;; * Images
+
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html
+
 (hcSection "Images")
 
+(defvar image-dired-dir)
 (setq image-dired-dir "/tmp/emacs-image-dired/")
+
+;; ------------------------------------------------------------------------------
+;; * Align
+
+;; https://gist.github.com/700416
+;; http://stackoverflow.com/questions/3633120/emacs-hotkey-to-align-equal-signs
+;; - uses http://www.emacswiki.org/emacs/rx
 
 (hcSection "Align")
 
-(defmacro hcMakeAlignCmd (name char)
+(defmacro hcMakeAlignCmd (name char) "NAME CHAR."
   `(defun ,name (begin end)
      ,(concat "Align region to " char " signs")
      (interactive "r")
@@ -190,10 +323,15 @@
 (hcMakeAlignCmd align-to-comma-before ",")
 
 (defun align-to-comma-after (begin end)
-  "Align region to , signs"
+  "BEGIN END: Align region to , signs."
   (interactive "r")
   (align-regexp begin end
                 (rx "," (group (zero-or-more (syntax whitespace))) ) 1 1 ))
+
+;; ------------------------------------------------------------------------------
+;; * Google Search
+
+;; http://emacsredux.com/blog/2013/03/28/google/
 
 (hcSection "Google Search")
 
@@ -206,6 +344,11 @@
     (url-hexify-string (if mark-active
                            (buffer-substring (region-beginning) (region-end))
                          (read-string "Google: "))))))
+
+;; ------------------------------------------------------------------------------
+;; * Google Contacts
+
+;; http://julien.danjou.info/projects/emacs-packages#google-contacts
 
 (hcSection "Google Contacts")
 
@@ -229,18 +372,98 @@
 ;; (use-package google-contacts-message :defer t)
 ;; Then use TAB to go to complete e-mail addresses in the header fields.
 
+;; First time use:
+;; - M-x google-contacts
+;; - "Enter the code your browser displayed: "
+;; - browser shows accounts.google.com/... saying
+;;   google-oauth-el would like to manage your contacts
+;;   CLICK: Accept
+;; - Gives code.
+;; - Cut/paste into above.
+;; - "Passphrase for PLSTORE  plstore .../.emacs.d/oauth.plstore
+;; - enter and store in password manager"
+
+;; ------------------------------------------------------------------------------
+;; * Google Maps
+
+;; http://julien.danjou.info/projects/emacs-packages#google-maps
+
+;; M-x google-maps
+;; - type a location.
+;;
+;; key bindings:
+;;
+;; + or - to zoom in or out;
+;; left, right, up, down to move;
+;; z to set a zoom level via prefix;
+;; q to quit;
+;; m to add or remove markers;
+;; c to center the map on a place;
+;; C to remove centering;
+;; t to change the maptype;
+;; w to copy the URL of the map to the kill-ring;
+;; h to show your home.
+
+;; Integrate into Org-mode:
+
+(use-package org-location-google-maps :defer t)
+
+;; Then use C-c M-L to enter a location assisted by Google geocoding service.
+;; Pressing C-c M-l will show you a map.
+
+;; Advanced: look at google-maps-static-show and google-maps-geocode-request functions.
+
+;; NOTE: home set via calendar-latitude/calendar-longitude
+
 (hcSection "Google Maps")
 (use-package google-maps :defer t)
+
+;; ------------------------------------------------------------------------------
+;; * Twitter
+
+;; http://www.emacswiki.org/emacs/TwitteringMode
 
 (hcSection "Twitter")
 (use-package twittering-mode :defer t)
 
+;; ------------------------------------------------------------------------------
+;; * Misc
+
 (hcSection "Misc")
 (use-package httpcode :defer t)
+
+;; ------------------------------------------------------------------------------
+;; * Features used but not customized
+
+;; ** Dired
+;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html#Dired
+;; - http://emacswiki.org/emacs/DiredMode
+;; ** Dynamic Abbreviations
+;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Dynamic-Abbrevs.html#Dynamic-Abbrevs
+;; - http://emacswiki.org/emacs/DynamicAbbreviations
+;; ** Speedbar
+;; - http://www.gnu.org/software/emacs/manual/html_mono/speedbar.html
+;; - http://emacswiki.org/emacs/SpeedBar
+;; ** Keyboard Macros
+;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html#Keyboard-Macros
+;; - http://emacswiki.org/emacs/KeyboardMacros
+;; ** Document Viewing
+;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Document-View.html#Document-View
+;; - http://www.emacswiki.org/emacs/DocViewMode
+;; ** Color Themes and rainbow-mode
+;; - http://emacsredux.com/blog/2013/08/21/color-themes-redux/
+;; - http://julien.danjou.info/projects/emacs-packages#rainbow-mode
+;; ** DIG (interface to DNS dig command)
+;; - /Applications/MacPorts/Emacs.app/Contents/Resources/lisp/net/dig.el.gz
+;; - http://stuff.mit.edu/afs/athena/astaff/project/emacs/source/emacs-23.1/lisp/net/dig.el
+
+;; ------------------------------------------------------------------------------
+;; * Non Literate
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; XML/HTML
+(defvar sgml-basic-offset)
 (setq sgml-basic-offset 4)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -249,6 +472,7 @@
 ;; TODO: factor the following two together.
 
 (defmacro hcRedefProc (procedure args &rest body)
+  "PROCEDURE ARGS BODY."
   (let ((original-name
 	 (intern (concat "*hc-emacs-original-" (format "%s" procedure) "*"))))
     `(progn
@@ -259,6 +483,7 @@
 	      (defun ,procedure	,args ,@body))))))
 
 (defmacro hcRedefVar (variable value)
+  "VARIABLE VALUE."
   (let ((original-name
 	 (intern (concat "*hc-emacs-original-" (format "%s" variable) "*"))))
     `(progn
@@ -269,12 +494,12 @@
 	      (setq ,variable ,value))))))
 
 ;; Do this early since it is used during init.
-(hcRedefProc user-full-name ()
+(hcRedefProc user-full-name () "."
 	 "Harold Carr")
 
 ;; Change canonical into win32 (i.e., colon) so emacs can do dir tracking.
 ;; Same as hcMakeDriveColon script, but do not want to go to shell each time.
-(defun hcMakeDriveColon-el (str)
+(defun hcMakeDriveColon-el (str) "STR."
   (if (and (>= (length str) 4)
 	   (string-equal (substring str 0 2) "//")
 	   (string-equal (substring str 3 4) "/"))
@@ -289,10 +514,12 @@
 ;	 (funcall *hc-emacs-original-expand-file-name*
 ;		  (hcMakeDriveColon-el file) default))
 
+(defvar file-name-buffer-file-type-alist)
 (cond ((not (hcWin32P))
        (hcRedefVar file-name-buffer-file-type-alist '(("*.*" . t) (".*" . t)))))
 
-(defun hcToggleBinaryModeMap ()
+(defvar *hc-emacs-original-file-name-buffer-file-type-alist*)
+(defun hcToggleBinaryModeMap () "."
   (interactive)
   (let ((tmp *hc-emacs-original-file-name-buffer-file-type-alist*))
     (setq *hc-emacs-original-file-name-buffer-file-type-alist*
@@ -304,7 +531,7 @@
 (hcSection "Open current buffer's associated file in an external program")
 
 (defun prelude-open-with ()
-  "Simple function that allows us to open the underlying file of a buffer in an external program."
+  "To open the underlying file of a buffer in an external program."
   (interactive)
   (when buffer-file-name
     (shell-command (concat
@@ -318,6 +545,7 @@
 (hcSection "Java")
 
 (defvar *hcJavaMode* 'google)
+(declare-function  google-set-c-style ".")
 (add-hook 'java-mode-hook
   (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
 
@@ -325,22 +553,25 @@
 (use-package google-c-style)
 
 ;; Make java mode support Java 1.5 annotations.
+(declare-function auto-complete-mode ".")
 (use-package java-mode-indent-annotations
   :config
   (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
   (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
 
+(defvar *compile-threshold*)
 (setq *compile-threshold* " -XX:CompileThreshold=2 ")
 
-(defun HC-JAVA_HOME ()
+(defun HC-JAVA_HOME () "."
   (cond ((getenv "JAVA_HOME"))
-	(t (error "no default JDK"))))
-(defun HC-JAVA_HOME-bin     () (concat (HC-JAVA_HOME) "/bin"))
-(defun HC-JAVA_HOME-classes () (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
+	(t (error "No default JDK"))))
+(defun HC-JAVA_HOME-bin     () "." (concat (HC-JAVA_HOME) "/bin"))
+(defun HC-JAVA_HOME-classes () "." (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Scala")
 
+(defvar scala-indent:step)
 (use-package scala-mode2
   :defer t
   :config
@@ -349,6 +580,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Clojure")
 
+(defvar clojure-enable-fancify-symbols)
 (use-package cider-mode
   :defer nil ;; HC so cider can find 'clojure-project-dir'
 ;; :pin melpa-stable
@@ -373,6 +605,7 @@
 
 ;;(load "c-mode")
 
+(defvar c-indent-level)
 (setq c-indent-level 4)
 ;(setq c-continued-statement-offset 4)
 ;(setq c-brace-offset -4)
@@ -395,14 +628,14 @@
 ;;This turns of the mac os x menu bar
 ;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
-(defun hcMacFW ()
+(defun hcMacFW () "."
   (interactive)
   (hc-w 100)
   (hc-h 27)
   (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
   )
 
-(defun hcHostedAppearance ()
+(defun hcHostedAppearance () "."
   (interactive)
   (set-face-background 'default "grey")
   (set-scroll-bar-mode 'right)
@@ -453,12 +686,13 @@
 ;;; Toolbar.
 
 ;; Turn off font-lock?
-(defun hcFontLockModeHook ()
+(defvar font-lock-auto-fontify)
+(defvar font-lock-mode-enable-list)
+(defun hcFontLockModeHook () "."
   (if (fboundp 'global-font-lock-mode)
       (global-font-lock-mode -1) ;; Emacs
     (setq font-lock-auto-fontify nil))
-  (setq font-lock-mode-enable-list nil)
-  (setq font-lock-maximum-size 0))
+  (setq font-lock-mode-enable-list nil))
 
 (cond ((hcDarwinP)
        (load-theme 'zenburn)
@@ -497,23 +731,4 @@
 
 (provide 'hcVanilla)
 
-;;; End of file.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(haskell-stylish-on-save hc-haskell-format-on-save)
- '(hindent-indent-size 4)
- '(hindent-line-length 120)
- '(hindent-reformat-buffer-on-save nil)
- '(hindent-style "johan-tibell")
- '(package-selected-packages
-   (quote
-    (zenburn-theme vkill use-package twittering-mode sunny-day-theme solarized-theme shm scala-mode2 rainbow-mode projectile paradox org-plus-contrib neotree memory-usage magit ledger-mode js2-mode intero httpcode htmlize hindent hi2 google-contacts google-c-style gnuplot-mode gnuplot git-timemachine ghci-completion ghc geiser fuzzy flymake-hlint flymake-haskell-multi flycheck-hdevtools flycheck-haskell f epresent ecb dic-lookup-w3m cryptol-mode color-theme cider calfw auto-complete))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;; .emacs.vanilla ends here
