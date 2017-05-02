@@ -75,6 +75,10 @@
 
 (hcSection "Top level misc stuff")
 
+;; Store customizations in a separate file.
+(setq custom-file (concat (hcEmacsDir) "/.emacs.vanilla.custom.el"))
+(load custom-file)
+
 ;; rather than highlight or off
 (setq blink-matching-paren (quote jump))
 

@@ -355,6 +355,10 @@ you should place you code here."
 
   (require '.emacs.common)
 
+  ;; Store customizations in a separate file.
+  (setq custom-file (concat (hcEmacsDir) "/.emacs.spacemacs.custom.el"))
+  (load custom-file)
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "helm")
 

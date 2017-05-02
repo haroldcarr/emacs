@@ -1,4 +1,5 @@
 .authinfo
+.emacs.*.custom.el
 .emacs-HASKELL-*
 .emacs.bmk
 .emacs.d.spacemacs/.cache
