@@ -4,10 +4,62 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2016 Sep 27 (Tue) 20:06:59 by Harold Carr.
+;;;; Last Modified : 2017 May 01 (Mon) 20:22:07 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+;;; Haskell Packages
+
+(use-package haskell-mode
+  :defer t
+  :bind (:map haskell-mode-map
+              ("M-g i" . haskell-navigate-imports)
+              ("M-g M-i" . haskell-navigate-imports))
+  :init
+  (progn
+    (setq haskell-compile-cabal-build-alt-command
+          "cd %s && stack clean && stack build --ghc-options -ferror-spans"
+          haskell-compile-cabal-build-command
+          "cd %s && stack build --ghc-options -ferror-spans"
+          haskell-compile-command
+          "stack ghc -- -Wall -ferror-spans -fforce-recomp -c %s")))
+
+(use-package haskell-snippets
+  :defer t)
+
+(use-package hlint-refactor
+  :defer t
+  :diminish ""
+  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
+
+(use-package intero
+  :defer t
+  :diminish " λ"
+  :bind (:map intero-mode-map
+              ("M-." . init-intero-goto-definition))
+  :init
+  (progn
+    (defun init-intero ()
+      "Enable Intero unless visiting a cached dependency."
+      (if (and buffer-file-name
+               (string-match ".+/\\.\\(stack\\|stack-work\\)/.+" buffer-file-name))
+          (progn
+            (eldoc-mode -1)
+            (flycheck-mode -1))
+        (intero-mode)
+        (setq projectile-tags-command "codex update")))
+
+    (add-hook 'haskell-mode-hook #'init-intero))
+  :config
+  (progn
+    (defun init-intero-goto-definition ()
+      "Jump to the definition of the thing at point using Intero or etags."
+      (interactive)
+      (or (intero-goto-definition)
+          (find-tag (find-tag-default))))
+
+    (flycheck-add-next-checker 'intero '(warning . haskell-hlint))))
 
 ;; COMMON
 (defvar hc-haskell-format-on-save t)
@@ -15,7 +67,7 @@
 (defvar haskell-stylish-on-save)
 (defvar hindent-reformat-buffer-on-save)
 
-(defun hcToggleHaskellFormatOnSave ()
+(defun hcToggleHaskellFormatOnSave () "."
   (interactive)
   (setq hc-haskell-format-on-save (not hc-haskell-format-on-save))
   (custom-set-variables
