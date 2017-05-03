@@ -76,7 +76,7 @@
 (hcSection "Top level misc stuff")
 
 ;; Store customizations in a separate file.
-(setq custom-file (concat (hcEmacsDir) "/.emacs.vanilla.custom.el"))
+(setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
 (load custom-file)
 
 ;; WHICH KEY
