@@ -1,4 +1,24 @@
+;;; init.el --- haskell
+
 ;;; Initialize package
+
+;;; Commentary:
+
+;;; Code:
+
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
+;; NOTE: set-mark-command is \C-space
+;; the following swaps the default kill/copy
+(global-set-key "\M-w" 'kill-region)
+(global-set-key "\C-w" 'kill-ring-save)
+
+(defvar bookmark-save-flag)
+(defvar bookmark-default-file)
+(setq bookmark-save-flag 1)
+(setq bookmark-default-file "~/.sync/.esync/emacs/.emacs.bmk")
+
+;; ------------------------------------------------------------------------------
 
 (require 'package)
 
