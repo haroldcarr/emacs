@@ -3,9 +3,9 @@
 .emacs.org-example
 .newsrc
 .newsrc.eld
-.spacemacs.emacs-update-steps.org
 .spacemacs.emacs.custom.el
 .spacemacs.emacs.d/.cache
+.spacemacs.emacs.z-update-steps.org
 .vanilla.emacs.custom.el
 .vanilla.emacs.d
 NOT-USED-ANYMORE/
