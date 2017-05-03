@@ -1,5 +1,27 @@
 ;;; Initialize package
 
+(require 'package)
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/"))
+(setq package-archive-priorities '(("melpa" . 10))
+      package-enable-at-startup nil)
+(package-initialize)
+
+;;; Initialize use-package
+
+(setq use-package-always-ensure t)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package))
+
+(require 'bind-key)
+(require 'diminish)
+
 ;;; Utilities
 
 (defun init-kill-buffer-current ()
@@ -8,6 +30,10 @@
   (kill-buffer (current-buffer)))
 
 ;;; Global Configuration
+
+;; Store customizations in a separate file.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
 
 ;; Store auto-saves and backups in emacs.d/var.
 (let* ((vdir (expand-file-name "var" user-emacs-directory))
@@ -23,6 +49,8 @@
 (when (member "Inconsolata" (font-family-list))
   (set-frame-font "Inconsolata 15"))
 
+;; Simplify prompts.
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Reduce noise.
 (setq confirm-nonexistent-file-or-buffer nil
@@ -53,14 +81,27 @@
                 tab-width spaces
                 tab-stop-list (number-sequence spaces max-line-length spaces)))
 
+;; Open URLs within Emacs.
+(when (package-installed-p 'eww)
+  (setq browse-url-browser-function 'eww-browse-url))
+
 (bind-key "C-c C-SPC" #'delete-trailing-whitespace)
 (bind-key "C-x C-b" #'ibuffer)
 (bind-key "C-x C-k" #'init-kill-buffer-current)
+(bind-key "M-/" #'hippie-expand)
 (bind-key "M-o" #'other-window)
 
 (global-subword-mode 1)
 
 ;;; General Packages
+
+(use-package company
+  :demand
+  :diminish ""
+  :init
+  (progn
+    (setq company-idle-delay 0.3)
+    (global-company-mode)))
 
 (use-package exec-path-from-shell
   :defer t
@@ -70,9 +111,51 @@
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize)))
 
+(use-package helm
+  :demand
+  :diminish ""
+  :bind (("C-M-y" . helm-show-kill-ring)
+         ("C-h a" . helm-apropos)
+         ("C-x C-f" . helm-find-files)
+         ("C-x b" . helm-mini)
+         ("M-s o" . helm-occur)
+         ("M-x" . helm-M-x)
+         :map helm-map
+         ([tab] . helm-execute-persistent-action))
+  :init
+  (progn
+    (setq helm-M-x-fuzzy-match t
+          helm-apropos-fuzzy-match t
+          helm-buffers-fuzzy-matching t
+          helm-ff-newfile-prompt-p nil
+          helm-locate-fuzzy-match t
+          helm-recentf-fuzzy-match t)
+    (require 'helm-config)
+    (helm-mode)))
+
+(use-package which-key
+  :demand
+  :pin melpa
+  :init (which-key-mode))
 
 (use-package yaml-mode
   :defer t)
+
+(use-package yasnippet
+  :demand
+  :diminish (yas-minor-mode . "")
+  :init
+  (progn
+    (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
+    (yas-global-mode))
+  :config
+  (progn
+    (defun init-yas-uncapitalize (cap)
+      (concat (downcase (substring cap 0 1))
+              (substring cap 1)))
+
+    (unbind-key "TAB" yas-minor-mode-map)
+    (unbind-key "<tab>" yas-minor-mode-map)))
 
 ;;; Demo Packages
 
@@ -155,6 +238,13 @@
       (interactive)
       (find-tag (find-tag-default)))))
 
+(use-package helm-projectile
+  :demand
+  :init
+  (progn
+    (setq projectile-completion-system 'helm)
+    (helm-projectile-on)))
+
 (use-package flycheck
   :demand
   :diminish ""
@@ -188,6 +278,74 @@
   :init
   (show-paren-mode))
 
+(use-package projectile
+  :demand
+  :diminish ""
+  :init
+  (progn
+    (defun init-projectile-test-suffix (project-type)
+      "Find default test files suffix based on PROJECT-TYPE."
+      (cond ((member project-type '(haskell-stack)) "Spec")
+            (t (projectile-test-suffix project-type))))
+
+    (setq projectile-create-missing-test-files t
+          projectile-mode-line nil
+          projectile-test-suffix-function #'init-projectile-test-suffix
+          projectile-use-git-grep t)
+    (make-variable-buffer-local 'projectile-tags-command)
+    (projectile-mode)))
+
+;;; Haskell Packages
+
+(use-package haskell-mode
+  :defer t
+  :bind (:map haskell-mode-map
+              ("M-g i" . haskell-navigate-imports)
+              ("M-g M-i" . haskell-navigate-imports))
+  :init
+  (progn
+    (setq haskell-compile-cabal-build-alt-command
+          "cd %s && stack clean && stack build --ghc-options -ferror-spans"
+          haskell-compile-cabal-build-command
+          "cd %s && stack build --ghc-options -ferror-spans"
+          haskell-compile-command
+          "stack ghc -- -Wall -ferror-spans -fforce-recomp -c %s")))
+
+(use-package haskell-snippets
+  :defer t)
+
+(use-package hlint-refactor
+  :defer t
+  :diminish ""
+  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
+
+(use-package intero
+  :defer t
+  :diminish " λ"
+  :bind (:map intero-mode-map
+              ("M-." . init-intero-goto-definition))
+  :init
+  (progn
+    (defun init-intero ()
+      "Enable Intero unless visiting a cached dependency."
+      (if (and buffer-file-name
+               (string-match ".+/\\.\\(stack\\|stack-work\\)/.+" buffer-file-name))
+          (progn
+            (eldoc-mode -1)
+            (flycheck-mode -1))
+        (intero-mode)
+        (setq projectile-tags-command "codex update")))
+
+    (add-hook 'haskell-mode-hook #'init-intero))
+  :config
+  (progn
+    (defun init-intero-goto-definition ()
+      "Jump to the definition of the thing at point using Intero or etags."
+      (interactive)
+      (or (intero-goto-definition)
+          (find-tag (find-tag-default))))
+
+    (flycheck-add-next-checker 'intero '(warning . haskell-hlint))))
 
 ;;; Enable Disabled Features
 
