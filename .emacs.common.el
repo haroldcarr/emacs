@@ -1,4 +1,4 @@
-;;; .emacs.common.el --- stuff used in vanilla and spacemacs
+;;; .emacs.common.el --- stuff used in vanilla and spacemacs           -*- mode: emacs-lisp -*-
 
 ;;; Commentary:
 
@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2017 May 01 (Mon) 17:40:33 by Harold Carr.
+;;;; Last Modified : 2017 May 02 (Tue) 08:35:19 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -22,13 +22,13 @@
 ;; Then, when an error occurs, you can tell what section it occurs in
 ;; by looking in the *Messages* buffer or examining the *hcSection* variable.
 ;;
-;; =debug-on-error= is finer grained, but this is still useful.
+;; debug-on-error is finer grained, but this is still useful.
 
 (defvar *hcSectionEnabled* t)
 (defvar *hcSection* "")
 
 (defun hcSection (title)
-  "For debugging .emacs. TITLE."
+  "TITLE: For debugging .emacs."
   (cond (*hcSectionEnabled*
          (setq *hcSection* title)
          (message title))))

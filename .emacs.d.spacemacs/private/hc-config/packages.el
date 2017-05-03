@@ -6,7 +6,9 @@
       '(
         eclim
         company-emacs-eclim
+        haskell-snippets
         hindent
+        hlint-refactor
         intero
         markdown-preview-mode
         peep-dired
@@ -105,8 +107,14 @@
 
 ;; ------------------------------------------------------------------------------
 
+(defun hc-config/init-haskell-snippets ()
+  (use-package haskell-snippets))
+
 (defun hc-config/init-hindent ()
   (use-package hcInitHaskell))
+
+(defun hc-config/init-hlint-refactor ()
+  (use-package hlint-refactor))
 
 (defun hc-config/init-intero ()
   (use-package intero

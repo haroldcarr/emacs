@@ -1,0 +1,3 @@
+from https://github.com/cydparser/demo-emacs-haskell/
+
+example config

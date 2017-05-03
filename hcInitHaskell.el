@@ -4,14 +4,17 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 May 01 (Mon) 20:22:07 by Harold Carr.
+;;;; Last Modified : 2017 May 02 (Tue) 07:49:10 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
 ;;; Haskell Packages
 
+;; https://github.com/cydparser/demo-emacs-haskell/blob/master/demo.org
+
 (use-package haskell-mode
+  :ensure t
   :defer t
   :bind (:map haskell-mode-map
               ("M-g i" . haskell-navigate-imports)
@@ -26,14 +29,17 @@
           "stack ghc -- -Wall -ferror-spans -fforce-recomp -c %s")))
 
 (use-package haskell-snippets
+  :ensure t
   :defer t)
 
 (use-package hlint-refactor
+  :ensure t
   :defer t
   :diminish ""
   :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
 
 (use-package intero
+  :ensure t
   :defer t
   :diminish " λ"
   :bind (:map intero-mode-map
@@ -61,7 +67,9 @@
 
     (flycheck-add-next-checker 'intero '(warning . haskell-hlint))))
 
-;; COMMON
+;; ------------------------------------------------------------------------------
+;; HC
+
 (defvar hc-haskell-format-on-save t)
 
 (defvar haskell-stylish-on-save)
@@ -77,6 +85,7 @@
            haskell-stylish-on-save      hindent-reformat-buffer-on-save))
 
 (use-package hindent
+  :ensure t
   :config (progn (add-hook 'haskell-mode-hook 'hindent-mode)
                  (custom-set-variables
                   '(hindent-indent-size 4)
