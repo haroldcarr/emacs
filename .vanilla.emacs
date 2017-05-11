@@ -806,21 +806,11 @@
     (setq font-lock-auto-fontify nil))
   (setq font-lock-mode-enable-list nil))
 
-(use-package zenburn-theme
+(use-package autumn-light-theme ;; zenburn
   :ensure t
   :demand
   :init
-  (progn
-    ;; Increase contrast for presentation.
-;    (defvar zenburn-override-colors-alist
-;      '(("zenburn-bg-1"     . "#101010")
-;        ("zenburn-bg-05"    . "#202020")
-;        ("zenburn-bg"       . "#2B2B2B")
-;        ("zenburn-bg+05"    . "#383838")
-;        ("zenburn-bg+1"     . "#3F3F3F")
-;        ("zenburn-bg+2"     . "#494949")
-;        ("zenburn-bg+3"     . "#4F4F4F")))
-    (load-theme 'zenburn 'no-confirm)))
+  (load-theme 'autumn-light 'no-confirm)) ;; zenburn
 
 (cond ((hcDarwinP)
        (hcMacFW)))

@@ -7,18 +7,30 @@
 ;;; Code:
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(defun hcMacFW () "."
+  (interactive)
+  (set-frame-width (selected-frame)  88) ;; 100
+  (set-frame-height (selected-frame) 23) ;   27                 20
+  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
+  )
+(hcMacFW)
 
 ;; NOTE: set-mark-command is \C-space
 ;; the following swaps the default kill/copy
 (global-set-key "\M-w" 'kill-region)
 (global-set-key "\C-w" 'kill-ring-save)
 
+; C-x 5 o other-frame "frame.el"
+; C-x o other-window "window.el"
+(global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
+(global-set-key "\M-g" 'goto-line)
+
 (defvar bookmark-save-flag)
 (defvar bookmark-default-file)
 (setq bookmark-save-flag 1)
-(setq bookmark-default-file "~/.sync/.esync/emacs/.emacs.bmk")
+(setq bookmark-default-file (concat (shell-command-to-string "hcLocation emacs") "/.emacs.bmk"))
 
-;; ------------------------------------------------------------------------------
+;; ==============================================================================
 
 (require 'package)
 
@@ -30,6 +42,7 @@
 
 ;;; Initialize use-package
 
+(defvar use-package-always-ensure)
 (setq use-package-always-ensure t)
 
 (unless (package-installed-p 'use-package)
@@ -42,6 +55,13 @@
 (require 'bind-key)
 (require 'diminish)
 
+;; HC
+(use-package autumn-light-theme
+  :demand
+  :init
+  (load-theme 'autumn-light 'no-confirm))
+
+;; ------------------------------------------------------------------------------
 ;;; Utilities
 
 (defun init-kill-buffer-current ()
@@ -90,9 +110,6 @@
 ;; Collect garbage less frequently.
 (setq gc-cons-threshold 104857600)
 
-;; Delete the trailing newline.
-(setq kill-whole-line t)
-
 ;; Adjust indentation and line wrapping.
 (let ((spaces 2)
       (max-line-length 100))
@@ -113,8 +130,10 @@
 
 (global-subword-mode 1)
 
+;; ------------------------------------------------------------------------------
 ;;; General Packages
 
+(defvar company-idle-delay)
 (use-package company
   :demand
   :diminish ""
@@ -131,6 +150,12 @@
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize)))
 
+(defvar helm-M-x-fuzzy-match)
+(defvar helm-apropos-fuzzy-match)
+(defvar helm-buffers-fuzzy-matching)
+(defvar helm-ff-newfile-prompt-p)
+(defvar helm-locate-fuzzy-match)
+(defvar helm-recentf-fuzzy-match)
 (use-package helm
   :demand
   :diminish ""
@@ -177,58 +202,7 @@
     (unbind-key "TAB" yas-minor-mode-map)
     (unbind-key "<tab>" yas-minor-mode-map)))
 
-;;; Demo Packages
-
-(use-package demo-it
-  :defer t)
-
-(use-package expand-region
-  :defer t
-  :bind ("C-=" . er/expand-region))
-
-(use-package fancy-narrow
-  :defer t)
-
-(use-package org
-  :defer t
-  :init
-  (progn
-    (setq org-hide-emphasis-markers t
-          org-log-done 'time
-          org-src-fontify-natively t
-          org-startup-truncated nil))
-  :config
-  (progn
-    (progn
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((emacs-lisp . t)
-         (sh . t))))))
-
-(use-package org-bullets
-  :defer t
-  :init
-  (progn
-    (add-hook 'org-mode-hook #'org-bullets-mode)))
-
-(use-package org-tree-slide
-  :defer t)
-
-(use-package zenburn-theme
-  :demand
-  :init
-  (progn
-    ;; Increase contrast for presentation.
-    (defvar zenburn-override-colors-alist
-      '(("zenburn-bg-1"     . "#101010")
-        ("zenburn-bg-05"    . "#202020")
-        ("zenburn-bg"       . "#2B2B2B")
-        ("zenburn-bg+05"    . "#383838")
-        ("zenburn-bg+1"     . "#3F3F3F")
-        ("zenburn-bg+2"     . "#494949")
-        ("zenburn-bg+3"     . "#4F4F4F")))
-    (load-theme 'zenburn 'no-confirm)))
-
+;; ------------------------------------------------------------------------------
 ;;; Development Packages
 
 (use-package compile
@@ -319,9 +293,9 @@
 
 (use-package haskell-mode
   :defer t
-  :bind (:map haskell-mode-map
-              ("M-g i" . haskell-navigate-imports)
-              ("M-g M-i" . haskell-navigate-imports))
+;;HC  :bind (:map haskell-mode-map
+;;              ;;HC("M-g i" . haskell-navigate-imports)
+;;              ;;HC("M-g M-i" . haskell-navigate-imports))
   :init
   (progn
     (setq haskell-compile-cabal-build-alt-command
@@ -367,9 +341,13 @@
 
     (flycheck-add-next-checker 'intero '(warning . haskell-hlint))))
 
+;; ------------------------------------------------------------------------------
 ;;; Enable Disabled Features
 
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+
+(provide 'init)
+;;; init.el ends here

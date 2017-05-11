@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 May 02 (Tue) 07:49:10 by Harold Carr.
+;;;; Last Modified : 2017 May 07 (Sun) 15:38:52 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -16,9 +16,9 @@
 (use-package haskell-mode
   :ensure t
   :defer t
-  :bind (:map haskell-mode-map
-              ("M-g i" . haskell-navigate-imports)
-              ("M-g M-i" . haskell-navigate-imports))
+;;HC  :bind (:map haskell-mode-map
+;;              ("M-g i" . haskell-navigate-imports)
+;;              ("M-g M-i" . haskell-navigate-imports))
   :init
   (progn
     (setq haskell-compile-cabal-build-alt-command

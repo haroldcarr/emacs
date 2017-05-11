@@ -1,20 +1,32 @@
 ;;; packages.el --- hc-config Layer packages File for Spacemacs
 
+;;; Commentary:
+
 ;; List of all packages to install and/or initialize. Built-in packages
 ;; which require an initialization must be listed explicitly in the list.
+
+;;; Code:
+
+(defvar hc-config-packages)
 (setq hc-config-packages
       '(
+        ;; JAVA via eclim + eclipse
         eclim
         company-emacs-eclim
+
+        ;; HASKELL
         haskell-snippets
         hindent
         hlint-refactor
         intero
+
+        ;; MISC
         markdown-preview-mode
         peep-dired
         ))
 
 ;; List of packages to exclude.
+(defvar hc-config-excluded-packages)
 (setq hc-config-excluded-packages '())
 
 ;; -----------------------------------------------------------------------------
@@ -61,7 +73,8 @@
 ;; CLASS HIERARCHY :
 ;;     C-c C-e h   / eclim-java-hierarchy
 ;;          display hierarchy tree for class in the current buffer
-
+(defvar eclim-mode-map)
+(defvar help-at-pt-timer-delay)
 (defun hc-config/init-eclim ()
   (use-package eclim
     :config
@@ -98,7 +111,8 @@
       )))
 
 ;; code completion: https://github.com/emacs-eclim/emacs-eclim/wiki/Code-Completion
-(defun hc-config/init-company-emacs-eclim ()
+(defvar company-emacs-eclim)
+(defun hc-config/init-company-emacs-eclim () "."
   (use-package company-emacs-eclim
     :config
     (progn
@@ -106,16 +120,18 @@
       (global-company-mode t))))
 
 ;; ------------------------------------------------------------------------------
-
-(defun hc-config/init-haskell-snippets ()
+(defvar haskell-snippets)
+(defun hc-config/init-haskell-snippets () "."
   (use-package haskell-snippets))
 
-(defun hc-config/init-hindent ()
+(defun hc-config/init-hindent () "."
   (use-package hcInitHaskell))
 
-(defun hc-config/init-hlint-refactor ()
+(defvar hlint-refactor)
+(defun hc-config/init-hlint-refactor () "."
   (use-package hlint-refactor))
 
+(defvar flycheck-check-syntax-automatically)
 (defun hc-config/init-intero ()
   (use-package intero
     :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
@@ -123,21 +139,27 @@
                    (setq flycheck-check-syntax-automatically '(mode-enabled save)))))
 
 ;; ------------------------------------------------------------------------------
-(defun hc-config/init-markdown-preview-mode ()
+(defvar markdown-preview-mode)
+(defun hc-config/init-markdown-preview-mode () "."
   (use-package markdown-preview-mode
     :ensure t
     :defer t
+    :init
+    (add-hook 'js-mode-hook #'indium-interaction-mode)
   ))
 
 ;; ------------------------------------------------------------------------------
+(defvar peep-dired)
 (defun hc-config/init-peep-dired ()
-  ;; http://pragmaticemacs.com/emacs/quickly-preview-images-and-other-files-with-peep-dired/
-
+  "LINK: http://pragmaticemacs.com/emacs/quickly-preview-images-and-other-files-with-peep-dired/ ."
   ;;preview files in dired
   (use-package peep-dired
     :ensure t
     :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
     :bind (:map dired-mode-map
                 ("P" . peep-dired))
-  ))
+    ))
+
+(provide 'packages)
+;;; packages.el ends here
 
