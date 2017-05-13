@@ -23,6 +23,9 @@
         ;; MISC
         markdown-preview-mode
         peep-dired
+
+        ;; THEMES
+        autumn-light-theme
         ))
 
 ;; List of packages to exclude.
@@ -158,6 +161,14 @@
     :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
     :bind (:map dired-mode-map
                 ("P" . peep-dired))
+    ))
+
+;; ------------------------------------------------------------------------------
+
+(defun hc-config/init-autumn-light-theme () "."
+  (use-package autumn-light-theme
+    :ensure t
+    :defer t
     ))
 
 (provide 'packages)

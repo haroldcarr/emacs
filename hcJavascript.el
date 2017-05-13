@@ -10,8 +10,8 @@
 (defvar js2-mode)
 (defvar js-mode-map)
 (use-package js2-mode
-  :ensure t
-  :init
+  ;;:ensure t
+  :config
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
     (add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
@@ -21,8 +21,8 @@
 (defvar js2-refactor)
 (defvar js2-mode-map)
 (use-package js2-refactor
-  :ensure t
-  :init
+  ;;:ensure t
+  :config
   (progn
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
     (js2r-add-keybindings-with-prefix "C-c C-r")
@@ -32,8 +32,8 @@
 
 (defvar xref-js2)
 (use-package xref-js2
-  :ensure t
-  :init
+  ;;:ensure t
+  :config
   (progn
     (add-hook 'js2-mode-hook
               (lambda ()
@@ -41,15 +41,16 @@
     (define-key esc-map "." #'xref-find-definitions)
     ))
 
-(defvar company-mode)
-(use-package company-mode
-  :ensure t)
+(defvar company)
+(use-package company
+  ;;:ensure t
+  )
 (defvar company-tern)
 (defvar company-backends)
 (defvar tern-mode-keymap)
 (use-package company-tern
-  :ensure t
-  :init
+  ;;:ensure t
+  :config
   (progn
     (add-to-list 'company-backends 'company-tern)
     (add-hook 'js2-mode-hook
@@ -66,8 +67,10 @@
 ;; https://gitter.im/indium-emacs/Lobby
 
 (use-package indium
-  :ensure t)
+  ;;:ensure t
+  )
 
 ;; ------------------------------------------------------------------------------
 (provide 'hcJavascript)
+
 ;;; hcJavascript.el ends here

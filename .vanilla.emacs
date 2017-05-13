@@ -8,6 +8,8 @@
 ;; 57   1 warning         cl package required at runtime (emacs-lisp)
 ;; 734   1 warning         the following functions might not be defined at runtime: neo-buffer--unlock-width, neo-buffer--lock-width (emacs-lisp)
 
+(defvar hc-emacs "hcev")
+
 ;; ------------------------------------------------------------------------------
 ;; * SETUP
 
@@ -742,9 +744,9 @@
 
 (defun hcMacFW () "."
   (interactive)
-  (hc-w 100)
-  (hc-h 27)
-  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-20-*-*-*-m-0-iso10646-1")
+  (hc-w 88) ;; 100
+  (hc-h 23) ;;  27                                              20
+  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
   )
 
 (defun hcHostedAppearance () "."

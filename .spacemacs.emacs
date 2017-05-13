@@ -353,6 +353,8 @@ you should place you code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; HC
 
+  (defvar hc-emacs "hces")
+
   (require '.emacs.common)
 
   ;; Store customizations in a separate file.

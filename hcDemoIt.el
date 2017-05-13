@@ -4,43 +4,42 @@
 
 ;;; Code:
 
-(usepackage demoit
+(use-package demo-it
   :defer t)
 
-(usepackage expandregion
+(use-package expand-region
   :defer t
-  :bind ("C=" . er/expandregion))
+  :bind ("C-=" . er/expand-region))
 
-(usepackage fancynarrow
+(use-package fancy-narrow
   :defer t)
 
-(usepackage org
+(use-package org
   :defer t
   :init
   (progn
-    (setq orghideemphasismarkers t
-          orglogdone 'time
-          orgsrcfontifynatively t
-          orgstartuptruncated nil))
+    (setq org-hide-emphasis-markers t
+          org-log-done 'time
+          org-src-fontify-natively t
+          org-startup-truncated nil))
   :config
   (progn
     (progn
-      (orgbabeldoloadlanguages
-       'orgbabelloadlanguages
-       '((emacslisp . t)
+      (org-babel-do-load-languages
+       'org-babel-load-languages
+       '((emacs-lisp . t)
          (sh . t))))))
 
-(usepackage orgbullets
+(use-package org-bullets
   :defer t
   :init
   (progn
-    (addhook 'orgmodehook #'orgbulletsmode)))
+    (add-hook 'org-mode-hook #'org-bullets-mode)))
 
-(usepackage orgtreeslide
+(use-package org-tree-slide
   :defer t)
 
 (use-package zenburn-theme
-  :ensure t
   :demand
   :init
   (progn

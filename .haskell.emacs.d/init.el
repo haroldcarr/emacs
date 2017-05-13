@@ -6,11 +6,13 @@
 
 ;;; Code:
 
+(defvar hc-emacs "hceh")
+
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (defun hcMacFW () "."
   (interactive)
   (set-frame-width (selected-frame)  88) ;; 100
-  (set-frame-height (selected-frame) 23) ;   27                 20
+  (set-frame-height (selected-frame) 23) ;;  27                 20
   (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
   )
 (hcMacFW)
@@ -36,8 +38,10 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
-(setq package-archive-priorities '(("melpa" . 10))
-      package-enable-at-startup nil)
+(setq package-archive-priorities '(("melpa" . 10)
+                                   ("gnu"   .  5)
+                                  ))
+(setq package-enable-at-startup nil)
 (package-initialize)
 
 ;;; Initialize use-package
@@ -56,10 +60,8 @@
 (require 'diminish)
 
 ;; HC
-(use-package autumn-light-theme
-  :demand
-  :init
-  (load-theme 'autumn-light 'no-confirm))
+;;(use-package autumn-light-theme :demand :init (load-theme 'autumn-light 'no-confirm))
+(use-package zenburn-theme      :demand :init (load-theme 'zenburn      'no-confirm))
 
 ;; ------------------------------------------------------------------------------
 ;;; Utilities
