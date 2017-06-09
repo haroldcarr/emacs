@@ -65,20 +65,7 @@
 (hcSection "Predicates")
 
 (defun hcIsVersionP    (x) "X." (string-match x (emacs-version)))
-(defun hcUnameContains (x) "X." (string-match x (shell-command-to-string "uname -a")))
-
-
-(defun hcLucidP        () "." (hcIsVersionP "Lucid"))
 (defun hcXEmacsP       () "." (hcIsVersionP "XEmacs"))
-(defun hcXP            () "." (equal window-system 'x))
-(defun hcOracleLinuxP  () "." (or (and (hcIsVersionP "redhat-linux")
-                                       (hcIsVersionP "us.oracle.com"))
-                                  (and (hcIsVersionP "x86_64-unknown-linux-gnu")
-                                       (hcIsVersionP "2013-03-26 on adc2100420"))
-                                  (and (hcUnameContains "Linux")
-                                       (or (hcUnameContains "slcn19cn15ib")
-                                           (hcUnameContains "slcn19cn16ib")
-                                           (hcUnameContains "adc00phv")))))
 (defun hcWin32P        () "." (or (equal window-system 'win32)
                                   (equal window-system 'w32)
                                   (equal window-system 'mswindows)
