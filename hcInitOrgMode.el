@@ -28,7 +28,6 @@
   ;; If you do not like transient-mark-mode, you can create an active
   ;; region by using the mouse to select a region, or pressing C-<SPC>
   ;; twice before moving the cursor.
-  (if (not (hcXEmacsP)) (transient-mark-mode 1))
 
   ;;(setq org-hide-leading-stars t)
 

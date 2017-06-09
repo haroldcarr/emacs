@@ -81,6 +81,8 @@
 (setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
 (load custom-file)
 
+(load-file (concat (hcEmacsDir) "/hcSpaceline.el"))
+
 ;; WHICH KEY
 (use-package which-key
   :ensure t
@@ -355,9 +357,9 @@
   (setq diary-list-include-blanks t)
   ;; not working: (add-hook 'list-diary-entries-hook 'sort-diary-entries t)
   ;; Make sure starting calendar comes after auto-resizing of frame.
-  (if (hcLucidP)
-      (defun diary-remind (form number)
-	(eval form)))
+  ;; (if (hcLucidP)
+  ;;    (defun diary-remind (form number)
+  ;;      (eval form)))
   ;; Do not automatically show calendar on startup
   ;(if (file-exists-p diary-file)
   ;    (calendar))
@@ -807,12 +809,6 @@
       (global-font-lock-mode -1) ;; Emacs
     (setq font-lock-auto-fontify nil))
   (setq font-lock-mode-enable-list nil))
-
-(use-package autumn-light-theme ;; zenburn
-  :ensure t
-  :demand
-  :init
-  (load-theme 'autumn-light 'no-confirm)) ;; zenburn
 
 (cond ((hcDarwinP)
        (hcMacFW)))
