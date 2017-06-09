@@ -8,12 +8,17 @@
 
 (defvar hc-emacs "hceh")
 
+(defvar hc-emacs-location (shell-command-to-string "hcLocation emacs"))
+
+(add-to-list 'load-path hc-emacs-location)
+
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (defun hcMacFW () "."
   (interactive)
   (set-frame-width (selected-frame)  88) ;; 100
   (set-frame-height (selected-frame) 23) ;;  27                 20
-  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
+  (if (string-match "darwin" (emacs-version))
+      (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1"))
   )
 (hcMacFW)
 
@@ -30,7 +35,10 @@
 (defvar bookmark-save-flag)
 (defvar bookmark-default-file)
 (setq bookmark-save-flag 1)
-(setq bookmark-default-file (concat (shell-command-to-string "hcLocation emacs") "/.emacs.bmk"))
+(setq bookmark-default-file (concat hc-emacs-location "/.emacs.bmk"))
+
+(setq-default show-trailing-whitespace  t)
+(setq         indicate-empty-lines      t)
 
 ;; ==============================================================================
 
@@ -59,9 +67,7 @@
 (require 'bind-key)
 (require 'diminish)
 
-;; HC
-;;(use-package autumn-light-theme :demand :init (load-theme 'autumn-light 'no-confirm))
-(use-package zenburn-theme      :demand :init (load-theme 'zenburn      'no-confirm))
+(load-file (concat hc-emacs-location "/hcSpaceline.el"))
 
 ;; ------------------------------------------------------------------------------
 ;;; Utilities
@@ -123,6 +129,15 @@
 ;; Open URLs within Emacs.
 (when (package-installed-p 'eww)
   (setq browse-url-browser-function 'eww-browse-url))
+
+;; HC
+(defun hc-browse (&optional arg)
+  "ARG: From browse-url.el."
+  (interactive "P")
+  (let ((url (browse-url-url-at-point)))
+    (if url
+        (eww-browse-with-external-browser url)
+      (error "No URL found"))))
 
 (bind-key "C-c C-SPC" #'delete-trailing-whitespace)
 (bind-key "C-x C-b" #'ibuffer)
@@ -350,6 +365,12 @@
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+
+;; ------------------------------------------------------------------------------
+;;; HC
+
+;; show the whole file when first visited
+(setq org-startup-folded nil)
 
 (provide 'init)
 ;;; init.el ends here
