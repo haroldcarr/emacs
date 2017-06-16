@@ -10,6 +10,10 @@
 
 (defvar hc-emacs-location (shell-command-to-string "hcLocation emacs"))
 
+(defun hc-load (filename) "FILENAME."
+  (interactive)
+  (load-file (concat hc-emacs-location "/" filename)))
+
 (add-to-list 'load-path hc-emacs-location)
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -67,7 +71,11 @@
 (require 'bind-key)
 (require 'diminish)
 
-(load-file (concat hc-emacs-location "/hcSpaceline.el"))
+;; ------------------------------------------------------------------------------
+;;; HC
+
+(hc-load "hcSpaceline.el")
+(hc-load "hcNeotree.el")
 
 ;; ------------------------------------------------------------------------------
 ;;; Utilities
