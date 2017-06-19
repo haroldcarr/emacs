@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2017 May 02 (Tue) 08:35:19 by Harold Carr.
+;;;; Last Modified : 2017 Jun 16 (Fri) 09:19:18 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -459,12 +459,8 @@ If invoked with a prefix ARG eval the expression after inserting it."
 
 ;; ------------------------------------------------------------------------------
 ;; * neotree
-(with-no-warnings
-(use-package neotree
-  :config (progn (setq neo-theme 'arrow)
-                 (setq neo-window-width 25)
-                 (setq neo-buffer--show-hidden-file-p t)))
-)
+
+(load-library "hcNeotree.el")
 
 (provide '.emacs.common)
 
