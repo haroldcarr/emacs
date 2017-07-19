@@ -44,6 +44,9 @@
 (setq-default show-trailing-whitespace  t)
 (setq         indicate-empty-lines      t)
 
+;; stop backup changing file creation date of original file
+(setq backup-by-copying t)
+
 ;; ==============================================================================
 
 (require 'package)

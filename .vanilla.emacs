@@ -278,6 +278,13 @@
     (helm-projectile-on)))
 
 ;; ------------------------------------------------------------------------------
+;; Bookmarks
+
+(hcSection "Bookmarks")
+
+(use-package hcBookmarkPlus)
+
+;; ------------------------------------------------------------------------------
 ;; * Emacs Code Browser (ECB)
 
 ;; http://www.emacswiki.org/emacs/EmacsCodeBrowser
