@@ -1,0 +1,6 @@
+emacs -q -l ./emacs/.haskell.emacs.d/init.el
+
+
+font : CM Typewriter Bold
+       Nimbus Mono L Bold
+size : 18

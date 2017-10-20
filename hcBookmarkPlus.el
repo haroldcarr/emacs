@@ -5,7 +5,8 @@
 ;;; Code:
 
 (use-package bookmark+
-  :ensure t)
+  :ensure t
+  :config (setq bmkp-prompt-for-tags-flag t))
 
 (provide 'hcBookmarkPlus)
 

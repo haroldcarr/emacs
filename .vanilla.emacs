@@ -280,9 +280,9 @@
 ;; ------------------------------------------------------------------------------
 ;; Bookmarks
 
-(hcSection "Bookmarks")
-
-(use-package hcBookmarkPlus)
+;;(hcSection "Bookmarks")
+;;
+;;(use-package hcBookmarkPlus)
 
 ;; ------------------------------------------------------------------------------
 ;; * Emacs Code Browser (ECB)
@@ -408,10 +408,10 @@
 
 (use-package hcInitHaskell)
 
-(use-package intero
-  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
-                 ;; https://github.com/commercialhaskell/intero/issues/208
-                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
+;;(use-package intero
+;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
+;;                 ;; https://github.com/commercialhaskell/intero/issues/208
+;;                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 
 ;; ------------------------------------------------------------------------------
 ;; * Images

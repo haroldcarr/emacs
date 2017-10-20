@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2017 Jul 06 (Thu) 17:13:57 by Harold Carr.
+;;;; Last Modified : 2017 Oct 20 (Fri) 07:41:08 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -71,6 +71,7 @@
                                   (equal window-system 'mswindows)
                                   (hcIsVersionP "cygwin")))
 (defun hcDarwinP       () "." (hcIsVersionP "darwin"))
+(defun hcLinuxP        () "." (hcIsVersionP "linux"))
 
 ;; ------------------------------------------------------------------------------
 ;; * Key Bindings
@@ -84,6 +85,9 @@
 ;; the following swaps the default kill/copy
 (global-set-key "\M-w" 'kill-region)
 (global-set-key "\C-w" 'kill-ring-save)
+
+;; when using vnc, "\C-y" is getting converted to a different key, so use this
+(if (hcLinuxP) (global-set-key "\C-h" 'yank))
 
 ; C-x 5 o other-frame "frame.el"
 ; C-x o other-window "window.el"
@@ -164,6 +168,10 @@
 
 (hcSection "Top level misc stuff")
 
+;; move/copy between two dired windows
+(defvar dired-dwim-target)
+(setq dired-dwim-target t)
+
 ;; This must be ON for haskell-mode to work.
 (with-no-warnings
 (use-package flycheck
@@ -191,9 +199,10 @@
 (with-no-warnings
 (use-package whitespace
   :config
-  (setq whitespace-style '(face lines-tail))
-  (setq whitespace-line-column 100)
-  (global-whitespace-mode t))
+  (progn
+    (setq whitespace-style '(face lines-tail))
+    (setq whitespace-line-column 100)
+    (global-whitespace-mode t)))
 )
 ;; so list-buffers won't jump back to top
 (defvar global-auto-revert-non-file-buffers)
@@ -223,7 +232,7 @@
 (defvar gnus-select-method)
 (setq gnus-select-method
       '(nntp "news.gmane.org"))
-
+(comment
 (defvar gnus-secondary-select-methods)
 (setq gnus-secondary-select-methods
       '((nnimap "gmail"
@@ -232,7 +241,7 @@
                 (nnimap-authenticator login)
                 (nnimap-expunge-on-close 'never)
                 (nnimap-stream ssl))))
-
+)
 ;; Original value was  "%U%R%z%I%(%[%4L: %-23,23f%]%) %s\n"
 (defvar gnus-summary-line-format)
 (defvar gnus-user-date-format-alist)
@@ -467,6 +476,15 @@ If invoked with a prefix ARG eval the expression after inserting it."
 (load-library "hcNeotree.el")
 
 (provide '.emacs.common)
+
+;; ------------------------------------------------------------------------------
+;; * EPUB
+
+;; https://github.com/wasamasa/nov.el
+(with-no-warnings
+(use-package nov
+  :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+)
 
 ;; ------------------------------------------------------------------------------
 ;; * greek

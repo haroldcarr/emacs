@@ -488,3 +488,24 @@ you should place you code here."
 
   (menu-bar-mode)
   )
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(eclim-eclipse-dirs (quote ("/Applications/Eclipse.app/Contents/Eclipse")))
+ '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
+ '(haskell-stylish-on-save hc-haskell-format-on-save)
+ '(hindent-indent-size 4)
+ '(hindent-line-length 120)
+ '(hindent-reformat-buffer-on-save nil)
+ '(hindent-style "johan-tibell")
+ '(package-selected-packages
+   (quote
+    (web-mode use-package ujelly-theme toc-org tangotango-theme solarized-theme rainbow-delimiters pug-mode persp-mode org-projectile org-download ob-http move-text monokai-theme moe-theme mmm-mode magit-gitflow link-hint ledger-mode js2-refactor jbeans-theme intero haskell-mode info+ highlight-numbers helm-swoop helm-projectile helm-make projectile gruvbox-theme gotham-theme fill-column-indicator evil-surround evil-nerd-commenter ensime dumb-jump define-word darktooth-theme color-theme-sanityinc-tomorrow apropospriate-theme aggressive-indent ace-link avy inflections cider clojure-mode multiple-cursors eclim tern iedit smartparens evil goto-chg flycheck yasnippet company markdown-mode org-plus-contrib magit magit-popup git-commit with-editor hydra helm helm-core async haml-mode js2-mode simple-httpd powerline dash s zenburn-theme zonokai-theme zen-and-art-theme yaml-mode ws-butler winum which-key web-beautify volatile-highlights vi-tilde-fringe undo-tree underwater-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme tronesque-theme toxi-theme tao-theme tango-plus-theme tango-2-theme tagedit sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spaceline spacegray-theme soothe-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme smeargle slim-mode seti-theme scss-mode scala-mode sbt-mode sass-mode reverse-theme restclient-helm restart-emacs railscasts-theme queue purple-haze-theme professional-theme popwin planet-theme pkg-info phoenix-dark-pink-theme phoenix-dark-mono-theme peep-dired pcre2el pastels-on-dark-theme parent-mode paradox orgit organic-green-theme org-present org-pomodoro org-category-capture org-bullets open-junk-file omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme ob-restclient noflet noctilux-theme niflheim-theme neotree naquadah-theme mustang-theme monochrome-theme molokai-theme minimal-theme material-theme markdown-toc markdown-preview-mode majapahit-theme madhat2r-theme macrostep lush-theme lorem-ipsum livid-mode linum-relative light-soap-theme less-css-mode json-mode js-doc jazz-theme ir-black-theme inkpot-theme indent-guide idris-mode hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-indentation hide-comnt heroku-theme hemisu-theme help-fns+ helm-themes helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag hc-zenburn-theme haskell-snippets gruber-darker-theme grandshell-theme google-translate google-c-style golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md gandalf-theme fuzzy flycheck-pos-tip flycheck-ledger flx-ido flatui-theme flatland-theme firebelly-theme farmhouse-theme fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-search-highlight-persist evil-numbers evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-ediff evil-args evil-anzu espresso-theme emmet-mode elisp-slime-nav dracula-theme django-theme diminish diff-hl darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme company-web company-tern company-statistics company-restclient company-emacs-eclim column-enforce-mode color-theme-sanityinc-solarized coffee-mode clues-theme clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme bind-key badwolf-theme autumn-light-theme autothemer auto-yasnippet auto-highlight-symbol auto-compile anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme adaptive-wrap ace-window ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
