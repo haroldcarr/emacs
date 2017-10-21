@@ -9,12 +9,11 @@
 (defvar hc-emacs "hceh")
 
 (defvar hc-emacs-location (shell-command-to-string "hcLocation emacs"))
+(add-to-list 'load-path hc-emacs-location)
 
 (defun hc-load (filename) "FILENAME."
   (interactive)
   (load-file (concat hc-emacs-location "/" filename)))
-
-(add-to-list 'load-path hc-emacs-location)
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (defun hcMacFW () "."
@@ -157,7 +156,6 @@
 (bind-key "C-c C-SPC" #'delete-trailing-whitespace)
 (bind-key "C-x C-b" #'ibuffer)
 (bind-key "C-x C-k" #'init-kill-buffer-current)
-(bind-key "M-/" #'hippie-expand)
 (bind-key "M-o" #'other-window)
 
 (global-subword-mode 1)
@@ -218,21 +216,7 @@
 (use-package yaml-mode
   :defer t)
 
-(use-package yasnippet
-  :demand
-  :diminish (yas-minor-mode . "")
-  :init
-  (progn
-    (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
-    (yas-global-mode))
-  :config
-  (progn
-    (defun init-yas-uncapitalize (cap)
-      (concat (downcase (substring cap 0 1))
-              (substring cap 1)))
-
-    (unbind-key "TAB" yas-minor-mode-map)
-    (unbind-key "<tab>" yas-minor-mode-map)))
+(hc-load "hc-yasnippet.el")
 
 ;; ------------------------------------------------------------------------------
 ;;; Development Packages
