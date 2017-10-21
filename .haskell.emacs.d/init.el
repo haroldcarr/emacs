@@ -180,33 +180,7 @@
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize)))
 
-(defvar helm-M-x-fuzzy-match)
-(defvar helm-apropos-fuzzy-match)
-(defvar helm-buffers-fuzzy-matching)
-(defvar helm-ff-newfile-prompt-p)
-(defvar helm-locate-fuzzy-match)
-(defvar helm-recentf-fuzzy-match)
-(use-package helm
-  :demand
-  :diminish ""
-  :bind (("C-M-y" . helm-show-kill-ring)
-         ("C-h a" . helm-apropos)
-         ("C-x C-f" . helm-find-files)
-         ("C-x b" . helm-mini)
-         ("M-s o" . helm-occur)
-         ("M-x" . helm-M-x)
-         :map helm-map
-         ([tab] . helm-execute-persistent-action))
-  :init
-  (progn
-    (setq helm-M-x-fuzzy-match t
-          helm-apropos-fuzzy-match t
-          helm-buffers-fuzzy-matching t
-          helm-ff-newfile-prompt-p nil
-          helm-locate-fuzzy-match t
-          helm-recentf-fuzzy-match t)
-    (require 'helm-config)
-    (helm-mode)))
+(hc-load "hc-helm.el")
 
 (use-package which-key
   :demand
@@ -248,13 +222,6 @@
       (interactive)
       (find-tag (find-tag-default)))))
 
-(use-package helm-projectile
-  :demand
-  :init
-  (progn
-    (setq projectile-completion-system 'helm)
-    (helm-projectile-on)))
-
 (use-package flycheck
   :demand
   :diminish ""
@@ -288,23 +255,7 @@
   :init
   (show-paren-mode))
 
-(require 'tramp)
-(use-package projectile
-  :demand
-  :diminish ""
-  :init
-  (progn
-    (defun init-projectile-test-suffix (project-type)
-      "Find default test files suffix based on PROJECT-TYPE."
-      (cond ((member project-type '(haskell-stack)) "Spec")
-            (t (projectile-test-suffix project-type))))
-
-    (setq projectile-create-missing-test-files t
-          projectile-mode-line nil
-          projectile-test-suffix-function #'init-projectile-test-suffix
-          projectile-use-git-grep t)
-    (make-variable-buffer-local 'projectile-tags-command)
-    (projectile-mode)))
+(hc-load "hc-projectile.el")
 
 ;;; Haskell Packages
 

@@ -44,14 +44,14 @@ do:
 *** search by name
 
 do:
-- point to something provided by external library or GHC
+- in a haskell file, point to something provided by external library or GHC
 - M-x hayoo (using [[http://hayoo.fh-wedel.de/][Hayoo!]]) or hoogle (using [[https://www.haskell.org/hoogle/][Hoogle]])
 
 *** search by type
 
 do:
 - M-x hayoo or hoogle
-- f a -> Bool
+- f a -> Maybe c
 
 --------------------------------------------------
 ** dante, intero
