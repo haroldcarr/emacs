@@ -1,4 +1,4 @@
-;;; package --- Org Mobile
+;;; hc-org-mobile --- Org Mobile
 
 ;;; Commentary:
 ;;;          http://orgmode.org/org.html#MobileOrg
@@ -44,5 +44,6 @@
 (add-hook 'org-mobile-pre-pull-hook  'hc-org-mobile-pre-pull-function)
 (add-hook 'org-mobile-post-push-hook 'hc-org-mobile-post-push-function)
 
-(provide hcInitOrgMobile)
-;;; hcInitOrgMobile.el ends here
+(provide 'hc-Org-Mobile)
+
+;;; hc-org-mobile.el ends here

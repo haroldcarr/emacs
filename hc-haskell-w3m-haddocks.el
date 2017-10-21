@@ -1,4 +1,4 @@
-;;; package --- w3m
+;;; hc-haskell-w3m-haddocks --- Summary
 
 ;;; Commentary:
 
@@ -40,5 +40,6 @@
   (define-key haskell-mode-map (kbd "C-c C-d") 'haskell-w3m-open-haddock)
 )
 
-(provide hcInitW3mHaddocks)
-;;; hcInitW3mHaddocks.el ends here
+(provide 'hc-haskell-w3m-haddocks)
+
+;;; hc-haskell-w3m-haddocks.el ends here

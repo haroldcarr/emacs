@@ -1,4 +1,4 @@
-;;; package --- COQ and ProofGeneral
+;;; hc-cog-proof-general --- packages for doing bookmark
 
 ;;; Commentary:
 
@@ -16,6 +16,7 @@
   (setq proof-splash-time 2)
 )
 
-(provide hcInitCoqProofGeneral)
-;;; hcInitCoqProofGeneral.el ends here
+(provide 'hc-coq-proof-general)
+
+;;; hc-coq-proof-general.el ends here
 

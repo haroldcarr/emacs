@@ -1,4 +1,4 @@
-;;; package --- hc init Org Mode
+;;; hc-org-mode --- hc init Org Mode
 
 ;;; Commentary:
 
@@ -10,7 +10,7 @@
 
 ;;; Code:
 
-(defun hcOrgMode ()
+(defun hc-org-mode ()
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
   ;; So I can visit script links in org files (instead of execute them)
   ;; I link to the real file: ln -s <some-script> <some-script>.hcScript
@@ -177,5 +177,6 @@
 
 (use-package ox-beamer :defer t) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
 
-(provide 'hcInitOrgMode)
-;;; hcInitOrgMode.el ends here
+(provide 'hc-org-mode)
+
+;;; hc-org-mode.el ends here

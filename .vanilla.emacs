@@ -81,7 +81,7 @@
 (setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
 (load custom-file)
 
-(load-file (concat (hcEmacsDir) "/hcSpaceline.el"))
+(load-file (concat (hcEmacsDir) "/hc-spaceline.el"))
 
 ;; WHICH KEY
 (use-package which-key
@@ -250,6 +250,7 @@
 ;; ------------------------------------------------------------------------------
 ;; * Projectile
 
+(require 'tramp)
 (use-package projectile
   :ensure t
   :demand
@@ -406,7 +407,7 @@
 
 (hcSection "Haskell")
 
-(use-package hcInitHaskell)
+(use-package hc-haskell-init)
 
 ;;(use-package intero
 ;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
@@ -721,7 +722,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "LISP and Scheme and Clojure")
 
-(use-package hcInitLisps)
+(use-package hc-lisps)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "C")
@@ -851,6 +852,6 @@
        (modify-syntax-entry ?* "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))))
 
-(provide 'hcVanilla)
+(provide '.vanilla.emacs)
 
-;;; .emacs.vanilla ends here
+;;; .vanilla.emacs ends here

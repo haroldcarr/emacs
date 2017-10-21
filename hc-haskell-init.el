@@ -1,4 +1,4 @@
-;;; hcHaskellInit --- Summary
+;;; hc-haskell-init --- Summary
 
 ;;; Commentary:
 
@@ -39,16 +39,16 @@
   :ensure t
   :defer t)
 
-(use-package hlint-refactor
-  :ensure t
-  :defer t
-  :diminish ""
-  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
+;;(use-package hlint-refactor
+;;  :ensure t
+;;  :defer t
+;;  :diminish ""
+;;  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
 
-;;(hc-load "hcHaskellIntero.el")
-(hc-load "hcHaskellDante.el")
+;;(hc-load "hc-haskell-intero.el")
+(hc-load "hc-haskell-dante.el")
 
-(provide 'hcHaskellInit)
+(provide 'hc-haskell-init)
 
-;;; hcHaskellInit.el ends here
+;;; hc-haskell-init.el ends here
 

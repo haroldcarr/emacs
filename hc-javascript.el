@@ -1,4 +1,4 @@
-;;; hcJavascript.el --- javascript development environment
+;;; hc-javascript.el --- javascript development environment
 
 ;;; Commentary:
 ;;;
@@ -71,6 +71,6 @@
   )
 
 ;; ------------------------------------------------------------------------------
-(provide 'hcJavascript)
+(provide 'hc-javascript)
 
-;;; hcJavascript.el ends here
+;;; hc-javascript.el ends here

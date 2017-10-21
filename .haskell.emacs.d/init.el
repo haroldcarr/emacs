@@ -81,8 +81,8 @@
 ;; ------------------------------------------------------------------------------
 ;;; HC
 
-(hc-load "hcSpaceline.el")
-(hc-load "hcNeotree.el")
+(hc-load "hc-spaceline.el")
+(hc-load "hc-neotree.el")
 
 ;; ------------------------------------------------------------------------------
 ;;; Utilities
@@ -304,6 +304,7 @@
   :init
   (show-paren-mode))
 
+(require 'tramp)
 (use-package projectile
   :demand
   :diminish ""
@@ -323,7 +324,7 @@
 
 ;;; Haskell Packages
 
-(hc-load "hcHaskellInit.el")
+(hc-load "hc-haskell-init.el")
 
 ;; ------------------------------------------------------------------------------
 ;;; Enable Disabled Features
@@ -340,4 +341,5 @@
 (setq org-startup-folded nil)
 
 (provide 'init)
+
 ;;; init.el ends here

@@ -1,0 +1,225 @@
+------------------------------------------------------------------------------
+* projectile
+
+project navigation, building, testing, ...
+
+Keybindings (subset)
+- C-c p ! : projectile-run-shell-command-in-root
+- C-c p R : projectile-regenerate-tags
+- C-c p S : projectile-save-project-buffers
+- C-c p b : projectile-switch-to-buffer
+- C-c p c : projectile-compile-project
+- C-c p f : projectile-find-file
+- C-c p j : projectile-find-tag
+- C-c p k : projectile-kill-buffers
+- C-c p t : projectile-toggle-between-implementation-and-test
+
+Press C-c p and wait (to see full list, via whick-key)
+
+with prefix C-c p 4 : action in different pane
+
+------------------------------------------------------------------------------
+* yasnippet / haskell-snippets
+
+some templates
+- =mod=  : adds a named (based on filepath) module declaration
+- =main= : adds a =Main= module and =main= function
+- =lang= : adds a =LANGUAGE= pragma
+- =opt=  : adds a =OPTIONS_GHC= pragma
+
+do:
+- open new file : =List.hs=
+- type =mod=
+- press =M-/= (hippie-expand)
+- select "simple module"
+- press RET
+- press tab to accept default module name (or start typing)
+
+------------------------------------------------------------------------------
+* haskell
+
+--------------------------------------------------
+** haskell-hoogle
+
+*** search by name
+
+do:
+- point to something provided by external library or GHC
+- M-x hayoo (using [[http://hayoo.fh-wedel.de/][Hayoo!]]) or hoogle (using [[https://www.haskell.org/hoogle/][Hoogle]])
+
+*** search by type
+
+do:
+- M-x hayoo or hoogle
+- f a -> Bool
+
+--------------------------------------------------
+** dante, intero
+
+Dante keybindings
+- C-c . : dante-type-at
+- C-c , : dante-info
+- C-c / : dante-auto-fix (apply Ghc suggestion for error at point)
+- M-.   : xref-find-definitions (goto definition)
+- M-?   : xref-find-references	(find uses)
+- C-c " : dante-eval-block
+
+Intero keybindings
+- C-c C-i : intero-info
+- C-c C-l : intero-repl-load
+- C-c C-r : intero-apply-suggestions
+- C-c C-t : intero-type-at
+- C-c C-z : intero-repl
+- M-.     : intero-goto-definition
+
+--------------------------------------------------
+*** view types / info
+
+do:
+
+*types*
+
+- point to something
+  - C-c .   : dante-type-at
+  - C-c C-t : intero-type-at
+
+*info* (shows definition and where defined, even if external)
+
+- point to something
+  - C-c ,   : dante-info
+  - C-c C-i : intero-info
+
+--------------------------------------------------
+*** definitions and references
+
+**** definitions
+
+- point to something
+- M-. : jump to definition
+- M-, : return to previous location
+
+**** references
+
+- point to something
+  - M-?   : xref-find-references	(dante : TODO BROKE)
+
+Note: see CODEX below for another method.
+
+--------------------------------------------------
+*** apply suggestions / auto-fix
+
+do:
+
+- add the following code to =List.hs=
+
+#+begin_example
+data List a = Cons a (List a) | Nil
+  deriving (Eq, Foldable, Show)
+#+end_example
+
+- see red squiggly line under =Foldable=
+- C-c ! l : flycheck-list-errors
+- says "... You need DeriveFoldable ..."
+  - C-c /   : dante-auto-fix
+  - C-c C-r : intero-apply-suggestions
+- (inserts appropriate =LANGUAGE= pragma)
+
+--------------------------------------------------
+*** add type info
+
+do:
+
+- add to =List.hs=
+
+#+begin_example
+cdr Nil = Nil
+cdr (Cons _ xs) = xs
+#+end_example
+
+- see red squiggly line under =cdr=
+- C-c ! l : flycheck-list-errors
+- says "... Top-level binding with no type signature ..."
+  - C-c /       : dante-auto-fix
+  - C-u C-c C-t : TODO
+- (inserts appropriate type signature)
+
+--------------------------------------------------
+*** doctest
+
+do:
+
+- add to =List.hs=
+
+#+begin_example
+-- | Returns the first element, if non-empty.
+--
+-- >>> car Nil
+--
+-- >>> car (Cons 'a' Nil)
+car :: List a -> Maybe a
+car xs = case xs of
+  Nil      -> Nothing
+  Cons x _ -> Just x
+#+end_example
+
+- point inside comment
+- C-c " : dante-eval-block
+- (inserts function call results)
+
+TODO : run tests after results specified
+
+--------------------------------------------------
+*** process buffer
+
+#+begin-example
+M-x dante-list-buffers RET
+M-x intero-list-buffers RET
+d ;; mark process for deletion
+x ;; kill it
+q ;; quit process list
+M-x dante-restart RET
+M-x intero-list-buffers RET
+#+end-example
+
+If intero or dante start acting weird, restart them.
+
+--------------------------------------------------
+** completion
+
+do:
+
+- in =List.hs=
+- type : import System.E
+- M-n or M-p : move through suggestions
+- note: delete 'E' until only : import System.
+- now shows all packages in 'System'
+
+--------------------------------------------------
+** test files
+
+do:
+
+- from =List.hs=
+- C-c p t
+- jumps to (or creates) =ListSpec.hs=
+- TODO : put in test dir, etc..
+
+--------------------------------------------------
+** build / run
+
+** build
+
+- C-c p c : build
+- C-c p ! : run
+
+--------------------------------------------------
+** references via CODEX and Intero
+
+TODO
+
+--------------------------------------------------
+** formatting
+
+- M-x haskell-mode-stylish-buffer
+
+

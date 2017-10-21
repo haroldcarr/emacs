@@ -1,4 +1,4 @@
-;;; hcSparqlMode.el --- Summry sparql-mode
+;;; hc-sparql-mode.el --- Summry sparql-mode
 
 ;;; Commentary:
 
@@ -9,5 +9,6 @@
     :config (sparql-set-base-url "http://localhost:3040/ds/query?default"))
 )
 
-(provide 'hcSparqlMode)
-;;; hcSparqlMode.el ends here
+(provide 'hc-sparql-mode)
+
+;;; hc-sparql-mode.el ends here

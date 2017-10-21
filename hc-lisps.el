@@ -1,4 +1,4 @@
-;;; package --- init lisps
+;;; hc-lisps --- init lisps
 
 ;;; Commentary:
 
@@ -63,10 +63,10 @@ java -server \
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package hcRunCommand)
+(use-package hc-run-command)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package hcPomCommand)
+;; (use-package hcPomCommand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcRunCommand clisp hcClispCmd)
@@ -278,6 +278,7 @@ java -server \
 (defun hcMzSchemeCmd ()
   (concat (hcUlhcd) "/lisp/plt/202/plt/bin/mzscheme"))
 
-(provide 'hcInitLisps)
-;;; hcInitLisps.el ends here
+(provide 'hc-lisps)
+
+;;; hc-lisps.el ends here
 

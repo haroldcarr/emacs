@@ -1,4 +1,4 @@
-;;; hcRacketMode.el --- Summry racketmode
+;;; hc-racket-mode.el --- Summry racketmode
 
 ;;; Commentary:
 
@@ -12,5 +12,6 @@
   )
 )
 
-(provide 'hcRacketMode)
-;;; hcRacketMode.el ends here
+(provide 'hc-racket-mode)
+
+;;; hc-racket-mode.el ends here

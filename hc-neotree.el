@@ -1,4 +1,4 @@
-;;; hcNeotree.el --- Summry neotree
+;;; hc-neotree.el --- Summry neotree
 
 ;;; Commentary:
 
@@ -16,5 +16,6 @@
                  (setq neo-buffer--show-hidden-file-p t)))
 )
 
-(provide 'hcNeotree)
-;;; hcNeotree.el ends here
+(provide 'hc-neotree)
+
+;;; hc-neotree.el ends here

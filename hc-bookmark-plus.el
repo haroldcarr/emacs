@@ -1,4 +1,4 @@
-;;; hcBookmarkPlusIt --- packages for doing bookmark
+;;; hc-bookmark-plus --- packages for doing bookmark
 
 ;;; Commentary:
 
@@ -10,4 +10,5 @@
 
 (provide 'hcBookmarkPlus)
 
-;;; hcBookmarkPlus.el ends here
+;;; hc-bookmark-plus.el ends here
+

@@ -302,7 +302,7 @@
 ;; because the window-system is x
 ;;(defun user-full-name () "Harold Carr")
 (with-no-warnings
-(use-package hcTimestamp)
+(use-package hc-timestamp)
 )
 ;; ------------------------------------------------------------------------------
 ;; * org-mode
@@ -312,8 +312,8 @@
 (use-package org
   :defer t
   :config
-  (progn (use-package hcInitOrgMode)
-         (hcOrgMode)))
+  (progn (use-package hc-org-mode)
+         (hc-org-mode)))
 )
 ;; ------------------------------------------------------------------------------
 ;; * Tags
@@ -473,9 +473,7 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;; ------------------------------------------------------------------------------
 ;; * neotree
 
-(load-library "hcNeotree.el")
-
-(provide '.emacs.common)
+(load-library "hc-neotree.el")
 
 ;; ------------------------------------------------------------------------------
 ;; * EPUB
@@ -541,5 +539,7 @@ If invoked with a prefix ARG eval the expression after inserting it."
   (global-set-key (kbd "M-] Y") "Ψ")
   (global-set-key (kbd "M-] W") "Ω")
 )
+
+(provide '.emacs.common)
 
 ;;; .emacs.common.el ends here

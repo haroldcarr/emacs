@@ -1,4 +1,4 @@
-;;; hcSpaceline --- my powerline
+;;; hc-spaceline --- my powerline
 
 ;;; Commentary:
 
@@ -43,9 +43,9 @@
   "."
   (spaceline-install hc-spaceline-left hc-spaceline-right)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
-       
+
 (hcSpaceline)
 
-(provide 'hcSpaceline)
+(provide 'hc-spaceline)
 
-;;; hcSpaceline.el ends here
+;;; hc-spaceline.el ends here

@@ -1,4 +1,4 @@
-;;; package --- Unicode key bindings
+;;; hc-unicode-keybindings --- Unicode key bindings
 
 ;;; Commentary:
 ;; http://ergoemacs.org/emacs/emacs_n_unicode.html
@@ -15,5 +15,6 @@
 (global-set-key (kbd "<f6> e") (lambda () (interactive) (insert "∃")))
 (global-set-key (kbd "<f6> 0") (lambda () (interactive) (insert "∅")))
 
-(provide 'hcUnicodeKeybindings)
-;;; hcUnicodeKeybindings.el ends here
+(provide 'hc-unicode-keybindings)
+
+;;; hc-unicode-keybindings.el ends here

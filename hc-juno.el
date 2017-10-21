@@ -1,7 +1,12 @@
 ;; -*- lexical-binding: t-*-
+;;; hc-juno --- Summary
+
+;;; Commentary:
 
 ;;; package --- generate server and client configuration files; spawn servers; start a client shell.
 ;;; Commentary:
+
+;;; Code:
 
 ;; OPERATION
 (comment
@@ -120,5 +125,6 @@
   "Zip the lists inside LISTS."
   (apply #'cl-mapcar #'list lists))
 
-(provide 'hcJuno)
-;;; hcJuno.el ends here
+(provide 'hc-juno)
+
+;;; hc-juno.el ends here

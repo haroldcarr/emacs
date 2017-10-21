@@ -1,4 +1,4 @@
-;;; hcHaskellFormat --- Summary
+;;; hc-haskell-format --- Summary
 
 ;;; Commentary:
 
@@ -35,7 +35,7 @@
                   '(haskell-stylish-on-save hc-haskell-format-on-save)
                   '(hindent-reformat-buffer-on-save nil))))
 
-(provide 'hcHaskellFormat)
+(provide 'hc-haskell-format)
 
-;;; hcHaskellFormat.el ends here
+;;; hc-haskell-format.el ends here
 

@@ -1,4 +1,4 @@
-;;; hcIntero --- Summary
+;;; hc-haskell-intero --- Summary
 
 ;;; Commentary:
 
@@ -46,7 +46,7 @@
 
     (flycheck-add-next-checker 'intero '(warning . haskell-hlint))))
 
-(provide 'hcIntero)
+(provide 'hc-haskell-intero)
 
-;;; hcIntero.el ends here
+;;; hc-haskell-intero.el ends here
 

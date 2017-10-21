@@ -1,7 +1,13 @@
+;;; hc-run-command --- Summary
+
+;;; Commentary:
+
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
 ;;;; Last Modified : 2011 Apr 03 (Sun) 21:02:33 by carr.
 ;;;;
+
+;;; Code:
 
 (require 'comint)
 (autoload 'run-scheme  "cmuscheme" "Run an inferior Scheme process." t)
@@ -41,6 +47,6 @@
 	 (interactive)
 	 (kill-buffer ,buf-name)))))
 
-(provide 'hcRunCommand)
+(provide 'hc-run-command)
 
-;;; End of file.
+;;; hc-run-command.el ends here

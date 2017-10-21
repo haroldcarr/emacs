@@ -430,7 +430,7 @@ you should place you code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Haskell")
 
-  ;; (use-package hcInitHaskell)
+  ;; (use-package hcHaskellInit)
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Appearance")

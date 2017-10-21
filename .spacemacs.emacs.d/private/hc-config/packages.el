@@ -135,7 +135,7 @@
   (use-package hlint-refactor))
 
 (defvar flycheck-check-syntax-automatically)
-(defun hc-config/init-intero ()
+(defun hc-config/init-intero () "."
   (use-package intero
     :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
                    ;; https://github.com/commercialhaskell/intero/issues/208

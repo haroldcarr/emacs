@@ -1,4 +1,4 @@
-;;; hcDemoIt --- packages for doing demos
+;;; hc-demo-it --- packages for doing demos
 
 ;;; Commentary:
 
@@ -54,6 +54,6 @@
         ("zenburn-bg+3"     . "#4F4F4F")))
     (load-theme 'zenburn 'no-confirm)))
 
-(provide 'hcDemoIt)
+(provide 'hc-demo-it)
 
-;;; hcDemoIt.el ends here
+;;; hc-demo-it.el ends here

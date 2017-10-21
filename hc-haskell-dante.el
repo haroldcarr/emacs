@@ -1,4 +1,4 @@
-;;; hcDante --- Summary
+;;; hc-haskell-dante --- Summary
 
 ;;; Commentary:
 
@@ -33,7 +33,7 @@
                 dante-repl-command-line-methods-alist))
     ))
 
-(provide 'hcDante)
+(provide 'hc-haskell-dante)
 
-;;; hcDante.el ends here
+;;; hc-haskell-dante.el ends here
 

@@ -1,4 +1,4 @@
-;;; hcGeiser.el --- Summry geiser
+;;; hc-racket-geiser.el --- Summry geiser
 
 ;;; Commentary:
 
@@ -14,5 +14,6 @@
   )
 )
 
-(provide 'hcGeiser)
-;;; hcGeiser.el ends here
+(provide 'hc-racket-geiser)
+
+;;; hc-racket-geiser.el ends here

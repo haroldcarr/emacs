@@ -1,4 +1,4 @@
-;;; hcBatchCmds --- for emacs --batch
+;;; hc-batch-cmds --- for emacs --batch
 ;;; Commentary:
 ;;; Code:
 
@@ -17,7 +17,7 @@ OUTFILENAME : ."
     (with-temp-file outfilename (insert exported)))
   (print 'DONE))
 
-(provide 'hcBatchCmds)
+(provide 'hc-batch-cmds)
 
-;;; hcBatchCmds.el ends here
+;;; hc-batch-cmds.el ends here
 
