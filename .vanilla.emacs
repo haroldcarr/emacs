@@ -337,7 +337,7 @@
 
 (hcSection "Haskell")
 
-(use-package hc-haskell-init)
+(use-package hc-haskell)
 
 ;;(use-package intero
 ;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)

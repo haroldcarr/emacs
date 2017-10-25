@@ -6,17 +6,14 @@
 
 (package-initialize)
 
-(defvar hc-emacs-location (shell-command-to-string "hcLocation emacs"))
+;; add the location of the files below
+(add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
 
-(defun hc-load (filename) "FILENAME."
-  (interactive)
-  (load-file (concat hc-emacs-location "/" filename)))
-
-(hc-load "hc-company.el")
-(hc-load "hc-helm.el")
-(hc-load "hc-yasnippet.el")
-(hc-load "hc-projectile.el")
-(hc-load "hc-haskell-init.el")
+(use-package "hc-company.el")
+(use-package "hc-helm.el")
+(use-package "hc-yasnippet.el")
+(use-package "hc-projectile.el")
+(use-package "hc-haskell.el")
 
 ;;; .init.el ends here
 

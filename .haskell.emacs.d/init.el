@@ -252,7 +252,7 @@
 
 ;;; Haskell Packages
 
-(hc-load "hc-haskell-init.el")
+(hc-load "hc-haskell.el")
 
 ;; ------------------------------------------------------------------------------
 ;;; Enable Disabled Features

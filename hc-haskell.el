@@ -1,10 +1,10 @@
-;;; hc-haskell-init --- Summary
+;;; hc-haskell --- Summary
 
 ;;; Commentary:
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 19 (Thu) 10:59:07 by Harold Carr.
+;;;; Last Modified : 2017 Oct 24 (Tue) 18:02:22 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -12,10 +12,6 @@
 ;;; Haskell Packages
 
 (defvar hc-emacs-location (shell-command-to-string "hcLocation emacs"))
-
-(defun hc-load (filename) "FILENAME."
-  (interactive)
-  (load-file (concat hc-emacs-location "/" filename)))
 
 ;; https://github.com/cydparser/demo-emacs-haskell/blob/master/demo.org
 
@@ -45,10 +41,10 @@
 ;;  :diminish ""
 ;;  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
 
-;;(hc-load "hc-haskell-intero.el")
-(hc-load "hc-haskell-dante.el")
+;;(use-package hc-haskell-intero.el)
+(use-package hc-haskell-dante)
 
-(provide 'hc-haskell-init)
+(provide 'hc-haskell)
 
-;;; hc-haskell-init.el ends here
+;;; hc-haskell.el ends here
 

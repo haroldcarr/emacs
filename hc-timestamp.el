@@ -1,10 +1,10 @@
-;;; hc-haskell-init --- File timestamps (from Glickstein's _GNU Emacs Extensions_).
+;;; hc-timestamp --- File timestamps (from Glickstein's _GNU Emacs Extensions_).
 
 ;;; Commentary:
 
 ;;;;
 ;;;; Created       : 1997 Jul 02 (Wed) 00:28:06 by Harold Carr.
-;;;; Last Modified : 2013 Mar 21 (Thu) 13:36:36 by Harold Carr.
+;;;; Last Modified : 2017 Oct 24 (Tue) 18:02:30 by Harold Carr.
 ;;;;
 
 ;;; Code:

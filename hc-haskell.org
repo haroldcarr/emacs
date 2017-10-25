@@ -3,11 +3,23 @@
 
 This is my emacs/haskell development environment.
 
-Note: much of this works with stack/[[https://commercialhaskell.github.io/intero/][intero]].  See: [[https://github.com/cydparser/demo-emacs-haskell/]]
-I switch from Intero to Dante because Dante works with cabal, nix, etc., whereas Intero only works with [[https://docs.haskellstack.org/en/stable/README/][Stack]].
+I switch from Intero to Dante because Dante works with cabal, [[https://nixos.org/nix/][nix]], etc., whereas Intero only works with [[https://docs.haskellstack.org/en/stable/README/][Stack]].
+
+Note: much of this works with [[https://commercialhaskell.github.io/intero/][intero]].  See: [[https://github.com/cydparser/demo-emacs-haskell/]]
 
 # Created       : 2017 Oct 24 (Tue) 17:20:43 by Harold Carr.
-Last Modified : 2017 Oct 24 (Tue) 17:45:19 by Harold Carr.
+Last Modified : 2017 Oct 24 (Tue) 18:12:23 by Harold Carr.
+
+------------------------------------------------------------------------------
+* setup
+
+Get =.haskell-minimal-init.el= from [[https://github.com/haroldcarr/emacs]].
+
+Also get the files it references from the same repo.
+
+#+begin_example
+emacs -q -l <path to>/.haskell-minimal-init.el
+#+end_example
 
 ------------------------------------------------------------------------------
 * [[https://github.com/bbatsov/projectile][projectile]]
