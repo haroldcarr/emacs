@@ -167,14 +167,7 @@
 
 (hcSection "completion (company)")
 
-(use-package company
-  :ensure t
-  :demand
-  :diminish ""
-  :init
-  (progn
-    (setq company-idle-delay 0.3)
-    (global-company-mode)))
+(use-package hc-company)
 
 ;; ------------------------------------------------------------------------------
 ;; * yasnippet

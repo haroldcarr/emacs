@@ -128,7 +128,7 @@
   (use-package haskell-snippets))
 
 (defun hc-config/init-hindent () "."
-  (use-package hcHaskellFormat))
+  (use-package hc-haskell-format))
 
 (defvar hlint-refactor)
 (defun hc-config/init-hlint-refactor () "."
