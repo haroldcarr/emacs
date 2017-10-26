@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 24 (Tue) 18:02:22 by Harold Carr.
+;;;; Last Modified : 2017 Oct 25 (Wed) 18:47:46 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -41,8 +41,12 @@
 ;;  :diminish ""
 ;;  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
 
-;;(use-package hc-haskell-intero.el)
-(use-package hc-haskell-dante)
+(cond ((y-or-n-p-with-timeout "Use Dante (otherwise use Intero)" 4 nil)
+       (message "Using Dante")
+       (use-package hc-haskell-dante))
+      (t
+       (message "Using Intero")
+       (use-package hc-haskell-intero)))
 
 (provide 'hc-haskell)
 
