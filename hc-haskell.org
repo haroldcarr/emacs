@@ -3,19 +3,27 @@
 
 This is my emacs/haskell development environment.
 
-I switch from Intero to Dante because Dante works with cabal, [[https://nixos.org/nix/][nix]], etc., whereas Intero only works with [[https://docs.haskellstack.org/en/stable/README/][Stack]].
+I use both [[https://commercialhaskell.github.io/intero/][Intero]] and [[https://github.com/jyp/dante][Dante]]
+- Intero only works with [[https://docs.haskellstack.org/en/stable/README/][Stack]]
+  - See: [[https://github.com/cydparser/demo-emacs-haskell/]]
+- Dante works with cabal, [[https://nixos.org/nix/][nix]], stack, etc.
 
-Note: much of this works with [[https://commercialhaskell.github.io/intero/][intero]].  See: [[https://github.com/cydparser/demo-emacs-haskell/]]
+Intero seems to work better with Stack than Dante.
 
 # Created       : 2017 Oct 24 (Tue) 17:20:43 by Harold Carr.
-Last Modified : 2017 Oct 25 (Wed) 06:57:06 by Harold Carr.
+Last Modified : 2017 Oct 26 (Thu) 08:14:50 by Harold Carr.
 
 ------------------------------------------------------------------------------
 * setup
 
-Get =.haskell-minimal-init.el= from [[https://github.com/haroldcarr/emacs]].
+Get
+- =.haskell-minimal-init.el=
+- =hc-haskell-dante.el=
+- =hc-haskell-intero.el=
+- and the files referenced in =.haskell-minimal-init.el=
+from [[https://github.com/haroldcarr/emacs]].
 
-Also get the files it references and =hc-haskell-dante.el= from the same repo.
+When the following starts, it will ask you whether to use Dante or Intero.
 
 #+begin_example
 emacs -q -l <path to>/.haskell-minimal-init.el
@@ -79,7 +87,7 @@ try:
 - enter : =f a -> Maybe c= RET
 
 --------------------------------------------------
-** [[https://github.com/jyp/dante][dante]]
+** Dante / Intero
 
 --------------------------------------------------
 *** view types / info
@@ -89,12 +97,14 @@ try:
 *types*
 
 - point to something
-- =C-c .= : dante-type-at
+- =C-c .=   : dante-type-at
+- =C-c C-t= : intero-type-at
 
 *info* (shows definition and where defined, even if external)
 
 - point to something
-- =C-c ,= : dante-info
+- =C-c ,=   : dante-info
+- =C-c C-i= : intero-info
 
 --------------------------------------------------
 *** definitions and references
@@ -102,13 +112,14 @@ try:
 **** definitions
 
 - point to something
-- =M-.= : jump to definition
-- =M-,= : return to previous location
+- =M-.= : jump to definition (both dante and intero)
+- =M-,= : return to previous location (both dante and intero)
 
 **** references
 
 - point to something
-- =M-?= : xref-find-references (TODO : DOES NOT WORK FOR ME)
+- =M-?= : xref-find-references (dante : TODO : DOES NOT WORK FOR ME)
+- =M-?= : intero-uses-at (TODO : DOES NOT WORK FOR ME)
 
 --------------------------------------------------
 *** apply suggestions / auto-fix
@@ -127,6 +138,7 @@ data List a = Cons a (List a) | Nil
 - says "... You need DeriveFoldable ..."
 - put cursor on =Foldable=
 - =C-c /=   : dante-auto-fix
+- =C-c C-r= : intero-apply-suggestions
 - (inserts appropriate =LANGUAGE= pragma)
 
 --------------------------------------------------
@@ -145,6 +157,7 @@ cdr (Cons _ xs) = xs
 - =C-c ! l= : flycheck-list-errors
 - says "... Top-level binding with no type signature ..."
 - =C-c /= : dante-auto-fix
+- =C-c C-r= : intero-apply-suggestions
 - (inserts appropriate type signature)
 
 --------------------------------------------------
@@ -179,16 +192,16 @@ If dante starts acting weird, restart it.
 
 #+begin_example
 M-x dante-list-buffers RET
+M-x intero-list-buffers RET
 d ;; mark process for deletion
 x ;; kill it
 q ;; quit process list
 M-x dante-restart RET
+M-x intero-list-buffers RET
 #+end_example
 
 --------------------------------------------------
 * completion via [[https://company-mode.github.io/][company]]
-
-Dante source has =dante-company= function that integrates it with =company=.
 
 try:
 

@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 19 (Thu) 10:57:59 by Harold Carr.
+;;;; Last Modified : 2017 Oct 25 (Wed) 19:44:29 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -16,7 +16,7 @@
   :defer t
   :diminish " λ"
   :bind (:map intero-mode-map
-              ("M-." . init-intero-goto-definition))
+              ("M-." . hc-intero-goto-definition))
   :init
   (progn
     (defun hc-init-intero ()
@@ -27,18 +27,13 @@
              (eldoc-mode -1)
              (flycheck-mode -1))
             (t
-             ;; https://github.com/commercialhaskell/intero/issues/208
-             (setq flycheck-check-syntax-automatically '(mode-enabled save))
              (intero-mode)
              (setq projectile-tags-command "codex update"))))
-    (defun hc-add-intero-to-haskell-mode-hook ()
-      "Do an explicit call to avoid automatic download when not installed."
-      (interactive)
-      (add-hook 'haskell-mode-hook #'hc-init-intero))
+    (add-hook 'haskell-mode-hook #'hc-init-intero)
   )
   :config
   (progn
-    (defun init-intero-goto-definition ()
+    (defun hc-intero-goto-definition ()
       "Jump to the definition of the thing at point using Intero or etags."
       (interactive)
       (or (intero-goto-definition)
