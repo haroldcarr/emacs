@@ -1,0 +1,23 @@
+https://nixos.org/nixos/manual/index.html#module-services-emacs
+
+emacs -q -l ./emacs/.haskell.emacs.d/init.el
+
+
+font : CM Typewriter Bold
+       Nimbus Mono L Bold
+size : 18
+
+------------------------------------------------------------------------------
+
+.nix.emacs-derivation*
+
+nix expression to build Emacs with packages.
+
+BUILD:
+
+nix-build .nix.emacs-derivation
+
+RUN:  (assumes ~/emacs linked to emacs location):
+
+~/emacs/result/bin/emacs -q -l emacs/.vanilla.emacs
+
