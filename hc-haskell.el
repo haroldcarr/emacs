@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 26 (Thu) 09:10:37 by Harold Carr.
+;;;; Last Modified : 2017 Nov 02 (Thu) 08:15:14 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -41,7 +41,7 @@
 
 (defvar hc-haskell)
 
-(cond ((y-or-n-p-with-timeout "Use Dante (otherwise use Intero, the default)" 6 nil)
+(cond ((y-or-n-p-with-timeout "for Haskell: use Dante/y; Intero/n (the default)" 6 nil)
        (message "Using Dante")
        (setq hc-haskell 'dante)
        (use-package hc-haskell-dante))

@@ -17,7 +17,7 @@
   :demand
   :diminish ""
   :bind (("C-M-y" . helm-show-kill-ring)
-         ("C-h a" . helm-apropos)
+        ;("C-h a" . helm-apropos)
          ("C-x C-f" . helm-find-files)
          ("C-x b" . helm-mini)
          ("M-s o" . helm-occur)

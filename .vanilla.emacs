@@ -630,11 +630,12 @@
 
 (defun hcHostedAppearance () "."
   (interactive)
-  (set-face-background 'default "grey")
+  ;;(set-face-background 'default "grey")
   (set-scroll-bar-mode 'right)
-  (set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-  (hc-w 160)
-  (hc-h 43)
+  ;;(set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
+  (set-face-font 'default "-PfEd-TlwgTypewriter-normal-normal-normal-*-24-*-*-*-*-0-iso10646-1")
+  ;;(hc-w 160)
+  ;;(hc-h 43)
   )
 
 ;; type fc-list on command line to see fonts installed

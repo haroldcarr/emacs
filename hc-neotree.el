@@ -12,8 +12,8 @@
               ("C-x 1" . neotree-stretch-toggle)
               )
   :config (progn (setq neo-theme 'arrow)
-                 (setq neo-window-width 10)
-                 (setq neo-buffer--show-hidden-file-p t)))
+                 (setq neo-window-width 25)
+                 (setq neo-show-hidden-files t)))
 )
 
 (provide 'hc-neotree)
