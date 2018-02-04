@@ -411,7 +411,7 @@ you should place you code here."
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   (hcSection "Java")
 
-  (defvar *hcJavaMode* 'google)
+  (defvar *hcJavaMode* 'not-google)
   (add-hook 'java-mode-hook
             (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
 
@@ -482,7 +482,7 @@ you should place you code here."
           (flycheck-mode " ⓢ" " s")
           (company-mode "" "")
           (hybrid-mode "" "")
-          (holy-mode "" "")
+          ;;(holy-mode "" "")
           (auto-fill-function " Ⓕ" " F")
           ))
 

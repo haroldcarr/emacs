@@ -1,4 +1,4 @@
-;;; hc-spaceline --- my powerline
+;;; hc-mode-line --- my powerline
 
 ;;; Commentary:
 
@@ -8,7 +8,7 @@
   :ensure t
   :config (require 'spaceline-config))
 
-(defvar hc-spaceline-left
+(defvar hc-mode-line-left
   '(((persp-name workspace-number window-number)
      :separator "|"
      :face highlight-face)
@@ -34,18 +34,19 @@
     (version-control :when active)      ;; e.g., GIT, ...
     ))
 
-(defvar hc-spaceline-right
+(defvar hc-mode-line-right
   '(which-function
     (erc-track :when active)            ;; new messages in IRC channel
     (global :when active)))             ;; ??
 
-(defun hcSpaceline ()
+(defun hc-mode-Line ()
   "."
-  (spaceline-install hc-spaceline-left hc-spaceline-right)
+  (interactive)
+  (spaceline-install hc-mode-line-left hc-mode-line-right)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
 
-(hcSpaceline)
+(hc-mode-Line)
 
-(provide 'hc-spaceline)
+(provide 'hc-mode-line)
 
-;;; hc-spaceline.el ends here
+;;; hc-mode-line.el ends here

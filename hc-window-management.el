@@ -1,0 +1,15 @@
+;;; hc-window-management.el --- window layout         -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(use-package e2wm)
+;; M-x e2wm:start-management
+
+(custom-set-faces
+ '(e2wm:face-history-list-normal ((t (:foreground "NavajoWhite4")))))
+
+(provide 'hc-window-management)
+
+;;; hc-window-management.el ends here

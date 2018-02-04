@@ -81,7 +81,7 @@
 (setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
 (load custom-file)
 
-(load-file (concat (hcEmacsDir) "/hc-spaceline.el"))
+(load-file (concat (hcEmacsDir) "/hc-mode-line.el"))
 
 ;; WHICH KEY
 (use-package which-key
@@ -537,7 +537,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Java")
 
-(defvar *hcJavaMode* 'google)
+(defvar *hcJavaMode* 'not-google)
 (declare-function  google-set-c-style ".")
 (add-hook 'java-mode-hook
   (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
@@ -579,7 +579,7 @@
 ;; :pin melpa-stable
   :config
   (progn
-    (define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
+    ;;(define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
     (setq clojure-enable-fancify-symbols t)
     ))
 
@@ -631,6 +631,9 @@
 (defun hcHostedAppearance () "."
   (interactive)
   ;;(set-face-background 'default "grey")
+  ;;(set-face-background 'default "gray19")
+  ;;(set-face-background 'default "gray14")
+  ;;(set-face-background 'default "gray10")
   (set-scroll-bar-mode 'right)
   ;;(set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
   (set-face-font 'default "-PfEd-TlwgTypewriter-normal-normal-normal-*-24-*-*-*-*-0-iso10646-1")

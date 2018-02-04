@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2017 Oct 20 (Fri) 07:41:08 by Harold Carr.
+;;;; Last Modified : 2017 Dec 21 (Thu) 12:31:21 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -33,7 +33,7 @@
          (setq *hcSection* title)
          (message title))))
 
-(setq debug-on-error nil)
+(setq debug-on-error t)
 
 (defmacro comment (&rest x) "X." nil)
 
@@ -201,7 +201,7 @@
   :config
   (progn
     (setq whitespace-style '(face lines-tail))
-    (setq whitespace-line-column 100)
+    (setq whitespace-line-column 1000)
     (global-whitespace-mode t)))
 )
 ;; so list-buffers won't jump back to top
@@ -447,9 +447,9 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;; C-x C-0 : reset to default size
 ;; these run text-scale-adjust
 
-(defun hc-h (n)    "N."   (set-frame-height (selected-frame) n))
-(defun hc-w (n)    "N."   (set-frame-width (selected-frame) n))
-(defun hc-hw (x y) "X Y." (hc-h x) (hc-w y))
+(defun hc-h (n)    "N."   (interactive) (set-frame-height (selected-frame) n))
+(defun hc-w (n)    "N."   (interactive) (set-frame-width (selected-frame) n))
+(defun hc-hw (x y) "X Y." (interactive) (hc-h x) (hc-w y))
 (defun hc-hwd ()   "."    (interactive) (hc-h 27) (hc-w 101))
 
 (defun hcFonts (default-height variable-pitch-height)
