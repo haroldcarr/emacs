@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2017 Dec 21 (Thu) 12:31:21 by Harold Carr.
+;;;; Last Modified : 2018 Mar 26 (Mon) 08:12:35 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -365,28 +365,13 @@
 ;; ------------------------------------------------------------------------------
 ;; * Version Control and Magit
 
-;; Version Control
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Version-Control.html#Version-Control
-;; - http://emacswiki.org/emacs/VersionControl
-;; GIT
-;; - http://magit.github.com/magit/magit.html
-;; - http://www.emacswiki.org/emacs/Magit
-;; - https://github.com/pidu/git-timemachine
-;; Magit and Ediff
-;; - http://dachary.org/?p=2893
-
 (hcSection "Version Control and Magit")
 
 (hcSection "git")
 (with-no-warnings
-(if (not (fboundp 'spacemacs-mode))
-    (use-package magit
-     :config
-     (progn
-       (setq git-commit-summary-max-length 80)
-       (setq git-commit-fill-column        80)
-       )))
+(use-package hc-git)
 )
+
 ;; ------------------------------------------------------------------------------
 ;; * Clojure/Cider
 

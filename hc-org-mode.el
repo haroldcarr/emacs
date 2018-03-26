@@ -135,7 +135,7 @@
   (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
 
   ;; http://plantuml.sourceforge.net/
-  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.7995.jar"))
+  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.1.2018.1.jar"))
 
   (add-hook 'org-babel-after-execute-hook 'hc/display-inline-images 'append)
 
