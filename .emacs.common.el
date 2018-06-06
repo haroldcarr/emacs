@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2018 Mar 26 (Mon) 08:12:35 by Harold Carr.
+;;;; Last Modified : 2018 May 21 (Mon) 12:07:51 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -220,6 +220,12 @@
 
 ;; stop backup changing file creation date of original file
 (setq backup-by-copying t)
+
+(with-no-warnings
+(use-package grep
+  :config
+  (setq grep-find-ignored-directories (cons ".stack-work" grep-find-ignored-directories)))
+)
 
 ;; ------------------------------------------------------------------------------
 ;; * GNUS
@@ -454,6 +460,10 @@ If invoked with a prefix ARG eval the expression after inserting it."
     (cond ((> (x-display-pixel-width) 1800)
            (hcFonts 200 300))
           (t (hcFonts 175 200)))))
+
+(defun hc-font-size (n) "N."
+  (interactive "nSize: ")
+  (hcFonts (* n 10) (* n 15)))
 
 ;; ------------------------------------------------------------------------------
 ;; * neotree

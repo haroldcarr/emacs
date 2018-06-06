@@ -4,7 +4,9 @@
 
 ;;; Code:
 
-(use-package eimp)
+(use-package eimp
+  :init (add-hook 'image-mode-hook 'eimp-mode)
+  )
 
 (provide 'hc-image)
 
