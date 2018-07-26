@@ -1,0 +1,10 @@
+------------------------------------------------------------------------------
+
+brew install emacs --with-cocoa --with-ctags --with-gnutls --with-imagemagick@6 --with-librsvg
+brew install ispell
+brew install ctags
+
+----
+brew upgrade emacs
+
+------------------------------------------------------------------------------

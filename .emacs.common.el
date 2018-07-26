@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2018 May 21 (Mon) 12:07:51 by Harold Carr.
+;;;; Last Modified : 2018 Jun 20 (Wed) 15:48:28 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -224,6 +224,7 @@
 (with-no-warnings
 (use-package grep
   :config
+  ;; List of names of sub-directories which `rgrep' shall not recurse into.
   (setq grep-find-ignored-directories (cons ".stack-work" grep-find-ignored-directories)))
 )
 
