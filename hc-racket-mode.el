@@ -1,6 +1,8 @@
-;;; hc-racket-mode.el --- Summry racketmode
+;;; hc-racket-mode.el --- Summry racket-mode
 
 ;;; Commentary:
+
+;; https://github.com/greghendershott/racket-mode
 
 ;;; Code:
 

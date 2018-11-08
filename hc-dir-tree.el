@@ -1,3 +1,23 @@
+;;; hc-dir-tree.el --- Summry dir-tree
+
+;;; Commentary:
+
+;;; Code:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package neotree
+  :bind (:map neotree-mode-map
+              ("a"     . neotree-stretch-toggle)
+              ("TAB"   . neotree-stretch-toggle)
+              ("C-x 1" . neotree-stretch-toggle)
+              )
+  :config (progn (setq neo-theme 'arrow)
+                 (setq neo-window-width 30)
+                 (setq neo-show-hidden-files t)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; https://github.com/jojojames/dired-sidebar
 
 (use-package dired-sidebar
@@ -28,3 +48,9 @@
     ;; M-x all-the-icons-install-fonts
     :ensure t
     :commands (all-the-icons-dired-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(provide 'hc-dir-tree)
+
+;;; hc-dir-tree.el ends here

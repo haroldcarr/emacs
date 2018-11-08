@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2018 Jun 20 (Wed) 15:48:28 by Harold Carr.
+;;;; Last Modified : 2018 Nov 07 (Wed) 06:38:58 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -81,10 +81,11 @@
 
 (hcSection "Key Bindings")
 
-;; NOTE: set-mark-command is \C-space
 ;; the following swaps the default kill/copy
 (global-set-key "\M-w" 'kill-region)
 (global-set-key "\C-w" 'kill-ring-save)
+;; default set-mark-command is \C-SPC
+(global-set-key "\C-c\C-m" 'set-mark-command) ;; for ssh/vnc into hosted
 
 ;; when using vnc, "\C-y" is getting converted to a different key, so use this
 (if (hcLinuxP) (global-set-key "\C-h" 'yank))
@@ -467,9 +468,9 @@ If invoked with a prefix ARG eval the expression after inserting it."
   (hcFonts (* n 10) (* n 15)))
 
 ;; ------------------------------------------------------------------------------
-;; * neotree
+;; * directory tree
 
-(load-library "hc-neotree.el")
+(load-library "hc-dir-tree.el")
 
 ;; ------------------------------------------------------------------------------
 ;; * EPUB

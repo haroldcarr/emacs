@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Nov 02 (Thu) 08:15:14 by Harold Carr.
+;;;; Last Modified : 2018 Nov 07 (Wed) 11:28:38 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -49,6 +49,19 @@
        (message "Using Intero")
        (setq hc-haskell 'intero)
        (use-package hc-haskell-intero)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/knupfer/haskell-emacs
+
+(use-package haskell-emacs
+  :ensure t
+  :defer t)
+
+(setq haskell-emacs-build-tool (quote stack))
+(setq haskell-emacs-dir (concat (hcEmacsDir) "/hc-haskell-fun/"))
+
+;;;;;;;;;;;;;
 
 (provide 'hc-haskell)
 

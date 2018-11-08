@@ -10,6 +10,8 @@
 (custom-set-faces
  '(e2wm:face-history-list-normal ((t (:foreground "NavajoWhite4")))))
 
+(use-package eyebrowse)
+
 (provide 'hc-window-management)
 
 ;;; hc-window-management.el ends here

@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 19 (Thu) 10:57:59 by Harold Carr.
+;;;; Last Modified : 2018 Oct 04 (Thu) 15:38:00 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -32,6 +32,7 @@
                                   ,(concat (projectile-project-root) "/shell.nix")))))
                 dante-repl-command-line-methods-alist))
     ))
+
 
 (provide 'hc-haskell-dante)
 

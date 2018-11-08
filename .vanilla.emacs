@@ -77,6 +77,8 @@
 
 (hcSection "Top level misc stuff")
 
+(desktop-save-mode 1)
+
 ;; Store customizations in a separate file.
 (setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
 (load custom-file)
