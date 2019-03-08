@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2018 Nov 07 (Wed) 06:38:58 by Harold Carr.
+;;;; Last Modified : 2019 Jan 01 (Tue) 11:12:31 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -480,6 +480,12 @@ If invoked with a prefix ARG eval the expression after inserting it."
 (use-package nov
   :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 )
+
+;; ------------------------------------------------------------------------------
+;; * HEXL-MODE : view/edit at files like in "hex dump" format
+
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Editing-Binary-Files.html
+
 
 ;; ------------------------------------------------------------------------------
 ;; * greek

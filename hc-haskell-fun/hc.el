@@ -2,23 +2,24 @@
 ;; start
 
 (haskell-emacs-init)
-;; or
-(haskell-emacs--start-proc)
+;; inside
+   (haskell-emacs--start-proc)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; stop
 
-(list-processes)
-(setq pp (get-process "hask<1>"))
-(kill-process pp)
-
-haskell-emacs--proc
-
 (haskell-emacs--stop-proc)
-;; has:
+
+;; inside
+    haskell-emacs--proc
     (set-process-sentinel haskell-emacs--proc nil)
     (kill-process haskell-emacs--proc)
     (setq haskell-emacs--proc nil)
+
+;; manual (but screws up haskell-emacs state)
+(list-processes)
+(setq pp (get-process "hask<1>"))
+(kill-process pp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use

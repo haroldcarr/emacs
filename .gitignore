@@ -1,6 +1,5 @@
 .authinfo
 .emacs.bmk
-.vanilla.emacs.d-OLD-ON-HOSTED
 .newsrc
 .newsrc.eld
 .spacemacs.emacs.custom.el
@@ -8,11 +7,14 @@
 .spacemacs.emacs.z-update-steps.org
 .vanilla.emacs.custom.el
 .vanilla.emacs.d
+.vanilla.emacs.d-OLD-ON-HOSTED
+0-Paradox-Access-Token
 NOT-USED-ANYMORE/
 ProofGeneral
 ProofGeneral-4.2/
 RCS/
 emacs-cheat-sheet.png
+hc-oracle-http-proxy.el
 java-mode-indent-annotations.el
 javaone.org
 result
