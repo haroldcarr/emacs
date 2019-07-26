@@ -1,6 +1,29 @@
+==============================================================================
+26.2
+
+https://emacs.stackexchange.com/questions/47902/another-way-to-install-emacs-on-os-x-using-homebrew
+points to:
+https://github.com/d12frosted/homebrew-emacs-plus
+
+/usr/local/Cellar/emacs-plus/26.2
+
 ------------------------------------------------------------------------------
+https://github.com/d12frosted/homebrew-emacs-plus
+
+brew tap  d12frosted/emacs-plus
+brew info            emacs-plus
+
+brew install         emacs-plus --with-ctags --without-spacemacs-icon
+
+
+==============================================================================
+26.1
 
 brew install emacs --with-cocoa --with-ctags --with-gnutls --with-imagemagick@6 --with-librsvg
+
+M-help v system-configuration-options
+"--disable-dependency-tracking --disable-silent-rules --enable-locallisppath=/usr/local/share/emacs/site-lisp --infodir=/usr/local/Cellar/emacs/26.1_1/share/info/emacs --prefix=/usr/local/Cellar/emacs/26.1_1 --with-gnutls --without-x --with-xml2 --without-dbus --with-imagemagick --with-rsvg --with-ns --disable-ns-self-contained"
+
 brew install ispell
 brew install ctags
 

@@ -14,7 +14,7 @@ in
     autumn-light-theme
     faceup
     repl-toggle
-    undo-tree
+    # undo-tree
     offlineimap
     flycheck
     flycheck-pos-tip
@@ -30,7 +30,7 @@ in
     projectile
     switch-window
     smart-mode-line
-    undo-tree
+    # undo-tree
     use-package
     el-get
     dash

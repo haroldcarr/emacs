@@ -1,0 +1,55 @@
+https://github.com/politza/pdf-tools
+
+how I installed on my Mac
+
+#
+# in a shell
+#
+
+brew info    poppler
+brew install poppler
+
+export PKG_CONFIG_PATH=/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig:/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig
+
+cd /tmp
+git clone git@github.com:politza/pdf-tools.git
+cd pdf-tools
+
+# needed by Makefile
+brew info    cask
+brew install cask
+
+make -s
+
+#
+# in emacs
+#
+
+# install the emacs package created in the previous make step
+M-x package-install-file
+pdf-tools-1.0.tar
+
+# activate it
+(pdf-tools-install)
+
+;; THIS WORKS
+(setq pdf-annot-list-format
+  '((page . 3)
+    (type . 10)
+    (label . 24)
+    (contents . 56)
+   ))
+
+;; default
+(setq pdf-annot-list-format
+  '((page . 3)
+    (type . 10)
+    (label . 24)
+    (date . 24)))
+
+;; what I want but it does not work
+(setq pdf-annot-list-format
+  '((page . 3)
+    (contents . 56)))
+
+
