@@ -202,7 +202,8 @@
 
 (if (functionp 'window-system)
     (when (and (window-system)
-           (>= emacs-major-version 24))
+               (>= emacs-major-version 24)
+               (not (server-running-p)))
       (server-start)))
 
 ;; ------------------------------------------------------------------------------

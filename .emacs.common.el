@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2019 Jan 01 (Tue) 11:12:31 by Harold Carr.
+;;;; Last Modified : 2019 Aug 02 (Fri) 12:52:53 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -228,6 +228,36 @@
   ;; List of names of sub-directories which `rgrep' shall not recurse into.
   (setq grep-find-ignored-directories (cons ".stack-work" grep-find-ignored-directories)))
 )
+
+;; ------------------------------------------------------------------------------
+;; * GNUS
+
+;; see ./pdf-tools.org
+
+;;  activate it
+(with-no-warnings
+(when (require 'pdf-tools nil :noerror)
+  (progn
+    (pdf-tools-install)
+    ;; THIS WORKS
+    (setq pdf-annot-list-format
+          '((page . 3)
+            (type . 10)
+            (label . 24)
+            (contents . 56)))))
+)
+
+;; default
+;;(setq pdf-annot-list-format
+;;  '((page . 3)
+;;    (type . 10)
+;;    (label . 24)
+;;    (date . 24)))
+
+;; what I want but it does not work
+;;(setq pdf-annot-list-format
+;;  '((page . 3)
+;;    (contents . 56)))
 
 ;; ------------------------------------------------------------------------------
 ;; * GNUS
