@@ -348,6 +348,13 @@
 ;;                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 
 ;; ------------------------------------------------------------------------------
+;; * Haskell
+
+(hcSection "Agda")
+
+(use-package hc-agda)
+
+;; ------------------------------------------------------------------------------
 ;; * Images
 
 ;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html

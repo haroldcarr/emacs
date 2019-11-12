@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2018 Nov 07 (Wed) 11:28:38 by Harold Carr.
+;;;; Last Modified : 2019 Nov 09 (Sat) 11:50:34 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -12,6 +12,8 @@
 ;;; Haskell Packages
 
 ;; for Intero, see: https://github.com/cydparser/demo-emacs-haskell/blob/master/demo.org
+
+(require 'ido)
 
 (use-package haskell-mode
   :ensure t
@@ -41,15 +43,30 @@
 
 (defvar hc-haskell)
 
-(cond ((y-or-n-p-with-timeout "for Haskell: use Dante/y; Intero/n (the default)" 6 nil)
-       (message "Using Dante")
-       (setq hc-haskell 'dante)
-       (use-package hc-haskell-dante))
-      (t
-       (message "Using Intero")
-       (setq hc-haskell 'intero)
-       (use-package hc-haskell-intero)))
+(defun hc-pick-haskell-support ()
+  "Prompt pick from a list."
+  (interactive)
+  (let ((choices '("hie" "dante" "intero" "none")))
+    (message "%s" (ido-completing-read "which haskell?: " choices))))
 
+(let ((pick (hc-pick-haskell-support)))
+  (cond ((equal pick "hie")
+         (message "Using HIE")
+         (setq hc-haskell 'hie)
+         (use-package hc-haskell-hie))
+        ((equal pick "dante")
+         (message "Using Dante")
+         (setq hc-haskell 'dante)
+         (use-package hc-haskell-dante))
+        ((equal pick "intero")
+         (message "Using Intero")
+         (setq hc-haskell 'intero)
+         (use-package hc-haskell-intero))
+        ((equal pick "none")
+         (message "NO HASKELL SUPPORT")
+         (setq hc-haskell 'none))
+        (t
+         (message "NO HASKELL MATCH %s" pick))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/knupfer/haskell-emacs
