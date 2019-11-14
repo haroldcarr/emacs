@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2019 Nov 09 (Sat) 11:50:34 by Harold Carr.
+;;;; Last Modified : 2019 Nov 13 (Wed) 16:32:33 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -46,18 +46,18 @@
 (defun hc-pick-haskell-support ()
   "Prompt pick from a list."
   (interactive)
-  (let ((choices '("hie" "dante" "intero" "none")))
+  (let ((choices '("dante" "hie" "intero" "none" "victor")))
     (message "%s" (ido-completing-read "which haskell?: " choices))))
 
 (let ((pick (hc-pick-haskell-support)))
-  (cond ((equal pick "hie")
-         (message "Using HIE")
-         (setq hc-haskell 'hie)
-         (use-package hc-haskell-hie))
-        ((equal pick "dante")
+  (cond ((equal pick "dante")
          (message "Using Dante")
          (setq hc-haskell 'dante)
          (use-package hc-haskell-dante))
+        ((equal pick "hie")
+         (message "Using HIE")
+         (setq hc-haskell 'hie)
+         (use-package hc-haskell-hie))
         ((equal pick "intero")
          (message "Using Intero")
          (setq hc-haskell 'intero)
@@ -65,6 +65,10 @@
         ((equal pick "none")
          (message "NO HASKELL SUPPORT")
          (setq hc-haskell 'none))
+        ((equal pick "victor")
+         (message "Using Victor")
+         (setq hc-haskell 'victor)
+         (use-package hc-haskell-victor-miraldo))
         (t
          (message "NO HASKELL MATCH %s" pick))))
 

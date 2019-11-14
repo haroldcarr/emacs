@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2019 Aug 02 (Fri) 12:52:53 by Harold Carr.
+;;;; Last Modified : 2019 Nov 14 (Thu) 08:45:52 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -230,34 +230,9 @@
 )
 
 ;; ------------------------------------------------------------------------------
-;; * GNUS
+;; * PDF
 
-;; see ./pdf-tools.org
-
-;;  activate it
-(with-no-warnings
-(when (require 'pdf-tools nil :noerror)
-  (progn
-    (pdf-tools-install)
-    ;; THIS WORKS
-    (setq pdf-annot-list-format
-          '((page . 3)
-            (type . 10)
-            (label . 24)
-            (contents . 56)))))
-)
-
-;; default
-;;(setq pdf-annot-list-format
-;;  '((page . 3)
-;;    (type . 10)
-;;    (label . 24)
-;;    (date . 24)))
-
-;; what I want but it does not work
-;;(setq pdf-annot-list-format
-;;  '((page . 3)
-;;    (contents . 56)))
+(use-package hc-pdf)
 
 ;; ------------------------------------------------------------------------------
 ;; * GNUS
