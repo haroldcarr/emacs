@@ -4,12 +4,14 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 25 (Wed) 19:44:29 by Harold Carr.
+;;;; Last Modified : 2020 Jan 07 (Tue) 16:46:49 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
 ;;; Intero
+
+;; https://stackoverflow.com/questions/59058854/intero-error-wrong-type-argument-stringp-nil
 
 (use-package intero
   :ensure t

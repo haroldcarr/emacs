@@ -1,3 +1,4 @@
+;; https://github.com/VictorCMiraldo/victor-emacs-config/blob/master/local/haskell.el
 ;; My haskell-mode niceties
 
 ;; We need haskell-mode!

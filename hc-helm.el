@@ -4,6 +4,10 @@
 
 ;;; Code:
 
+(defmacro helm-aif (test then &optional else)
+  `(let ((it ,test))
+     (if it ,then ,else)))
+
 ;; SYNC WITH HELM-PROJECTILE BELOW IF THIS CHANGES
 (defvar helm-M-x-fuzzy-match)
 (defvar helm-apropos-fuzzy-match)
@@ -27,12 +31,13 @@
          ([tab]       . helm-execute-persistent-action))
   :init
   (progn
-    (setq helm-M-x-fuzzy-match        t
-          helm-apropos-fuzzy-match    t
-          helm-buffers-fuzzy-matching t
-          helm-ff-newfile-prompt-p    nil
-          helm-locate-fuzzy-match     t
-          helm-recentf-fuzzy-match    t)
+    (setq helm-M-x-fuzzy-match           t
+          helm-apropos-fuzzy-match       t
+          helm-buffers-fuzzy-matching    t
+          helm-ff-newfile-prompt-p       nil
+          helm-locate-fuzzy-match        t
+          helm-recentf-fuzzy-match       t
+          helm-M-x-use-completion-styles nil)
     (require 'helm-config)
     (helm-mode)))
 

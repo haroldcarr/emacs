@@ -6,6 +6,7 @@
 ;; Install for the version of GHC we are using in our OBM projects:
 ;;
 ;; stack ./install.hs hie-8.6.5
+;; stack ./install.hs build-data
 ;;
 ;;
 ;; That should result in something like:
@@ -24,6 +25,11 @@
 ;;
 ;;
 ;; Then add the following to your emacs configuration
+
+(require 'lsp-mode)
+
+(require 'lsp-ui)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 
 (require 'lsp)
 (require 'lsp-haskell)

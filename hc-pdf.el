@@ -14,6 +14,7 @@
     (global-set-key (kbd "C-c z") 'pdf-view-midnight-minor-mode)
   )
 )
+)
 
 ;; default
 ;;(setq pdf-annot-list-format

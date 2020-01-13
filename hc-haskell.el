@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2019 Nov 13 (Wed) 16:32:33 by Harold Carr.
+;;;; Last Modified : 2019 Dec 03 (Tue) 18:10:15 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -46,7 +46,7 @@
 (defun hc-pick-haskell-support ()
   "Prompt pick from a list."
   (interactive)
-  (let ((choices '("dante" "hie" "intero" "none" "victor")))
+  (let ((choices '("dante" "ghcide" "hie" "intero" "none" "victor")))
     (message "%s" (ido-completing-read "which haskell?: " choices))))
 
 (let ((pick (hc-pick-haskell-support)))
@@ -54,6 +54,10 @@
          (message "Using Dante")
          (setq hc-haskell 'dante)
          (use-package hc-haskell-dante))
+        ((equal pick "ghcide")
+         (message "Using GHCIDE")
+         (setq hc-haskell 'ghcide)
+         (use-package hc-haskell-ghcide))
         ((equal pick "hie")
          (message "Using HIE")
          (setq hc-haskell 'hie)
