@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2019 Nov 14 (Thu) 08:45:52 by Harold Carr.
+;;;; Last Modified : 2020 Jan 23 (Thu) 21:40:20 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -229,6 +229,11 @@
   (setq grep-find-ignored-directories (cons ".stack-work" grep-find-ignored-directories)))
 )
 
+;; Useful in *Org Agenda* buffer.
+(defun hc-line-spacing (n) "N. Put more space between lines or nil to regular."
+  (interactive "nSize: ")
+  (setq line-spacing n))
+
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
@@ -242,9 +247,11 @@
 ;; Get an app-specific password: https://support.google.com/accounts/answer/185833
 
 ;;;; RECEIVE
+;; https://lars.ingebrigtsen.no/2020/01/06/whatever-happened-to-news-gmane-org/comment-page-1/#comment-36418
 (defvar gnus-select-method)
 (setq gnus-select-method
-      '(nntp "news.gmane.org"))
+      '(nntp "news.gmane.io")
+      )
 (comment
 (defvar gnus-secondary-select-methods)
 (setq gnus-secondary-select-methods

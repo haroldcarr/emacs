@@ -30,10 +30,12 @@
 
 (require 'lsp-ui)
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+(add-hook 'haskell-mode-hook 'flycheck-mode)
 
 (require 'lsp)
 (require 'lsp-haskell)
 (add-hook 'haskell-mode-hook #'lsp)
+
 (setq lsp-haskell-process-path-hie "hie-wrapper")
 
 ;; Then go visit a Haskell file and watch it work.
