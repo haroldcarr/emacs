@@ -25,6 +25,9 @@
   ;;; Org Misc
   ;;;
 
+  ;; do not automatically indent below headlines
+  (setq org-adapt-indentation nil)
+
   ;; If you do not like transient-mark-mode, you can create an active
   ;; region by using the mouse to select a region, or pressing C-<SPC>
   ;; twice before moving the cursor.
@@ -32,7 +35,7 @@
   ;;(setq org-hide-leading-stars t)
 
   ;; show the whole file when first visited
-  (setq org-startup-folded nil)
+  (setq org-startup-folded 'showeverything)
 
   ;; don't fold when yanking
   (setq org-yank-folded-subtrees nil)
@@ -93,24 +96,16 @@
   (setq org-default-priority ?E)
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "STARTED(s)" "|" "DONE(d!/!)" "DELEGATED(D!/!)")
-          (sequence "CURRENT(c)" "AVAILABLE(a)" "|" "PHONE")
-          (sequence "OPEN(O!)" "|" "CLOSED(C!)")
+        '((sequence "NEXT(n)" "INPG(i)" "TODO(t)" "SUSP(s)" "|" "DONE(d!/!)" "DROP(D!/!)")
           ))
 
   (setq org-todo-keyword-faces
-        '(("TODO"       :foreground "yellow"         :weight bold)
-          ("NEXT"       :foreground "white"          :weight bold)
-          ("STARTED"    :foreground "orange"         :weight bold)
+        '(("NEXT"       :foreground "white"          :weight bold)
+          ("INPG"       :foreground "orange"         :weight bold) -- in progress
+          ("TODO"       :foreground "yellow"         :weight bold)
+          ("SUSP"       :foreground "magenta"        :weight bold) -- suspended
           ("DONE"       :foreground "forest green"   :weight bold)
-          ("DELEGATED"  :foreground "forest green"   :weight bold)
-
-          ("CURRENT"    :foreground "white"          :weight bold)
-          ("AVAILABLE"  :foreground "magenta"        :weight bold)
-          ("PHONE"      :foreground "yellow"         :weight bold)
-
-          ("OPEN"       :foreground "brown"          :weight bold)
-          ("CLOSED"     :foreground "forest green"   :weight bold)
+          ("DROP"       :foreground "brown"          :weight bold)
           ))
 
   ;;;
@@ -130,9 +125,9 @@
   ;;; see http://doc.norang.ca/org-mode.html
   ;;; see http://home.fnal.gov/~neilsen/notebook/orgExamples/org-examples.html
 
-  ;; http://ditaa.org/ditaa/
-  ;; probably not needed since the jar comes with org-mode in contrib/scripts.
-  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa0_9.jar"))
+  ;; https://github.com/stathissideris/ditaa (old http://ditaa.org/ditaa/)
+  ;; jar comes with org-mode in contrib/scripts (but override to ensure latest)
+  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa-0.11.0-standalone.jar"))
 
   ;; http://plantuml.sourceforge.net/
   (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.1.2019.6.jar"))

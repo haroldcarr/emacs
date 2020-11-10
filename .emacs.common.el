@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2020 Jan 23 (Thu) 21:40:20 by Harold Carr.
+;;;; Last Modified : 2020 Aug 26 (Wed) 16:42:18 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -73,6 +73,10 @@
 (defun hcDarwinP       () "." (hcIsVersionP "darwin"))
 (defun hcLinuxP        () "." (hcIsVersionP "linux"))
 
+(defun hcMachineName   () "." (replace-regexp-in-string
+                               "\n$" ""
+                               (shell-command-to-string "uname -n")))
+
 ;; ------------------------------------------------------------------------------
 ;; * Key Bindings
 
@@ -115,7 +119,7 @@
 			  args)))))
 
 (defmacro hcShDefCmd (name args)
-  "NAME ARGS: create a function that execuates a shell command."
+  "NAME ARGS: create a function that executes a shell command."
   `(defun ,name ,args
      (apply #'hcShExecCmd (list ',name ,@args))))
 
@@ -237,10 +241,14 @@
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(use-package hc-pdf)
+(when (member (hcMachineName) '("hcmb"))
+  (hcSection "PDF")
+  (use-package hc-pdf))
 
 ;; ------------------------------------------------------------------------------
 ;; * GNUS
+
+(hcSection "GNUS")
 
 ;; https://whereofwecannotspeak.wordpress.com/2009/07/15/getting-gnus-to-read-mail-over-imap/
 
@@ -482,10 +490,13 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;; ------------------------------------------------------------------------------
 ;; * directory tree
 
+(hcSection "directory tree")
 (load-library "hc-dir-tree.el")
 
 ;; ------------------------------------------------------------------------------
 ;; * EPUB
+
+(hcSection "EPUB")
 
 ;; https://github.com/wasamasa/nov.el
 (with-no-warnings

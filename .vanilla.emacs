@@ -77,7 +77,8 @@
 
 (hcSection "Top level misc stuff")
 
-(desktop-save-mode 1)
+(when (member (hcMachineName) '("hcmb"))
+  (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.
 (setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
@@ -338,9 +339,9 @@
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
 
-(hcSection "Haskell")
-
-(use-package hc-haskell)
+(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac"))
+  (hcSection "Haskell")
+  (use-package hc-haskell))
 
 ;;(use-package intero
 ;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
@@ -496,6 +497,12 @@
 (hcSection "Misc")
 (use-package httpcode :defer t)
 
+(defun hc-tps (ntx ndays nhours nminutes nseconds)
+  (let ((days-seconds    (* (* (* ndays 24) 60) 60))
+        (hours-seconds   (* (* nhours       60) 60))
+        (minutes-seconds (* nminutes            60)))
+    (/ ntx (+ days-seconds hours-seconds minutes-seconds nseconds))))
+
 ;; ------------------------------------------------------------------------------
 ;; * Features used but not customized
 
@@ -637,6 +644,12 @@
   (hc-h 23) ;;  27                                              20
   (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
   )
+
+(defun hcColor () "."
+   (interactive)
+   (set-foreground-color "#DCDCCC")
+   (set-background-color "#3F3F3F")
+   (set-cursor-color     "#FFFFEF"))
 
 (defun hcHostedAppearance () "."
   (interactive)
