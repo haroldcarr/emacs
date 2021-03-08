@@ -77,7 +77,7 @@
 
 (hcSection "Top level misc stuff")
 
-(when (member (hcMachineName) '("hcmb"))
+(when (member (hcMachineName) '("hcarr-mac"))
   (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.
@@ -201,10 +201,16 @@
 ;; or
 ;; emacsclient -e '(client-save-kill-emacs)'
 
+(require 'server)
+
+(defun server-started-p ()
+  "Return non-nil if this Emacs has a server started."
+  (and (boundp server-process) server-process))
+
 (if (functionp 'window-system)
     (when (and (window-system)
                (>= emacs-major-version 24)
-               (not (server-running-p)))
+               (not (server-started-p)))
       (server-start)))
 
 ;; ------------------------------------------------------------------------------
@@ -217,7 +223,7 @@
 
 ;;(hcSection "Bookmarks")
 ;;
-;;(use-package hcBookmarkPlus)
+;;(use-package hc-bookmark-plus)
 
 ;; ------------------------------------------------------------------------------
 ;; * Emacs Code Browser (ECB)
@@ -349,11 +355,11 @@
 ;;                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
 
 ;; ------------------------------------------------------------------------------
-;; * Haskell
+;; * Agda
 
-(hcSection "Agda")
-
-(use-package hc-agda)
+(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac"))
+  (hcSection "Agda")
+  (use-package hc-agda))
 
 ;; ------------------------------------------------------------------------------
 ;; * Images

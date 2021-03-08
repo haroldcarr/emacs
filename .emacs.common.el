@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2020 Aug 26 (Wed) 16:42:18 by Harold Carr.
+;;;; Last Modified : 2021 Mar 08 (Mon) 09:38:54 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -103,6 +103,8 @@
 (if (not (hcWin32P))
   (global-set-key "\M-\ " 'dabbrev-expand)
   (global-set-key "\C-z"  'dabbrev-expand)) ; when all else fails
+
+(global-set-key "\C-c\C-k" 'describe-char)
 
 ;; ------------------------------------------------------------------------------
 ;; * Executing shell commands
@@ -238,10 +240,29 @@
   (interactive "nSize: ")
   (setq line-spacing n))
 
+;; momentarily show the point of the window/buffer being switched to
+(hcRequire pulse)
+(defun pulse-line (&rest _)
+  "Interactive function to pulse the current line."
+  (interactive)
+  (pulse-momentary-highlight-one-line (point)))
+(defadvice other-window        (after        other-window-pulse activate) (pulse-line))
+(defadvice delete-window       (after       delete-window-pulse activate) (pulse-line))
+(defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate) (pulse-line))
+(defadvice other-frame         (after         other-frame-pulse activate) (pulse-line))
+(setq pulse-delay 0.20)
+
+;; ------------------------------------------------------------------------------
+;; * Markdown
+
+(when (member (hcMachineName) '("hcmb" "hcarr-mac"))
+  (hcSection "Markdown")
+  (use-package hc-markdown))
+
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(when (member (hcMachineName) '("hcmb"))
+(when (member (hcMachineName) '("hcmb" "hcarr-mac"))
   (hcSection "PDF")
   (use-package hc-pdf))
 
@@ -312,8 +333,10 @@
 (hcSection "Bookmarks")
 
 (defvar bookmark-save-flag)
+(defvar bookmark-sort-flag)
 (defvar bookmark-default-file)
 (setq bookmark-save-flag 1)
+(setq bookmark-sort-flag nil)
 (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
 
 ;; ------------------------------------------------------------------------------

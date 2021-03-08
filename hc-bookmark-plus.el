@@ -8,7 +8,7 @@
   :ensure t
   :config (setq bmkp-prompt-for-tags-flag t))
 
-(provide 'hcBookmarkPlus)
+(provide 'hc-bookmark-plus)
 
 ;;; hc-bookmark-plus.el ends here
 

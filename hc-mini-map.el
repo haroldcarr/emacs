@@ -49,7 +49,7 @@
 
 ;; Enable via: (sublimity-mode 1)
 
-(provide 'hcBookmarkPlus)
+(provide 'hc-bookmark-plus)
 
 ;;; hc-mini-map.el ends here
 
