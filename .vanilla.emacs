@@ -72,6 +72,13 @@
 (require 'use-package)
 (require '.emacs.common)
 
+
+;; ------------------------------------------------------------------------------
+;; * named keyboard macros
+
+(fset 'ecp
+   (kmacro-lambda-form [?\C-s ?\[ ?l ?a ?b ?e ?l ?= ?\" ?E ?C ?P ?\C-e backspace backspace backspace ?\C-d ?\C-d ?\C-d] 0 "%d"))
+
 ;; ------------------------------------------------------------------------------
 ;; * Top level misc
 

@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 Mar 08 (Mon) 09:38:54 by Harold Carr.
+;;;; Last Modified : 2021 Mar 25 (Thu) 11:23:45 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -338,6 +338,13 @@
 (setq bookmark-save-flag 1)
 (setq bookmark-sort-flag nil)
 (setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+
+;; ------------------------------------------------------------------------------
+;; * Web Browsing
+
+(hcSection "Web Browsing")
+(use-package prot-eww)
+(use-package prot-eww-key-bindings)
 
 ;; ------------------------------------------------------------------------------
 ;; * Timestamp

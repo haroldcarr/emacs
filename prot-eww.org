@@ -1,0 +1,8 @@
+video of usage:
+https://protesilaos.com/codelog/2021-03-25-emacs-eww/
+
+description of commands:
+https://protesilaos.com/dotemacs/#h:524bc702-ff55-4ed9-9a38-26d30d64591d
+
+source:
+https://gitlab.com/protesilaos/dotfiles/-/blob/master/emacs/.emacs.d/prot-lisp/prot-eww.el
