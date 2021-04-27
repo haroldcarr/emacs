@@ -12,9 +12,9 @@ expressions."
        (display-warning 'prot-emacs (format "Loading `%s' failed" ,package) :warning))
      ,@body))
 
-(prot-emacs-builtin-package 'browse-url
-  (setq browse-url-browser-function 'eww-browse-url)
-  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
+;(prot-emacs-builtin-package 'browse-url
+;  (setq browse-url-browser-function 'eww-browse-url)
+;  (setq browse-url-secondary-browser-function 'browse-url-default-browser))
 
 (prot-emacs-builtin-package 'shr
   (setq shr-use-colors nil)             ; t is bad for accessibility

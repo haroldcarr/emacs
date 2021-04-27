@@ -8,6 +8,7 @@
 ;; treemacs
 ;; https://github.com/Alexander-Miller/treemacs/tree/d6acbaf81abf719c58d577a3a5bc18010fa85fbd
 
+
 (use-package treemacs
   :ensure t
   :defer t
@@ -90,7 +91,8 @@
 (use-package treemacs-icons-dired
   :after treemacs dired
   :ensure t
-  :config (treemacs-icons-dired-mode))
+  :config (treemacs-icons-dired-mode)
+)
 
 (use-package treemacs-magit
   :after treemacs magit
@@ -146,6 +148,15 @@
     ;; M-x all-the-icons-install-fonts
     :ensure t
     :commands (all-the-icons-dired-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; https://github.com/knpatel401/filetree
+
+;; M-x filetree-show ...
+
+(use-package filetree
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

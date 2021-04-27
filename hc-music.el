@@ -6,10 +6,11 @@
 
 ;; https://www.gnu.org/software/emms/manual/
 (use-package emms-setup
+  :custom
+  (emms-source-file-default-directory (concat (hcUlhcd) "/00-music-root"))
   :config
   (emms-all)
   (emms-default-players)
-  (setq emms-source-file-default-directory (concat (hcUlhcd) "/00-music-root"))
   (emms-browser-add-category "title" 'info-title)
   :bind (:map emms-browser-mode-map
               ("b 7" .'emms-browse-by-title))

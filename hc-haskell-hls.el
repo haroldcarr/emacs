@@ -15,23 +15,26 @@
                       (let ((lsp-keymap-prefix hc-lsp-mode-keymap-prefix))
                         (lsp-enable-which-key-integration))))
   :config
-    (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
-    ;; https://emacs.stackexchange.com/a/54976/5176
-    (setq lsp-file-watch-threshold 512
-          lsp-enable-file-watchers nil)
+  (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
+  ;; https://emacs.stackexchange.com/a/54976/5176
+  (setq lsp-file-watch-threshold 512
+        lsp-enable-file-watchers nil)
 )
 
 (use-package lsp-haskell
   :custom
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-doc-position 'bottom)
-  (lsp-ui-sideline-enable nil)
+  (lsp-haskell-brittany-on nil)
+  (lsp-haskell-floskell-on nil)
+  (lsp-haskell-fourmolu-on nil)
+  (lsp-haskell-ormolu-on   nil)
+  (lsp-ui-doc-enable       nil)
+  (lsp-ui-doc-position     'bottom)
+  (lsp-ui-sideline-enable  nil)
   :custom-face ;; gray35/tango-dark; white/zenburn
-  (lsp-ui-doc-background ((t (:background "white" ;; "gray35"
-                                          ))))
+  (lsp-ui-doc-background   ((t (:background "white"))))
 )
 
-(require 'lsp-treemacs)
+;;(require 'lsp-treemacs)
 
 (provide 'hc-haskell-hls)
 

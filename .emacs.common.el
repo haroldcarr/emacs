@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 Mar 25 (Thu) 11:23:45 by Harold Carr.
+;;;; Last Modified : 2021 Apr 21 (Wed) 11:35:46 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -539,6 +539,11 @@ If invoked with a prefix ARG eval the expression after inserting it."
 
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Editing-Binary-Files.html
 
+
+(defun hc-signed-off-by ()
+  "X."
+  (interactive)
+  (insert "Signed-off-by: Harold Carr harold.carr@oracle.com"))
 
 ;; ------------------------------------------------------------------------------
 ;; * greek
