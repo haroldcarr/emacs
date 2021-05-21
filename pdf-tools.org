@@ -1,4 +1,6 @@
 https://github.com/politza/pdf-tools
+new maintainer:
+https://github.com/vedang/melpa/commit/a6321fb947f6461ac9b673fe47fc7c27ffae09ee
 
 how I installed on my Mac
 

@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 Apr 21 (Wed) 11:35:46 by Harold Carr.
+;;;; Last Modified : 2021 May 21 (Fri) 11:38:48 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -121,7 +121,7 @@
 			  args)))))
 
 (defmacro hcShDefCmd (name args)
-  "NAME ARGS: create a function that executes a shell command."
+  "NAME ARGS: create a function to execute a shell command."
   `(defun ,name ,args
      (apply #'hcShExecCmd (list ',name ,@args))))
 
@@ -246,11 +246,16 @@
   "Interactive function to pulse the current line."
   (interactive)
   (pulse-momentary-highlight-one-line (point)))
-(defadvice other-window        (after        other-window-pulse activate) (pulse-line))
-(defadvice delete-window       (after       delete-window-pulse activate) (pulse-line))
-(defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate) (pulse-line))
-(defadvice other-frame         (after         other-frame-pulse activate) (pulse-line))
+(defadvice other-window        (after        other-window-pulse activate) "." (pulse-line))
+(defadvice delete-window       (after       delete-window-pulse activate) "." (pulse-line))
+(defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate) "." (pulse-line))
+(defadvice other-frame         (after         other-frame-pulse activate) "." (pulse-line))
 (setq pulse-delay 0.20)
+
+;; ------------------------------------------------------------------------------
+;; * Themes
+
+(use-package hc-theme-switch)
 
 ;; ------------------------------------------------------------------------------
 ;; * Markdown

@@ -352,7 +352,7 @@
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
 
-(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac"))
+(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac" "hcmb-air"))
   (hcSection "Haskell")
   (use-package hc-haskell))
 
@@ -364,7 +364,7 @@
 ;; ------------------------------------------------------------------------------
 ;; * Agda
 
-(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac"))
+(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac" "hcmb-air"))
   (hcSection "Agda")
   (use-package hc-agda))
 
@@ -658,11 +658,17 @@
   (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
   )
 
-(defun hcColor () "."
+(defun hcColorZB () "."
    (interactive)
    (set-foreground-color "#DCDCCC")
    (set-background-color "#3F3F3F")
    (set-cursor-color     "#FFFFEF"))
+
+(defun hcColorBW () "."
+   (interactive)
+   (set-foreground-color "#FFFFFF")
+   (set-background-color "#000000")
+   (set-cursor-color     "#FFFFFF"))
 
 (defun hcHostedAppearance () "."
   (interactive)
