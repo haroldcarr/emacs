@@ -12,22 +12,6 @@
 (defvar *hc-sync-to*)
 (defvar *hc-sync-what*)
 
-(defun hc-add-or-delete (widget this lis)
-  (if (widget-get widget :value)
-      (cons this lis)
-    (-remove #'(lambda (that) (eq this that)) lis)))
-
-(defun hc-add-or-delete-*hc-sync-to* (widget this)
-  (setq *hc-sync-to* (hc-add-or-delete widget this *hc-sync-to*))
-  (message (prin1-to-string *hc-sync-to*)))
-
-(defun hc-add-or-delete-*hc-sync-what* (widget this)
-  (setq *hc-sync-what* (hc-add-or-delete widget this *hc-sync-what*))
-  (message (prin1-to-string *hc-sync-what*)))
-
-(defun hc-host-to-ip       (h) (shell-command-to-string (concat "ip-"       h)))
-(defun hc-host-to-username (h) (shell-command-to-string (concat "username-" h)))
-
 (defun hc-sync ()
   "Synchronize data between machines."
   (interactive)
@@ -55,58 +39,23 @@
     (widget-insert "\n--------------------------------------------------")
     (widget-insert "\nto (select one or more):\n\n")
 
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-to* w "o2011"))
-                   nil)
-    (widget-insert " o2011 ")
-    (setq to-o2011
-          (widget-create 'editable-field
-                         :format "%v"
-                         "?"))
-
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-to* w "o2015"))
-                   nil)
-    (widget-insert " o2015 ")
-    (setq to-o2015
-          (widget-create 'editable-field
-                         :format "%v"
-                         "?"))
-
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-to* w "o2020"))
-                   nil)
-    (widget-insert " o2020 ")
-    (setq to-o2020
-          (widget-create 'editable-field
-                         :format "%v"
-                         "?"))
+    (hc-sync-to-destination o2011)
+    (hc-sync-to-destination o2015)
+    (hc-sync-to-destination o2020)
 
     (widget-insert "\n--------------------------------------------------")
     (widget-insert "\nwhat (select one or more):\n\n")
 
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-what* w "s-a2b"))
-                   nil)
-    (widget-insert " s-a2b")
+    (hc-sync-to-what s-a2b)
 
     (widget-insert "\n")
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-what* w "s-fcw-music"))
-                   nil)
-    (widget-insert " s-fcw-music")
+    (hc-sync-to-what s-fcw-music)
 
     (widget-insert "\n")
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-what* w "s-hc-music"))
-                   nil)
-    (widget-insert " s-hc-music")
+    (hc-sync-to-what s-hc-music)
 
     (widget-insert "\n")
-    (widget-create 'checkbox
-                   :notify (lambda (w &rest ignore) (hc-add-or-delete-*hc-sync-what* w "s-pictures"))
-                   nil)
-    (widget-insert " s-pictures")
+    (hc-sync-to-what s-pictures)
 
     (widget-insert "\n")
     (widget-insert "\n--------------------------------------------------")
@@ -161,9 +110,33 @@
     (use-local-map widget-keymap)
     (widget-setup)))
 
+(defmacro hc-sync-to-destination (dest-as-symbol)
+  (let ((dest (symbol-name dest-as-symbol)))
+    `(progn
+       (widget-create 'checkbox
+                      :notify (lambda (w &rest ignore)
+                                (setq *hc-sync-to* (hc-add-or-delete w ,dest *hc-sync-to*))
+                                (message (prin1-to-string *hc-sync-to*)))
+                      nil)
+       (widget-insert ,(concat " " dest " "))
+       (setq ,(intern (concat "to-" dest))
+             (widget-create 'editable-field
+                            :format "%v"
+                            "?")))))
 
-(defun hc-run-sync (sync-name)
-  (hcRunCommandInBuffer (concat "*" sync-name "*") sync-name))
+(defmacro hc-sync-to-what (what-as-symbol)
+  (let ((what (symbol-name what-as-symbol)))
+    `(progn
+       (widget-create 'checkbox
+                      :notify (lambda (w &rest ignore)
+                                (setq *hc-sync-what* (hc-add-or-delete w ,what *hc-sync-what*))
+                                (message (prin1-to-string *hc-sync-what*)))
+                      nil)
+       (widget-insert ,(concat " " what)))))
+
+(defun hc-host-to-ip       (h)         (shell-command-to-string (concat "ip-"       h)))
+(defun hc-host-to-username (h)         (shell-command-to-string (concat "username-" h)))
+(defun hc-run-sync         (sync-name) (hcRunCommandInBuffer (concat "*" sync-name "*") sync-name))
 
 (defun hc-ssh-get-hostname (user host handle-result)
   (interactive)
@@ -184,6 +157,11 @@
                            (t event))))
            (kill-buffer buffer)
            (funcall handle-result name))))))
+
+(defun hc-add-or-delete (widget this lis)
+  (if (widget-get widget :value)
+      (cons this lis)
+    (-remove #'(lambda (that) (eq this that)) lis)))
 
 (provide 'hc-sync)
 
