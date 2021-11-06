@@ -18,3 +18,6 @@
   (hc-disable-all-themes)
   (message "after")
   (load-theme theme no-confirm no-enable))
+
+(provide 'hc-theme-switch)
+

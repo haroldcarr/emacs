@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 May 21 (Fri) 11:38:48 by Harold Carr.
+;;;; Last Modified : 2021 Jul 29 (Thu) 09:26:40 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -252,6 +252,31 @@
 (defadvice other-frame         (after         other-frame-pulse activate) "." (pulse-line))
 (setq pulse-delay 0.20)
 
+;;(when (hcIsVersionP "28")
+;;  (setc tab-bar-format '(tab-bar-format-global)
+;;        tab-bar-mode t))
+
+;; (defun hc-split-window-sensibly (&optional window)
+;;   "WINDOW.  Replace `split-window-sensibly' with one that prefers vertical splits."
+;;   (interactive)
+;;   (if (and (fboundp 'window-in-direction)
+;;                        ;; Don't try to split when starting in a minibuffer
+;;                        ;; e.g M-: and try to use helm-show-kill-ring.
+;;                        (not (minibufferp helm-current-buffer)))
+;;       (let ((window (or window (selected-window))))
+;;         ;; (or (and (window-splittable-p window t)
+;;         ;;          (with-selected-window window
+;;         ;;            (split-window-right)))
+;;         ;;     (and (window-splittable-p window)
+;;         ;;          (with-selected-window window
+;;         ;;            (split-window-below)))))))
+;;         (if (window-splittable-p window)
+;;             (with-selected-window window (split-window-below))))))
+
+;; (setq      split-window-preferred-function-ORIG split-window-preferred-function)
+;; (setq      split-window-preferred-function #'hc-split-window-sensibly)
+;; (setq helm-split-window-preferred-function #'hc-split-window-sensibly)
+
 ;; ------------------------------------------------------------------------------
 ;; * Themes
 
@@ -348,8 +373,7 @@
 ;; * Web Browsing
 
 (hcSection "Web Browsing")
-(use-package prot-eww)
-(use-package prot-eww-key-bindings)
+(use-package hc-web-browsing)
 
 ;; ------------------------------------------------------------------------------
 ;; * Timestamp

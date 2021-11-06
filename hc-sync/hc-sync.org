@@ -1,0 +1,19 @@
+from   |                  | hostname            | to |              | using |
+------------------------------------------------------------------------------------------
+       | ip-air           | ssh user-air@ip-air |    |              |       | s-a2b
+       | ip-backup        | ditto               |    |              |       | s-fcw-music
+       | ip-main          | ditto               |    |              |       | s-hc-music
+       | ip-mid-2011-mini | ditto               |    |              |       | s-hcx
+       | ip-o2020         | ditto               |    |              |       | s-local-bin
+       |                  | ditto               |    |              |       | s-pictures
+------------------------------------------------------------------------------------------
+       |                  |                     |    | ip-raspberry |       | s-raspberry
+------------------------------------------------------------------------------------------
+       |                  |                     |    | ip-labs-besk |       | s-hosted-labs
+------------------------------------------------------------------------------------------
+       |                  |                     |    | ip-o-hc      |       | s-hosted-hc
+
+
+[[]] remember pw
+check connectivity
+sync

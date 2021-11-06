@@ -352,7 +352,7 @@
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
 
-(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac" "hcmb-air"))
+(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
   (hcSection "Haskell")
   (use-package hc-haskell))
 
@@ -364,7 +364,7 @@
 ;; ------------------------------------------------------------------------------
 ;; * Agda
 
-(when (member (hcMachineName) '("hcmb" "o2020" "hcarr-mac" "hcmb-air"))
+(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
   (hcSection "Agda")
   (use-package hc-agda))
 

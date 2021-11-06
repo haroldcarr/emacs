@@ -23,15 +23,40 @@
 
 (use-package lsp-haskell
   :custom
-  (lsp-haskell-brittany-on nil)
-  (lsp-haskell-floskell-on nil)
-  (lsp-haskell-fourmolu-on nil)
-  (lsp-haskell-ormolu-on   nil)
-  (lsp-ui-doc-enable       nil)
-  (lsp-ui-doc-position     'bottom)
-  (lsp-ui-sideline-enable  nil)
-  :custom-face ;; gray35/tango-dark; white/zenburn
-  (lsp-ui-doc-background   ((t (:background "white"))))
+
+  ;; -------------------------
+  (lsp-haskell-brittany-on            nil)
+  (lsp-haskell-floskell-on            nil)
+  (lsp-haskell-fourmolu-on            nil)
+  (lsp-haskell-ormolu-on              nil)
+
+  ;; -------------------------
+  ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
+  (lsp-enable-symbol-highlighting     t)
+  (lsp-ui-doc-show-with-cursor        t)
+  (lsp-ui-doc-show-with-mouse         t)
+  (lsp-lens-enable                    nil)
+  (lsp-headerline-breadcrumb-enable   t)
+  (lsp-ui-sideline-enable             nil)
+  (lsp-ui-sideline-show-code-actions  t)
+  (lsp-ui-sideline-show-hover         nil)
+  (lsp-modeline-code-actions-enable   t)
+;;(lsp-diagnostics-provider           :auto)
+  (lsp-eldoc-enable-hover             t)
+  (lsp-modeline-diagnostics-enable    t)
+  ;; manual request via `lsp-signature-activate`
+;;(lsp-signature-auto-activate        '(:on-trigger-char :on-server-request))
+  (lsp-signature-render-documentation t)
+;;(lsp-completion-provider            :capf)
+;;(lsp-completion-show-detail         t)
+;;(lsp-completion-show-kind           t)
+
+  ;; -------------------------
+  (lsp-ui-doc-enable                  t)
+  (lsp-ui-doc-position                'top)
+  :custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
+  (lsp-ui-doc-background              ((t (:background "gray50"))))
+
 )
 
 ;;(require 'lsp-treemacs)
