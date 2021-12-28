@@ -24,6 +24,7 @@
   (remove-overlays)
 
   (let ((here (s-trim (shell-command-to-string "hostname")))
+        (to-hc-mid-2011-mini)
         (to-o2011)
         (to-o2015)
         (to-o2020))
@@ -39,9 +40,9 @@
     (widget-insert "\n--------------------------------------------------")
     (widget-insert "\nto (select one or more):\n\n")
 
+    (hc-sync-to-destination hc-mid-2011-mini)
     (hc-sync-to-destination o2011)
     (hc-sync-to-destination o2015)
-    (hc-sync-to-destination o2020)
 
     (widget-insert "\n--------------------------------------------------")
     (widget-insert "\nwhat (select one or more):\n\n")
@@ -73,6 +74,9 @@
                               user ip
                               #'(lambda (r)
                                   (pcase r
+                                    ("hc-mid-2011-mini"
+                                             (widget-value-set
+                                              to-hc-mid-2011-mini (format "%s %s %s" user r ip)))
                                     ("o2011" (widget-value-set
                                               to-o2011 (format "%s %s %s" user r ip)))
                                     ("o2015" (widget-value-set

@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 Jul 29 (Thu) 09:26:40 by Harold Carr.
+;;;; Last Modified : 2021 Dec 10 (Fri) 10:20:14 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -278,8 +278,15 @@
 ;; (setq helm-split-window-preferred-function #'hc-split-window-sensibly)
 
 ;; ------------------------------------------------------------------------------
+;; * Sync
+
+(hcSection "Sync")
+(use-package hc-sync)
+
+;; ------------------------------------------------------------------------------
 ;; * Themes
 
+(hcSection "Themes")
 (use-package hc-theme-switch)
 
 ;; ------------------------------------------------------------------------------

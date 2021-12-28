@@ -46,9 +46,13 @@
 ;;       For now I have a symlink from ~/.emacs.d to here.
 ;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
 (setq package-archives
-      '(("melpa" . "http://melpa.org/packages/")
-        ("org"   . "http://orgmode.org/elpa/")
-        ("gnu"   . "http://elpa.gnu.org/packages/")))
+      '(
+        ("melpa"  . "http://melpa.org/packages/")
+        ;; https://list.orgmode.org/87lfa7tc9v.fsf@gnu.org/t/
+        ("gnu"    . "http://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ;;("org"    . "http://orgmode.org/elpa/")
+       ))
 
 ;;        ("marmalade"    . "http://marmalade-repo.org/packages/")
 ;;        ("melpa-stable" . "http://stable.melpa.org/packages/")

@@ -1,3 +1,22 @@
+svg, scribble in emacs
+https://lifeofpenguin.blogspot.com/2021/10/svg-widget-in-gnu-emacs.html
+https://lifeofpenguin.blogspot.com/2021/11/spice-simulation-in-gnu-emacs-from.html
+https://lifeofpenguin.blogspot.com/2021/08/scribble-notes-in-gnu-emacs.html
+
+emacs on large files
+https://github.com/m00natic/vlfi
+
+emacs as hex editor
+https://www.reddit.com/r/emacs/comments/qca1re/til_emacs_has_a_hex_editor/
+
+multimedia popup functionality
+https://github.com/manateelazycat/popweb
+
+extend emacs graphic capabilities
+https://github.com/emacs-eaf/emacs-application-framework
+
+------------------------------------------------------------------------------
+
 treemacs versus neotree (in hc-dir-tree.el)
 
 ------------------------------------------------------------------------------
@@ -19,10 +38,10 @@ Call the function and it will prompt you with a list of files in your starting
 directory (defaulting to ~/downloads, but configurable with
 bjm/move-file-here-start-dir) sorted to have the most recent first. The chosen
 file will then be moved to the current directory if you are in dired, or else
-the directory of the current buffer. 
+the directory of the current buffer.
 
 The function needs the packages dash.el and swiper installed. Here is the code –
-comments are welcome. 
+comments are welcome.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; move file here                                                         ;;
