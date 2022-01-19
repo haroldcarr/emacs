@@ -21,9 +21,9 @@
     (erase-buffer))
   (remove-overlays)
 
-  (let ((here       (s-trim (shell-command-to-string "hostname")))
-        (candidates (-filter (lambda (x) (s-contains? "o2020-to" x))
-                             (directory-files (concat (hcLocation "dotfiles") "/.unison/")))))
+  (let* ((here       (s-trim (shell-command-to-string "hostname")))
+         (candidates (-filter (lambda (x) (s-contains? (concat here "-to") x))
+                              (directory-files (concat (hcLocation "dotfiles") "/.unison/")))))
     (setq *hc-sync-to* '())
 
     ;; --------------------------------------------------
