@@ -22,8 +22,9 @@
   (remove-overlays)
 
   (let* ((here       (s-trim (shell-command-to-string "hostname")))
-         (candidates (-filter (lambda (x) (s-contains? (concat here "-to") x))
-                              (directory-files (concat (hcLocation "dotfiles") "/.unison/")))))
+         (candidates (reverse
+                      (-filter (lambda (x) (s-contains? (concat here "-to") x))
+                               (directory-files (concat (hcLocation "dotfiles") "/.unison/"))))))
     (setq *hc-sync-to* '())
 
     ;; --------------------------------------------------
@@ -64,13 +65,6 @@
 (defun hc-run-sync (sync-name)
   (hcRunCommandInBuffer (concat "*" sync-name "*") sync-name))
 
-(provide 'hc-sync)
-
-;;; hc-sync.el ends here
-
-;(setq x (-filter (lambda (x) (s-contains? "o2020-to" x))
-;                 (directory-files (concat (hcLocation "dotfiles") "/.unison/"))))
-
 (defun hc-group (fs)
   (if (null fs) '()
     (let* ((g (-group-by #'(lambda (f) (s-starts-with? (s-left 8 (car fs)) f)) fs))
@@ -84,7 +78,9 @@
                            (cdadr l)))))
       (cons this (hc-group that)))))
 
-;(hc-group x)
+(provide 'hc-sync)
+
+;;; hc-sync.el ends here
 
 
 

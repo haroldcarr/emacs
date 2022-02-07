@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2021 Dec 10 (Fri) 10:20:14 by Harold Carr.
+;;;; Last Modified : 2022 Jan 21 (Fri) 08:55:04 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -251,6 +251,9 @@
 (defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate) "." (pulse-line))
 (defadvice other-frame         (after         other-frame-pulse activate) "." (pulse-line))
 (setq pulse-delay 0.20)
+
+;; TRAMP : do not ask to save passwords
+(setq auth-source-save-behavior nil)
 
 ;;(when (hcIsVersionP "28")
 ;;  (setc tab-bar-format '(tab-bar-format-global)

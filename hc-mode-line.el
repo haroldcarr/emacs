@@ -24,13 +24,15 @@
      :separator " | ")
     input-method                        ;; ??
     selection-info                      ;; number of characters or lines selected
-    major-mode                          ;; current major mode e.g., Emacs-Lisp, LitHaskell
+    (major-mode  :priority 79)          ;; current major mode e.g., Emacs-Lisp, LitHaskell
+    (minor-modes :when active
+                 :priority 9)
+;;    (((minor-modes                      ;; currently enabled minor modes
+;;       :separator spaceline-minor-modes-separator) process) :when active)
     ((flycheck-error                    ;; number of errors
       flycheck-warning                  ;; number of warnings
       flycheck-info)                    ;; number of notifications
      :when active)
-    ;;(((minor-modes                      ;; currently enabled minor modes
-    ;;   :separator spaceline-minor-modes-separator) process) :when active)
     (version-control :when active)      ;; e.g., GIT, ...
     ))
 
