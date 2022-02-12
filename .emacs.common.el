@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Jan 21 (Fri) 08:55:04 by Harold Carr.
+;;;; Last Modified : 2022 Feb 07 (Mon) 11:04:15 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -285,6 +285,12 @@
 
 (hcSection "Sync")
 (use-package hc-sync)
+
+;; ------------------------------------------------------------------------------
+;; * Pinboard
+
+(hcSection "Pinboard")
+(use-package hc-pinboard)
 
 ;; ------------------------------------------------------------------------------
 ;; * Themes
