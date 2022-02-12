@@ -4,22 +4,22 @@
 (use-package lsp
   :custom
   ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
-  (lsp-enable-symbol-highlighting     t)
-  (lsp-lens-enable                    nil)
-  (lsp-headerline-breadcrumb-enable   t)
-  (lsp-modeline-code-actions-enable   t)
+;;(lsp-completion-provider            :capf)
+;;(lsp-completion-show-detail         t)
+;;(lsp-completion-show-kind           t)
 ;;(lsp-diagnostics-provider           :auto)
   (lsp-eldoc-enable-hover             t)
+  (lsp-enable-symbol-highlighting     t)
+  (lsp-headerline-breadcrumb-enable   t)
+  (lsp-lens-enable                    nil)
+  (lsp-modeline-code-actions-enable   t)
   (lsp-modeline-diagnostics-enable    t)
   ;; manual request via `lsp-signature-activate`
 ;;(lsp-signature-auto-activate        '(:on-trigger-char :on-server-request))
   (lsp-signature-render-documentation t)
-;;(lsp-completion-provider            :capf)
-;;(lsp-completion-show-detail         t)
-;;(lsp-completion-show-kind           t)
 )
 
-(add-hook 'haskell-mode-hook #'lsp)
+(add-hook 'haskell-mode-hook          #'lsp)
 (add-hook 'haskell-literate-mode-hook #'lsp)
 
 (defvar hc-lsp-mode-keymap-prefix "C-c l")
@@ -31,29 +31,30 @@
   :config
   (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
   ;; https://emacs.stackexchange.com/a/54976/5176
-  (setq lsp-file-watch-threshold 512
-        lsp-enable-file-watchers nil)
+  (setq lsp-enable-file-watchers nil
+        lsp-file-watch-threshold 512
+  )
 )
 
 (use-package lsp-ui
+;;:custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
+;;(lsp-ui-doc-background              ((t (:background "gray50"))))
   :custom
-  (lsp-ui-doc-show-with-cursor        t)
-  (lsp-ui-doc-show-with-mouse         t)
-  (lsp-ui-sideline-enable             nil)
-  (lsp-ui-sideline-show-code-actions  t)
-  (lsp-ui-sideline-show-hover         nil)
-  (lsp-ui-doc-enable                  t)
-  (lsp-ui-doc-position                'top)
-  :custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
-  (lsp-ui-doc-background              ((t (:background "gray50"))))
+  (lsp-ui-doc-enable                 t)
+  (lsp-ui-doc-position               'top)
+  (lsp-ui-doc-show-with-cursor       t)
+  (lsp-ui-doc-show-with-mouse        t)
+  (lsp-ui-sideline-enable            nil)
+  (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-sideline-show-hover        nil)
 )
 
 (use-package lsp-haskell
   :custom
-  (lsp-haskell-brittany-on            nil)
-  (lsp-haskell-floskell-on            nil)
-  (lsp-haskell-fourmolu-on            nil)
-  (lsp-haskell-ormolu-on              nil)
+  (lsp-haskell-brittany-on           nil)
+  (lsp-haskell-floskell-on           nil)
+  (lsp-haskell-fourmolu-on           nil)
+  (lsp-haskell-ormolu-on             nil)
 )
 
 ;;(require 'lsp-treemacs)
