@@ -4,14 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2020 Sep 19 (Sat) 09:36:24 by Harold Carr.
+;;;; Last Modified : 2022 Mar 08 (Tue) 09:00:12 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
 ;;; Haskell Packages
-
-;; for Intero, see: https://github.com/cydparser/demo-emacs-haskell/blob/master/demo.org
 
 (require 'ido)
 
@@ -46,49 +44,29 @@
 (defun hc-pick-haskell-support ()
   "Prompt pick from a list."
   (interactive)
-  (let ((choices '("dante" "ghcide" "hie" "hls" "intero" "none" "victor")))
+  (let ((choices '("hls" "none")))
     (message "%s" (ido-completing-read "which haskell?: " choices))))
 
 (let ((pick (hc-pick-haskell-support)))
-  (cond ((equal pick "dante")
-         (message "Using Dante")
-         (setq hc-haskell 'dante)
-         (use-package hc-haskell-dante))
-        ((equal pick "ghcide")
-         (message "Using GHCIDE")
-         (setq hc-haskell 'ghcide)
-         (use-package hc-haskell-ghcide))
-        ((equal pick "hie")
-         (message "Using HIE")
-         (setq hc-haskell 'hie)
-         (use-package hc-haskell-hie))
-        ((equal pick "hls")
+  (cond ((equal pick "hls")
          (message "Using HLS")
          (setq hc-haskell 'hls)
          (use-package hc-haskell-hls))
-        ((equal pick "intero")
-         (message "Using Intero")
-         (setq hc-haskell 'intero)
-         (use-package hc-haskell-intero))
         ((equal pick "none")
          (message "NO HASKELL SUPPORT")
          (setq hc-haskell 'none))
-        ((equal pick "victor")
-         (message "Using Victor")
-         (setq hc-haskell 'victor)
-         (use-package hc-haskell-victor-miraldo))
         (t
          (message "NO HASKELL MATCH %s" pick))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/knupfer/haskell-emacs
 
-(use-package haskell-emacs
-  :ensure t
-  :defer t)
+;; (use-package haskell-emacs
+;;   :ensure t
+;;   :defer t)
 
-(setq haskell-emacs-build-tool (quote stack))
-(setq haskell-emacs-dir (concat (hcEmacsDir) "/hc-haskell-fun/"))
+;; (setq haskell-emacs-build-tool (quote stack))
+;; (setq haskell-emacs-dir (concat (hcEmacsDir) "/hc-haskell-fun/"))
 
 ;;;;;;;;;;;;;
 

@@ -32,7 +32,9 @@
   (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
   ;; https://emacs.stackexchange.com/a/54976/5176
   (setq lsp-enable-file-watchers nil
+        lsp-enable-snippet       nil
         lsp-file-watch-threshold 512
+
   )
 )
 
