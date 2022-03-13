@@ -1,0 +1,8 @@
+#!/bin/sh
+
+emacsDir=/net/suntools.eng/export/tools/sparc/bin
+gnuDir=$HOME/.sync/.esync/gnu
+
+$emacsDir/xemacs -nw -batch -l $gnuDir/.emacs -l $gnuDir/hc-reindent-files.el -f doKestrel
+
+

@@ -1,0 +1,30 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ToDo
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+&%%(diary-block 1 1 1999 12 31 1999)	:
+	To do:
+		Work:
+			* Interceptor work for EJB.
+				Read interceptor submissions
+			* Obtain Rose98 for NT
+				Install Rahul Rose on pinyon
+			* Enroll in class
+			* Resync papers/OMG with KEN's
+			* Learn/document RIP testing on NT
+			* Back up NT registry - rdisk /s
+			* register laptop
+			* Get internal modem fixed.
+			* Obtain and setup home Sparc/ISDN/Modem
+			* emacs vm imap mail - requires emacs >= 20.4
+		Personal:
+			* Call 3 Snyders, David Sneider, Bret
+			* Email job change to lists
+			* Interest to Giordi and Whitney
+			* Epson 740 (maybe 700) $249
+			* sync work
+				Filter ^M
+				cp hcRmCr ..
+				chmod +w-x *
+				for f in *; do ../hcRmCr $f done
+

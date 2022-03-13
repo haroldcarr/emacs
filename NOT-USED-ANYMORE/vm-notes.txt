@@ -1,0 +1,76 @@
+(hc-section "VM")
+
+;"/net/suntools/export/tools/external/XEmacs/lib/xemacs-20.4/lisp/vm/"
+(cond ((XP)
+       (autoload 'vm "vm" "Start VM on your primary inbox." t)
+       (autoload 'vm-other-frame "vm" "Like `vm' but starts in another frame." t)
+       (autoload 'vm-visit-folder "vm" "Start VM on an arbitrary folder." t)
+       (autoload 'vm-visit-virtual-folder "vm" "Visit a VM virtual folder." t)
+       (autoload 'vm-mode "vm" "Run VM major mode on a buffer" t)
+       (autoload 'vm-mail "vm" "Send a mail message using VM." t)
+       (autoload 'vm-submit-bug-report "vm" "Send a bug report about VM." t)
+;From: Babu Srinivasan <babu.srinivasan@tara.Eng>
+;You should set the vm-spool-files in your ~/.vm file.
+;I get my mail from shorter.
+
+;imap:		type of service
+;shorter.eng:	mailserver
+;143:		tcp-port (on server) to use (143 is imap default)
+;inbox:		tell vm to use the default inbox for the user
+;login:		how to contact the server
+;babus:		username
+;*		password ('*' means ask user for pw at login)
+
+(setq  vm-spool-files '("imap:shorter.eng:143:inbox:login:carr:*"))
+
+;
+;You should get the base64-encoode decode stuff so that you
+;can view atatchments faster.
+;
+;
+;Actually I have
+;(setq
+;   vm-spool-files '("imap:shorter.eng:143:inbox:login:babus:*")
+;   vm-auto-get-new-mail 60
+;   vm-imap-expunge-after-retrieving t ; this happens to be the default
+;   vm-mime-base64-encoder-program "~/bin/base64-encode"
+;   vm-mime-base64-decoder-program "~/bin/base64-decode"
+;   vm-folder-directory "~/Mail/"
+;   vm-confirm-new-folders t
+;   vm-flush-interval nil
+;   vm-preview-lines t
+;   vm-inhibit-startup-message t
+;   vm-circular-folders nil
+;   vm-follow-summary-cursor t
+;   vm-move-after-deleting t
+;   vm-delete-after-saving t
+;   vm-auto-next-message nil
+;   vm-mail-header-from "Babu Srinivasan <babu.srinivasan@tara>"
+;   vm-auto-decode-mime-messages t   ; is the default
+;   vm-url-browser 'vm-mouse-send-url-to-netscape
+;   vm-toolbar-pixmap-directory "/export/home/local/emacs-20.4/lib/xemacs-20.4/etc/vm/pixmaps-small"
+;   vm-summary-uninteresting-senders vm-mail-header-from
+;   vm-summary-uninteresting-senders (regexp-quote vm-mail-header-from)
+;   vm-mime-attachment-save-directory "/tmp/"
+;)
+))
+
+; From: Howard Melman <howard@silverstream.com>
+
+(setq vm-mime-external-content-types-alist
+      '(("text/html"                     "IE")
+        ("image/gif"                     "IE")
+        ("image/jpeg"                    "IE")
+        ("image/xbm"                     "IE")
+        ("image/bmp"                     "C:/WINNT/System32/mspaint.exe") ;XXX doesn't work?
+        ("audio/vnd.qcelp"               "cmd.exe" "/c" "C:/Program Files/PureVoice/PureVoice.exe")
+        ("audio/wav"                     "C:/WINNT/System32/rundll32.exe" "C:/WINNT/System32/amovie.ocx,RunDll" "/play" "/close")
+        ("video/mpeg"                    "C:/WINNT/System32/rundll32.exe" "C:/WINNT/System32/amovie.ocx,RunDll" "/play" "/close")
+        ("video/quicktime"               "C:/WINNT/PLAY32.EXE")
+        ("application/pdf"               "cmd.exe" "/c" "c:/acrobat3/reader/AcroRd32.exe")
+        ("application/postscript"        "cmd.exe" "/c" "C:/Gnu/gstools/gsview/gsview32.exe")
+        ("application/msword"            "cmd.exe" "/c" "C:/Program Files/Microsoft Office/Office/WINWORD.EXE")
+        ("application/vnd.ms-powerpoint" "cmd.exe" "/c" "C:/Program Files/Microsoft Office/Office/POWERPNT.EXE")
+        ("application/vnd.ms-excel"      "cmd.exe" "/c" "C:/Program Files/Microsoft Office/Office/EXCEL.EXE")
+        ))
+)

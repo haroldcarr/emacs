@@ -1,0 +1,9 @@
+(setq url-global-history-hash-table (make-hash-table :size 1 :test 'equal))
+(cl-puthash "file:d:/usr/local/hc/emacs/emacs-20.3.1/lisp/sml-mode-3.3/sml-mode.html" '(14189 20611 365000) url-global-history-hash-table)
+(cl-puthash "http://www.cs.indiana.edu/elisp/w3/styles/w3.css" '(14127 1289 354000) url-global-history-hash-table)
+(cl-puthash "http://www.altera.gr/dsouflis/tinyscm.html" '(14127 1307 610000) url-global-history-hash-table)
+(cl-puthash "http://www.cs.washington.edu/homes/voelker/ntemacs.html" '(14127 1385 783000) url-global-history-hash-table)
+(cl-puthash "file:d:/usr/local/hc/emacs/w3/w3-4.0pre.39/etc/default.css" '(14189 20611 245000) url-global-history-hash-table)
+(cl-puthash "http://www.cs.indiana.edu/elisp/w3/docs.html" '(14127 1287 982000) url-global-history-hash-table)
+(cl-puthash "file:d:/home/carr/.sync/.esync/j.html" '(14129 48234 40000) url-global-history-hash-table)
+

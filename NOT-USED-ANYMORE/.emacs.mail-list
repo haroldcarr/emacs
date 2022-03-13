@@ -1,0 +1,175 @@
+;;;;
+;;;; Created       : 1999 May 03 (Mon) 19:33:38 by Harold Carr.
+;;;; Last Modified : 1999 Sep 11 (Sat) 08:35:17 by Harold Carr.
+;;;;
+
+(defmacro comment (&rest x) nil)
+(comment "put these either in mail list or address book"
+	SUN 650-960-1300
+
+	Mohana Ramanujam Tibco 415-846-5245
+	Suhas Patil 510-623-8300
+	Mark Ericson (ex-Novell)
+	Keven Tyson (OMG Ontology/Clos, TIBCO question)
+	Kevin Lewis 801-466-3196
+	Graham Hamilton
+	Rohit Garg
+	Henry Wolking
+	Jack Vetterli
+	Stan Shebs
+	Jim Ambras
+	Neguine
+	Clement Leung
+	Arun
+	Mark Scott Johnson
+	Chuck Hansen
+	Al Davis
+	Martin Griss
+	Sun Authors
+	Vivek Nagar
+	Rod McChesney
+	Rick Cattell
+	Jeff Nisewanger
+	Mark Hapner
+	Seth White
+	Gary Lindstrom
+	Ravindra
+	Jay Lepreau
+	Gregor Kiczales
+	Bruce Martin 415-655-3744 work
+	Dan Miranker
+	Marilyn Lerner 204-786-5465
+	Bill Cox
+	Julian Padget
+	David Heisser	53539
+	Bob Kessler
+	Leigh Stoller
+	Jed Krohnfeldt
+	Ken Cavanaugh
+	Chris Callsen
+	
+------------------------------------------------------------------------------
+To: Subodh Bapat <subodh.bapat@eng>, Larry Cable <larry.cable@eng>,
+        Harold Carr <harold.carr@eng>, Rick Cattell <rcattell@eng>,
+        Bruce Elder <bruce.elder@eng>, Shel Finklestein <shel.finkelstein@eng>,
+        Rohit Garg <rohit.garg@eng>, Michel Gien <michel.gien@france.sun.com>,
+        Rob Gingell <rob.gingell@eng>, David Heisser<david.heisser@eng>,
+        Greg Nuyens <greg.nuyens@eng>, Graham Hamilton <graham.hamilton@eng>,
+        Christian Jacquemot <christian.jacquemot@france>,
+        Hal Jespersen <hal.jespersen@eng>, Yousef Khalidi <yousef.khalidi@eng>,
+        Jeff Nisewanger <jeff.nisewanger@eng>,
+        Karsten Riemer <karsten.riemer@east>, Alan Snyder <alan.snyder@eng>,
+        Ken Urquhart <ken.urquhart@eng>, Brent Welsch <brent.welch@eng>,
+        Karl Matzke <karl.matzke@eng>, Michael Condry <michael.condry@eng>,
+        Roger Martin <rjmartin@eng.sun.com>
+From: Roger Martin <rjmartin@eng.sun.com>
+
+------------------------------------------------------------------------------
+
+To: rohit.garg@Eng, vivek.nagar@Eng, rod.mcchesney@Eng, connie.weiss@Eng, anita.jindal@Eng, david.heisser@Eng,  anil.vijendran@Eng, sanjeev.krishnan@Eng, seth.white@Eng, mark.hapner@Eng, jeff.nisewanger@Eng, christian.callsen@Eng, janet.koenig@Eng, ken.cavanaugh@Eng, terena.chinnfujii@Eng, jeff.dinkins@Eng, chung_le@claris.com, rick.cattell@Eng, rita.marks@Eng, swee.lim@Eng, whei-ling.chang@Eng, ellen.siegel@Eng, alan.snyder@eng
+
+Subject: NEO/Carr Goodbye Reunion Lunch
+
+RSVP:
+
+Christian Callsen
+Harold Carr
+Rick Cattell
+Ken Cavanaugh
+Whei-ling Chang
+Rohit Garg
+David Heisser
+Anita Jindal
+Janet Koenig
+Sanjeev Krishnan
+Rita L. Marks
+Vivek Nagar
+Jeff Nisewanger
+Ellen Siegel
+Alan Snyder
+Anil K. Vijendran
+Seth White
+)
+
+(comment
+"peter valsamis mailing list"
+ Beth Custer <b1custer@sirius.com>
+ Bob Ostertag <BOstertag@aol.com>
+ Dan Plonsey <plonsey@sunra.berkeley.edu>
+ Dana Reason <dreason@ucsd.edu>
+ Derk Richardson <derk13@aol.com>
+ Sweatyshop@aol.com
+ Graham Connah <GrahamCo@aol.com>
+ gino robair <gino@rastascan.com>
+ Matthew Goodheart <mgheart@LanMinds.Com>
+ Sean Zitello <spazello@mindspring.com>
+)
+
+(define-mail-alias "test" "carr@cs.utah.edu harold.carr@sun.com" nil)
+
+(defvar hc-utah-cs-friends
+  "ald@cs.utah.edu
+   bdb@cs.utah.edu
+   crj@cs.utah.edu
+   cruse@cs.utah.edu
+   darby@cs.utah.edu
+   elb@cs.utah.edu
+   ferretti@cs.utah.edu
+   fish@cs.utah.edu
+   ganesh@cs.utah.edu
+   gary@cs.utah.edu
+   gb@phobos.com
+   hanscom@cs.utah.edu
+   jeff.knell@hsc.utah.edu
+   jhm@chpc.utah.edu
+   kessler@cs.utah.edu
+   lepreau@cs.utah.edu
+   mflatt@cs.rice.edu
+   mjb@cs.utah.edu
+   retrac@cs.utah.edu
+   rfr@cs.utah.edu
+   rose@cs.utah.edu
+   stoller@cs.utah.edu
+   swanson@cs.utah.edu
+   tch@cs.utah.edu
+   tim.burns@part.net
+   weiler@cs.utah.edu
+   yih@cs.utah.edu")
+
+(defvar hc-utah-friends
+  "asitmain.sclow@email.state.ut.us
+   cheria@burgoyne.com
+   claw@hass.usu.edu
+   csmain.ccrowthe@email.state.ut.us
+   DAVIDSUCEC@aol.com
+   fyanow@aros.net
+   jack@spectraldesign.com
+   jhonluz@aros.net
+   kevin@performanceaudio.com
+   kokinis@ganymede.net
+   okcorral@micron.net
+   pamain.ccrowthe@state.ut.us
+   pz@aros.net
+   songdog@infowest.com
+   swilliams@media.utah.edu")
+
+(defvar hc-utah-pr-only
+  "csmart@slweekly.com
+   fridays@morgan.cs.utah.edu")
+
+(define-mail-alias
+  "utah-cs"
+  hc-utah-cs-friends
+  nil)
+
+(define-mail-alias
+  "utah-friends"
+  (concat hc-utah-cs-friends " " hc-utah-friends)
+  nil)
+
+(define-mail-alias
+  "utah-pr"
+  (concat hc-utah-cs-friends " " hc-utah-friends " " hc-utah-pr-only)
+  nil)
+
+;;; End of file.

@@ -1,0 +1,52 @@
+(load-file (expand-file-name "~/.sync/.esync/emacs/.emacs"))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(display-time-mode t)
+ '(load-home-init-file t t)
+ '(nxml-child-indent 4)
+ '(org-export-htmlize-output-type (quote css))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(tool-bar-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(font-lock-builtin-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+ '(font-lock-comment-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+ '(font-lock-constant-face ((((class color) (min-colors 88) (background light)) (:foreground "black"))))
+ '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "White"))))
+ '(font-lock-keyword-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+ '(font-lock-string-face ((((class color) (min-colors 88) (background light)) (:foreground "blue"))))
+ '(font-lock-type-face ((((class color) (min-colors 88) (background light)) (:foreground "Black"))))
+ '(font-lock-variable-name-face ((((class color) (min-colors 88) (background light)) (:foreground "cornsilk"))))
+ '(font-lock-warning-face ((((class color) (min-colors 88) (background light)) (:foreground "Black" :weight bold))))
+ '(js2-error-face ((t (:foreground "black"))))
+ '(js2-external-variable-face ((t (:foreground "white"))))
+ '(js2-function-param-face ((t (:foreground "black"))))
+ '(js2-instance-member-face ((t (:foreground "white"))))
+ '(js2-jsdoc-html-tag-delimiter-face ((t (:foreground "white"))))
+ '(js2-jsdoc-html-tag-name-face ((t (:foreground "white"))))
+ '(js2-jsdoc-tag-face ((t (:foreground "black"))))
+ '(js2-jsdoc-type-face ((t (:foreground "black"))))
+ '(js2-jsdoc-value-face ((t (:foreground "black"))))
+ '(js2-magic-paren-face ((t (:foreground "white"))))
+ '(js2-private-function-call-face ((t (:foreground "white"))))
+ '(js2-private-member-face ((t (:foreground "white"))))
+ '(js2-warning-face ((t (:foreground "white"))))
+ '(proof-locked-face ((t (:background "#8d8d8d")))))
+
+
+;;; This was installed by package-install.el.
+;;; This provides support for the package system and
+;;; interfacing with ELPA, the package archive.
+;;; Move this code earlier if you want to reference
+;;; packages in your .emacs.
+;(when
+;    (load
+;     (expand-file-name "~/.emacs.d/elpa/package.el"))
+;  (package-initialize))
