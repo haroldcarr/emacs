@@ -358,7 +358,9 @@
 
 (when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
   (hcSection "Haskell")
-  (use-package hc-haskell))
+  (use-package hc-haskell)
+  (use-package hc-haskell-pick)
+)
 
 ;;(use-package intero
 ;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)

@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Mar 08 (Tue) 09:00:12 by Harold Carr.
+;;;; Last Modified : 2022 Mar 13 (Sun) 13:44:27 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -12,6 +12,10 @@
 ;;; Haskell Packages
 
 (require 'ido)
+
+(use-package flycheck
+  :ensure t
+  :config (global-flycheck-mode 1))
 
 (use-package haskell-mode
   :ensure t
@@ -38,25 +42,6 @@
 ;;  :defer t
 ;;  :diminish ""
 ;;  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
-
-(defvar hc-haskell)
-
-(defun hc-pick-haskell-support ()
-  "Prompt pick from a list."
-  (interactive)
-  (let ((choices '("hls" "none")))
-    (message "%s" (ido-completing-read "which haskell?: " choices))))
-
-(let ((pick (hc-pick-haskell-support)))
-  (cond ((equal pick "hls")
-         (message "Using HLS")
-         (setq hc-haskell 'hls)
-         (use-package hc-haskell-hls))
-        ((equal pick "none")
-         (message "NO HASKELL SUPPORT")
-         (setq hc-haskell 'none))
-        (t
-         (message "NO HASKELL MATCH %s" pick))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/knupfer/haskell-emacs

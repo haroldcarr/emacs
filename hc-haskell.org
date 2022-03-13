@@ -1,6 +1,8 @@
 #+OPTIONS: num:nil toc:nil
 #+Title: Haskell / Emacs Dev Env
 
+DEPRECATED : use hc-haskell-hls.el
+
 This is my emacs/haskell development environment.
 
 I use both [[https://commercialhaskell.github.io/intero/][Intero]] and [[https://github.com/jyp/dante][Dante]]
@@ -11,7 +13,7 @@ I use both [[https://commercialhaskell.github.io/intero/][Intero]] and [[https:/
 Intero seems to work better with Stack than Dante.
 
 # Created       : 2017 Oct 24 (Tue) 17:20:43 by Harold Carr.
-Last Modified : 2017 Oct 26 (Thu) 08:14:50 by Harold Carr.
+Last Modified : 2022 Mar 13 (Sun) 13:22:13 by Harold Carr.
 
 ------------------------------------------------------------------------------
 * setup
