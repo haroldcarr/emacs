@@ -1,12 +1,3 @@
-==============================================================================
-26.2
-
-https://emacs.stackexchange.com/questions/47902/another-way-to-install-emacs-on-os-x-using-homebrew
-points to:
-https://github.com/d12frosted/homebrew-emacs-plus
-
-/usr/local/Cellar/emacs-plus/26.2
-
 ------------------------------------------------------------------------------
 https://github.com/d12frosted/homebrew-emacs-plus
 
@@ -14,6 +5,13 @@ brew tap  d12frosted/emacs-plus
 brew info            emacs-plus
 
 brew install         emacs-plus --with-ctags --without-spacemacs-icon
+
+28.1
+April 16, 2022
+brew tap  d12frosted/emacs-plus
+brew install         emacs-plus --with-ctags
+brew uninstall       emacs-plus@28
+brew install         emacs-plus --with-ctags --with-imagemagick --with-native-comp
 
 27.1
 June 13, 2020 : brew updated itself when I was installing something unrelated
@@ -34,6 +32,15 @@ June 14, 2020 : solved via
 lrwxr-xr-x  1 carr  admin  20 Jun 13 08:47 /usr/local/opt/libffi@ -> ../Cellar/libffi/3.3
 > cd /usr/local/Cellar/libffi/3.3/lib
 > ln -s libffi.7.dylib libffi.6.dylib
+
+==============================================================================
+26.2
+
+https://emacs.stackexchange.com/questions/47902/another-way-to-install-emacs-on-os-x-using-homebrew
+points to:
+https://github.com/d12frosted/homebrew-emacs-plus
+
+/usr/local/Cellar/emacs-plus/26.2
 
 ==============================================================================
 26.1

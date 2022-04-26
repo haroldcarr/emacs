@@ -7,9 +7,9 @@
     (pdf-tools-install)
     ;; THIS WORKS
     (setq pdf-annot-list-format
-          '((page . 3)
-            (type . 10)
-            (label . 24)
+          '((page     .  3)
+            (type     . 10)
+            (label    . 24)
             (contents . 56)))
     (global-set-key (kbd "C-c z") 'pdf-view-midnight-minor-mode)
   )

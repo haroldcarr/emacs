@@ -88,7 +88,7 @@
 
 (hcSection "Top level misc stuff")
 
-(when (member (hcMachineName) '("hcarr-mac"))
+(when (member (hcMachineName) '("o2020"))
   (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.
@@ -101,7 +101,6 @@
 (use-package which-key
   :ensure t
   :demand
-  :pin melpa
   :init (which-key-mode))
 
 ;; rather than highlight or off

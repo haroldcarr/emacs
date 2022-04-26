@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Feb 07 (Mon) 11:04:15 by Harold Carr.
+;;;; Last Modified : 2022 Apr 22 (Fri) 13:12:04 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -301,14 +301,14 @@
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
 
-(when (member (hcMachineName) '("hcmb" "hcarr-mac"))
+(when (member (hcMachineName) '("o2020" "o2015"))
   (hcSection "Markdown")
   (use-package hc-markdown))
 
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(when (member (hcMachineName) '("hcmb" "hcarr-mac"))
+(when (member (hcMachineName) '("o2020" "o2015"))
   (hcSection "PDF")
   (use-package hc-pdf))
 

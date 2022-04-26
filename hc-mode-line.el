@@ -25,8 +25,8 @@
     input-method                        ;; ??
     selection-info                      ;; number of characters or lines selected
     (major-mode  :priority 79)          ;; current major mode e.g., Emacs-Lisp, LitHaskell
-    (minor-modes :when active
-                 :priority 9)
+;;    (minor-modes :when active
+;;                 :priority 9)
 ;;    (((minor-modes                      ;; currently enabled minor modes
 ;;       :separator spaceline-minor-modes-separator) process) :when active)
     ((flycheck-error                    ;; number of errors

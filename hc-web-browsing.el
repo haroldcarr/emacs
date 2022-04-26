@@ -13,10 +13,11 @@
 
 (setq
   ;; See: http://ergoemacs.org/emacs/emacs_set_default_browser.html
- browse-url-browser-function
- '(("haroldcarr\\.com"            . eww-browse-url)
-   ("."                           . osx-browse-url-chrome)
-  ))
+  browse-url-handlers
+  '(("haroldcarr\\.com"            . eww-browse-url)
+    ;;("."                           . osx-browse-url-chrome)
+    ("."                           . osx-browse-url) ;; use default
+   ))
 
 (defun hc-hoogle-eww (s)
   "."

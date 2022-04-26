@@ -4,9 +4,9 @@
 
 ;;; Code:
 
-(defmacro helm-aif (test then &optional else)
-  `(let ((it ,test))
-     (if it ,then ,else)))
+;;(defmacro helm-aif (test then &optional else)
+;;  `(let ((it ,test))
+;;     (if it ,then ,else)))
 
 ;; SYNC WITH HELM-PROJECTILE BELOW IF THIS CHANGES
 (defvar helm-M-x-fuzzy-match)
