@@ -14,18 +14,16 @@
 
 ;;; Code:
 
-(with-no-warnings
-(if (not (fboundp 'spacemacs-mode))
-    (use-package magit
-     :config
-     (progn
-       (setq git-commit-summary-max-length 80)
-       (setq git-commit-fill-column        80)
-       )))
+(use-package magit
+  :config
+  (progn
+    (setq magit-git-executable          "/usr/local/bin/git")
+    (setq git-commit-summary-max-length 80)
+    (setq git-commit-fill-column        80)
+  )
 )
 
 ;; https://github.com/syohex/emacs-git-gutter
-(with-no-warnings
 (use-package git-gutter
   :config
   (progn
@@ -33,7 +31,7 @@
     ;; HC: enabling this breaks git-gutter
     ;; to use git-gutter and linum-mode
     ;;(git-gutter:linum-setup)
-    ))
+  )
 )
 
 (provide 'hc-git)

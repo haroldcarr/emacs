@@ -1,4 +1,25 @@
-------------------------------------------------------------------------------
+==============================================================================
+TIPS
+
+;; show everything load in order of loading
+(print (mapconcat 'car (reverse load-history) "\n"))
+
+AGDA- C-c C-x M-;    : comment to end
+
+select region, then
+C-x C-i              : then arrow left/right to indent
+
+==============================================================================
+update Mac OS
+
+- update OS
+- xcode-select --install
+- brew update
+- brew upgrade, or
+  - brew reinstall gcc
+  - brew reinstall libgccjit
+
+==============================================================================
 https://github.com/d12frosted/homebrew-emacs-plus
 
 brew tap  d12frosted/emacs-plus

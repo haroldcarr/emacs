@@ -1,7 +1,0 @@
-spac/emacs rocks
-
-AGDA- C-c C-x M-;    : comment to end
-
-select region, then
-C-x C-i              : then arrow left/right to indent
-

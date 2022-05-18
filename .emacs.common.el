@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Apr 22 (Fri) 13:12:04 by Harold Carr.
+;;;; Last Modified : 2022 Apr 29 (Fri) 17:25:21 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -174,6 +174,16 @@
 ;; * Top level misc
 
 (hcSection "Top level misc stuff")
+
+;; https://www.emacswiki.org/emacs/GccEmacs#h5o-13
+;; tell package.el to do ahead-of-time native compilation
+;;
+;; native-comp...
+(setq package-native-compile t)
+(defun hc-do-native-compile ()
+  "."
+  (interactive)
+  (native-compile-async (concat (hcEmacsDir) "/.vanilla.emacs.d/elpa")  'recursively))
 
 ;; move/copy between two dired windows
 (defvar dired-dwim-target)

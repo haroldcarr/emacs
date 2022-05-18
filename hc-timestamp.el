@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 1997 Jul 02 (Wed) 00:28:06 by Harold Carr.
-;;;; Last Modified : 2017 Oct 24 (Tue) 18:02:30 by Harold Carr.
+;;;; Last Modified : 2022 Apr 26 (Tue) 20:10:34 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -99,8 +99,8 @@
 
 (add-hook 'after-change-functions 'remember-change-time)
 
-(add-hook 'write-file-hooks ;;'local-write-file-hooks
-	  '(lambda ()
+(add-hook 'write-file-functions ;;'local-write-file-hooks
+	  #'(lambda ()
 	     (if last-change-time
 		 (update-modifystamps last-change-time))))
 
