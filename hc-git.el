@@ -17,7 +17,6 @@
 (use-package magit
   :config
   (progn
-    (setq magit-git-executable          "/usr/local/bin/git")
     (setq git-commit-summary-max-length 80)
     (setq git-commit-fill-column        80)
   )

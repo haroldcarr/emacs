@@ -12,12 +12,41 @@ C-x C-i              : then arrow left/right to indent
 ==============================================================================
 update Mac OS
 
-- update OS
-- xcode-select --install
-- brew update
-- brew upgrade, or
-  - brew reinstall gcc
-  - brew reinstall libgccjit
+update OS
+
+xcode-select --install
+# or maybe 1 or in addition to (to get up-to-date command line tools)
+1.
+softwareupdate --all --install --force
+2.
+sudo rm -rf /Library/Developer/CommandLineTools
+sudo xcode-select --install
+3. #  manually  https://developer.apple.com/download/all/
+/usr/bin/xcodebuild -version
+
+brew update
+
+brew upgrade
+# or (for native compile)
+brew reinstall gcc
+brew reinstall libgccjit
+
+brew uninstall       emacs-plus@28
+
+brew install         emacs-plus --with-ctags --with-imagemagick --with-native-comp
+
+# https://github.com/NixOS/nix/issues/3051#issuecomment-526763058
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+# http://fluffynukeit.com/installing-essential-software-in-nixos/
+nix-env -iA nixpkgs.gitAndTools.git
+# or
+nix profile install nixpkgs#gitAndTools.git
+# also set 'magit-git-executable' in 'hc-git.el'
+# because emacs is adding just to path: e.g., brew shims
+
+# the install of git is to workaround:
+# https://github.com/d12frosted/homebrew-emacs-plus/issues/469
 
 ==============================================================================
 https://github.com/d12frosted/homebrew-emacs-plus
