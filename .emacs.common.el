@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Apr 29 (Fri) 17:25:21 by Harold Carr.
+;;;; Last Modified : 2022 Jul 06 (Wed) 08:18:29 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -110,6 +110,23 @@
 ;; * Executing shell commands
 
 (hcSection "Shell Commands")
+
+;; SHELLS
+;; eshell
+;;   Implemented in Elisp. Integrated with Emacs. Runs on Windows.
+;;   Does not support terminal manipulation capabilities (e.g., ncdu, nmtui, ...).
+;; shell
+;;    Uses standard shell (e.g., bash). reads input from Emacs, sends it to shell, displays shell output.
+;;    Does not support interactive commands that handle how output should be displayed (e.g., htop).
+;; term
+;;    Terminal emulator written in Elisp. Runs a shell (like terminal emulator Gnome Terminal).
+;;    Program output can manipulate output using escape codes. So htop will work
+;;    But term and ansi-term do not implement all escapes codes.
+;;    Some programs do not work properly. Has inferior performance.
+;; vterm
+;;    https://github.com/akermu/emacs-libvterm
+;;    Terminal emulator. Core is written in C, libvterm.
+;;    Fast and works with most terminal applications.
 
 (defun hcShExecCmd (name &rest args)
   "NAME ARGS: execute a shell command."

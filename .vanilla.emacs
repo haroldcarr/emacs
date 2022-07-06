@@ -58,6 +58,7 @@
 ;;        ("melpa-stable" . "http://stable.melpa.org/packages/")
 
 (package-initialize)
+(setq package-enable-at-startup nil)
 
 ;; can't get rid of warning
 ;; https://stackoverflow.com/questions/5019724/in-emacs-what-does-this-error-mean-warning-cl-package-required-at-runtime
