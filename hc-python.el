@@ -5,17 +5,13 @@
 ;;; Code:
 
 (with-no-warnings
-  (use-package geiser
-  :ensure t
-  :config (progn (setq geiser-racket-binary
-                       "/Applications/Racket v6.9/bin/racket")
-                 (setq geiser-racket-gracket-binary
-                       "/Applications/Racket v6.9/bin/gracket-text")))
+  (use-package python-mode
+  :ensure t)
+
   (use-package elpy
     :ensure t
     :init
     (elpy-enable))
-
 
   ;; If elpy cannot find the symbol then try a rgrep search.
   ;;

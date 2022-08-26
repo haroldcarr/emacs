@@ -354,6 +354,14 @@
 )
 
 ;; ------------------------------------------------------------------------------
+;; * Python
+
+(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
+  (hcSection "Python")
+  (use-package hc-python)
+)
+
+;; ------------------------------------------------------------------------------
 ;; * Haskell
 
 (when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
