@@ -1,6 +1,38 @@
 https://github.com/politza/pdf-tools
 new maintainer:
 https://github.com/vedang/melpa/commit/a6321fb947f6461ac9b673fe47fc7c27ffae09ee
+https://github.com/vedang/pdf-tools
+
+------------------------------------------------------------------------------
+* Mac 2022-08-22
+
+I get an error when upgrading AND when try by hand (shown below)
+
+brew install poppler
+brew install automake
+brew install cask
+export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/opt/libffi/lib/pkgconfig/:/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig"
+git clone https://github.com/vedang/pdf-tools
+cd pdf-tools
+make EMACS="/usr/local/Cellar/emacs-plus@28/28.1/bin/emacs" -s
+
+
+ERROR:
+synctex_parser.c:8421:12: error: static declaration of 'vasprintf' follows non-static declaration
+static int vasprintf(char **ret,
+           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/stdio.h:370:6: note: 
+      previous declaration is here
+int      vasprintf(char ** __restrict, const char * __restrict, va_list) __printflike(2, 0);
+         ^
+1 error generated.
+make[2]: *** [libsynctex_a-synctex_parser.o] Error 1
+make[1]: *** [all] Error 2
+make: *** [server/epdfinfo] Error 2
+
+
+------------------------------------------------------------------------------
+a long time ago
 
 how I installed on my Mac
 

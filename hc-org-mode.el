@@ -20,6 +20,8 @@
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
+  ;; TODO: find a replacement
+  ;; \C-c & is the normal keybinding for org-mark-ring-goto, but it is taken by yasnippet 
 
   ;;;
   ;;; Org Misc
@@ -92,7 +94,7 @@
               (org-defkey org-mode-map "\C-c]"    'undefined)))
 
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority ?E)
+  (setq org-lowest-priority  ?E)
   (setq org-default-priority ?E)
 
   (setq org-todo-keywords
@@ -139,9 +141,9 @@
 
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((emacs-lisp . t)
+   '((ditaa      . t)
      (dot        . t)
-     (ditaa      . t)
+     (emacs-lisp . t)
      (gnuplot    . t)
      (haskell    . t)
      (latex      . t)

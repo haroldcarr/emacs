@@ -11,7 +11,7 @@
   (lsp-eldoc-enable-hover             t)
   (lsp-enable-symbol-highlighting     t)
   (lsp-headerline-breadcrumb-enable   t)
-  (lsp-lens-enable                    nil)
+  (lsp-lens-enable                    t)
   (lsp-modeline-code-actions-enable   t)
   (lsp-modeline-diagnostics-enable    t)
   ;; manual request via `lsp-signature-activate`
@@ -46,9 +46,9 @@
   (lsp-ui-doc-position               'top)
   (lsp-ui-doc-show-with-cursor       t)
   (lsp-ui-doc-show-with-mouse        t)
-  (lsp-ui-sideline-enable            nil)
+  (lsp-ui-sideline-enable            t)
   (lsp-ui-sideline-show-code-actions t)
-  (lsp-ui-sideline-show-hover        nil)
+  (lsp-ui-sideline-show-hover        t)
 )
 
 (use-package lsp-haskell
