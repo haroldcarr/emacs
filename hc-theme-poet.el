@@ -22,7 +22,7 @@
 ;; (org-bullets 1)
 
 (use-package poet-theme
-  :ensure t
+  :ensure nil
   :demand
   :init (load-theme 'poet 'no-confirm))
 

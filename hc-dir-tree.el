@@ -10,7 +10,7 @@
 
 
 (use-package treemacs
-  :ensure t
+  :ensure nil
   :defer t
   :init
   (with-eval-after-load 'winum
@@ -82,25 +82,25 @@
 
 ;;(use-package treemacs-evil
 ;;  :after treemacs evil
-;;  :ensure t)
+;;  :ensure nil)
 
 (use-package treemacs-projectile
   :after treemacs projectile
-  :ensure t)
+  :ensure nil)
 
 (use-package treemacs-icons-dired
   :after treemacs dired
-  :ensure t
+  :ensure nil
   :config (treemacs-icons-dired-mode)
 )
 
 (use-package treemacs-magit
   :after treemacs magit
-  :ensure t)
+  :ensure nil)
 
 (use-package treemacs-persp ;;treemacs-persective if you use perspective.el vs. persp-mode
   :after treemacs persp-mode ;;or perspective vs. persp-mode
-  :ensure t
+  :ensure nil
   :config (treemacs-set-scope-type 'Perspectives))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -122,7 +122,7 @@
 
 (use-package dired-sidebar
   :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
-  :ensure t
+  :ensure nil
   :commands (dired-sidebar-toggle-sidebar)
   :config
   (cond
@@ -146,7 +146,7 @@
 
   (use-package all-the-icons-dired
     ;; M-x all-the-icons-install-fonts
-    :ensure t
+    :ensure nil
     :commands (all-the-icons-dired-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -156,7 +156,7 @@
 ;; M-x filetree-show ...
 
 (use-package filetree
-  :ensure t)
+  :ensure nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

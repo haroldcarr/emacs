@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2017 Oct 19 (Thu) 10:59:07 by Harold Carr.
+;;;; Last Modified : 2022 Oct 28 (Fri) 12:16:51 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -26,7 +26,7 @@
            haskell-stylish-on-save      hindent-reformat-buffer-on-save))
 
 (use-package hindent
-  :ensure t
+  :ensure nil
   :config (progn (add-hook 'haskell-mode-hook 'hindent-mode)
                  (custom-set-variables
                   '(hindent-indent-size 4)

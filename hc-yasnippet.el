@@ -5,7 +5,7 @@
 ;;; Code:
 
 (use-package yasnippet
-  :ensure t
+  :ensure nil
   :demand
   :diminish (yas-minor-mode . "")
   :init

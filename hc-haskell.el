@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Mar 13 (Sun) 13:44:27 by Harold Carr.
+;;;; Last Modified : 2022 Oct 28 (Fri) 12:17:27 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -14,11 +14,11 @@
 (require 'ido)
 
 (use-package flycheck
-  :ensure t
+  :ensure nil
   :config (global-flycheck-mode 1))
 
 (use-package haskell-mode
-  :ensure t
+  :ensure nil
   :defer t
   ;;:bind (:map haskell-mode-map
   ;;            ("M-g i" . haskell-navigate-imports)
@@ -34,11 +34,11 @@
 )
 
 (use-package haskell-snippets
-  :ensure t
+  :ensure nil
   :defer t)
 
 ;;(use-package hlint-refactor
-;;  :ensure t
+;;  :ensure nil
 ;;  :defer t
 ;;  :diminish ""
 ;;  :init (add-hook 'haskell-mode-hook #'hlint-refactor-mode))
@@ -47,7 +47,7 @@
 ;; https://github.com/knupfer/haskell-emacs
 
 ;; (use-package haskell-emacs
-;;   :ensure t
+;;   :ensure nil
 ;;   :defer t)
 
 ;; (setq haskell-emacs-build-tool (quote stack))

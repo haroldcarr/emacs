@@ -18,7 +18,7 @@
 (package-initialize)
 
 (use-package which-key
-  :ensure t
+  :ensure nil
   :demand
   :pin melpa
   :init (which-key-mode))

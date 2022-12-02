@@ -17,7 +17,7 @@
 (defvar helm-recentf-fuzzy-match)
 
 (use-package helm
-  :ensure t
+  :ensure nil
   :demand
   :diminish ""
   :bind (("C-M-y"     . helm-show-kill-ring)
@@ -43,7 +43,7 @@
 
 ;; SYNC WITH HELM ABOVE IF THIS CHANGES
 (use-package helm-projectile
-  :ensure t
+  :ensure nil
   :after projectile
   :demand
   :init

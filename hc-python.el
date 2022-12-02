@@ -6,12 +6,13 @@
 
 (with-no-warnings
   (use-package python-mode
-  :ensure t)
+    :ensure nil)
 
   (use-package elpy
-    :ensure t
+    :ensure nil
+    :defer  t
     :init
-    (elpy-enable))
+    (advice-add 'python-mode :before 'elpy-enable))
 
   ;; If elpy cannot find the symbol then try a rgrep search.
   ;;

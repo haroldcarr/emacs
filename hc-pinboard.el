@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Feb 07 (Mon) 10:32:18 by Harold Carr.
+;;;; Last Modified : 2022 Oct 28 (Fri) 12:19:26 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -29,7 +29,7 @@
            (pinboard))
           ((equal pick "pinboard-list")
            (message (concat "using " pick))
-           (use-package pinboard-api :ensure t)
+           (use-package pinboard-api :ensure nil)
            (setq hc-pinboard pick)
            (use-package hc-pinboard-list
              :config

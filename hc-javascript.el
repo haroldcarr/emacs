@@ -10,7 +10,7 @@
 (defvar js2-mode)
 (defvar js-mode-map)
 (use-package js2-mode
-  ;;:ensure t
+  ;;:ensure nil
   :config
   (progn
     (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -21,7 +21,7 @@
 (defvar js2-refactor)
 (defvar js2-mode-map)
 (use-package js2-refactor
-  ;;:ensure t
+  ;;:ensure nil
   :config
   (progn
     (add-hook 'js2-mode-hook #'js2-refactor-mode)
@@ -32,7 +32,7 @@
 
 (defvar xref-js2)
 (use-package xref-js2
-  ;;:ensure t
+  ;;:ensure nil
   :config
   (progn
     (add-hook 'js2-mode-hook
@@ -43,13 +43,13 @@
 
 (defvar company)
 (use-package company
-  ;;:ensure t
+  ;;:ensure nil
   )
 (defvar company-tern)
 (defvar company-backends)
 (defvar tern-mode-keymap)
 (use-package company-tern
-  ;;:ensure t
+  ;;:ensure nil
   :config
   (progn
     (add-to-list 'company-backends 'company-tern)
@@ -67,7 +67,7 @@
 ;; https://gitter.im/indium-emacs/Lobby
 
 (use-package indium
-  ;;:ensure t
+  ;;:ensure nil
   )
 
 ;; ------------------------------------------------------------------------------

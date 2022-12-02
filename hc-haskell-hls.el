@@ -47,8 +47,8 @@
   (lsp-ui-doc-show-with-cursor       t)
   (lsp-ui-doc-show-with-mouse        t)
   (lsp-ui-sideline-enable            t)
-  (lsp-ui-sideline-show-code-actions t)
-  (lsp-ui-sideline-show-hover        t)
+  (lsp-ui-sideline-show-code-actions nil)
+  (lsp-ui-sideline-show-hover        nil)
 )
 
 (use-package lsp-haskell

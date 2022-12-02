@@ -8,7 +8,7 @@
 ;; https://github.com/dengste/minimap/blob/master/minimap.el
 
 (use-package minimap
-  :ensure t
+  :ensure nil
   :config
   (custom-set-faces
    '(minimap-font-face ((t (:height 120 :family "DejaVu Sans Mono")))))
@@ -18,11 +18,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/zk-phi/sublimity
 
-;; (use-package sublimity-scroll     :ensure t)
-;; (use-package sublimity-map        :ensure t)
-;; (use-package sublimity-attractive :ensure t)
+;; (use-package sublimity-scroll     :ensure nil)
+;; (use-package sublimity-map        :ensure nil)
+;; (use-package sublimity-attractive :ensure nil)
 (use-package sublimity
-  :ensure t
+  :ensure nil
   :config
   (progn
     (setq sublimity-scroll-weight       10)

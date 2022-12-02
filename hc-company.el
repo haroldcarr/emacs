@@ -5,7 +5,7 @@
 ;;; Code:
 
 (use-package company
-  :ensure t
+  :ensure nil
   :demand
   :diminish ""
   :init
