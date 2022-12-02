@@ -4,18 +4,14 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Oct 28 (Fri) 12:17:27 by Harold Carr.
+;;;; Last Modified : 2022 Dec 02 (Fri) 08:48:21 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
-;;; Haskell Packages
-
 (require 'ido)
 
-(use-package flycheck
-  :ensure nil
-  :config (global-flycheck-mode 1))
+(use-package hc-flycheck)
 
 (use-package haskell-mode
   :ensure nil

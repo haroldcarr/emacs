@@ -23,10 +23,9 @@
 
 (use-package hc-lsp-rust)
 
-;; inline errors
-(use-package flycheck :ensure nil)
+(use-package hc-flycheck)
 
-;; Create / cleanup rust scratch projects quickly
+;; create / cleanup rust scratch projects quickly
 (use-package rust-playground :ensure nil)
 
 ;; for Cargo.toml and other config files
