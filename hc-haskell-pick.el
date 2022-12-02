@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Mar 13 (Sun) 13:24:37 by Harold Carr.
+;;;; Last Modified : 2022 Dec 02 (Fri) 08:19:12 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -23,7 +23,7 @@
   (cond ((equal pick "hls")
          (message "Using HLS")
          (setq hc-haskell-pick 'hls)
-         (use-package hc-haskell-hls))
+         (use-package hc-lsp-haskell))
         ((equal pick "none")
          (message "NO HASKELL SUPPORT")
          (setq hc-haskell-pick 'none))

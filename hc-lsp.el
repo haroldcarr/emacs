@@ -1,8 +1,13 @@
-;; https://github.com/haskell/haskell-language-server
-;; https://ianyepan.github.io/posts/emacs-ide/
+;;; hc-lsp --- Summary
 
-(add-hook 'haskell-mode-hook          #'lsp-mode)
-(add-hook 'haskell-literate-mode-hook #'lsp-mode)
+;;; Commentary:
+
+;;;;
+;;;; Created       : ...                        by Harold Carr.
+;;;; Last Modified : 2022 Dec 02 (Fri) 08:09:18 by Harold Carr.
+;;;;
+
+;;; Code:
 
 (defvar hc-lsp-mode-keymap-prefix "C-c l")
 
@@ -34,9 +39,6 @@
   (lsp-signature-render-documentation t)
 )
 
-(add-hook 'haskell-mode-hook          #'lsp-mode)
-(add-hook 'haskell-literate-mode-hook #'lsp-mode)
-
 (use-package lsp-ui
 ;;:custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
 ;;(lsp-ui-doc-background              ((t (:background "gray50"))))
@@ -50,15 +52,10 @@
   (lsp-ui-sideline-show-hover        nil)
 )
 
-(use-package lsp-haskell
-  :custom
-  (lsp-haskell-brittany-on           nil)
-  (lsp-haskell-floskell-on           nil)
-  (lsp-haskell-fourmolu-on           nil)
-  (lsp-haskell-ormolu-on             nil)
-)
-
 ;;(require 'lsp-treemacs)
 
-(provide 'hc-haskell-hls)
+
+(provide 'hc-lsp)
+
+;;; hc-lsp.el ends here
 
