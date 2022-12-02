@@ -1,0 +1,91 @@
+emacs-pdf.el -- Emacs library to print buffer to PDF file.
+
+* Example configuration
+
+   (require 'pdf)
+
+* Example usage
+
+   M-x pdf-buffer
+
+or
+
+   M-x pdf-region
+
+in example.txt will create example.txt.pdf file.
+
+Some variables can be customized in pdf and ps groups.
+
+* Download
+
+   git clone https://logand.com/git/emacs-pdf.git
+
+* Atom Feed
+
+see https://logand.com/sw/emacs-pdf/atom.xml
+
+* Why?
+
+PDF have (unfortunatelly) become the standard format for exchanging
+documents.
+
+Emacs does not have a simple way of creating PDF documents yet.
+
+There are many ways to create PDF documents in Emacs currently but all
+of them require installation of huge external dependencies.
+
+Printing from Emacs also pretty much depends on unsafe, unportable and
+obsolete PostScript.
+
+* What
+
+emacs-pdf.el solves the above issues by creating PDF documents
+directly in Emacs without any external dependencies.
+
+The code is rather short but already takes it quite close towards the
+goal.  Pages are automatically broken and counted, page headers and
+footers are supported and a few things like font type or size can be
+customized.
+
+* TODO
+
+unicode support: The biggest missing piece is support for non-ASCII
+characters.  Emacs has already the best support for international
+input and output of any software I know.  It would be nice to extend
+that also to PDF generation.  I myself use several input methods and
+characters not supported by PDF out of the box.  This is complex but
+essential.
+
+per file customizations: Should this be stored in a separate file
+(instead of in-file syntax)?  I would really like to customize page
+headers and footers and font type and size per file.
+
+justification: It would be nice to justify paragraphs.  This would
+require understanding of font metrics and will bring quite a lot of
+complexity.
+
+box justification: Justify the whole box right but justify the text
+inside the box left.  Does it need special syntax or would a
+convention be enough?
+
+ruler: It would be nice to suport tab-stop-list or something like
+that.
+
+multiple columns: It would be nice to output text in more columns.  It
+should be possible to control where exactly to turn it on and off so
+maybe we need some kind of syntax for this?  If there is syntax for
+this kind of stuff, what about syntax for justification and ruler?
+
+colors: It would be nice to support color output.  What would be a
+good way to have Emacs in reverse video (screen with black background)
+but still support output to white paper without fiddling with faces
+too much?
+
+tables, pictures etc: Is there a reasonable subset for rich documents
+without inventing new document format and reinventing TeX, roff etc?
+Or just use abw or odt files directly?
+
+* Discussion
+
+see
+https://www.reddit.com/r/emacs/comments/guffg5/emacspdfel_emacs_library_to_print_buffer_to_pdf/
