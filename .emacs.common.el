@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Jul 06 (Wed) 08:18:29 by Harold Carr.
+;;;; Last Modified : 2022 Oct 28 (Fri) 15:23:00 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -282,6 +282,9 @@
 ;; TRAMP : do not ask to save passwords
 (setq auth-source-save-behavior nil)
 
+;; have 'M-x dictionary-search' use
+(setq dictionary-server "dict.org")
+
 ;;(when (hcIsVersionP "28")
 ;;  (setc tab-bar-format '(tab-bar-format-global)
 ;;        tab-bar-mode t))
@@ -443,7 +446,8 @@
   :defer t
   :config
   (progn (use-package hc-org-mode)
-         (hc-org-mode)))
+         (hc-org-mode)
+         (use-package hc-noter)))
 )
 ;; ------------------------------------------------------------------------------
 ;; * Tags
