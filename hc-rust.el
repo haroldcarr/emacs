@@ -21,8 +21,6 @@
               ("C-c C-c h" . lsp-ui-doc-glance))
   )
 
-(use-package hc-lsp-rust)
-
 (use-package hc-flycheck)
 
 ;; create / cleanup rust scratch projects quickly
