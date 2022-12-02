@@ -12,8 +12,7 @@
   :config
   (custom-set-faces
    '(minimap-font-face ((t (:height 120 :family "DejaVu Sans Mono")))))
-  )
-  )
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/zk-phi/sublimity
@@ -45,7 +44,8 @@
     ;;(sublimity-attractive-hide-vertical-border)
     ;;(sublimity-attractive-hide-fringes)
     ;;(sublimity-attractive-hide-modelines)
-  ))
+  )
+)
 
 ;; Enable via: (sublimity-mode 1)
 

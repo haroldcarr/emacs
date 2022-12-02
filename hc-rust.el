@@ -7,7 +7,7 @@
 
 ;; rustic = basic rust-mode + additions
 (use-package rustic
-  :ensure
+  :ensure nil
   :bind (:map rustic-mode-map
               ("M-j"       . lsp-ui-imenu)
               ("M-?"       . lsp-find-references)
@@ -23,7 +23,7 @@
 
 ;; for rust-analyzer integration
 (use-package lsp-mode
-  :ensure
+  :ensure nil
   :commands lsp
   :custom
   ;; (lsp-eldoc-render-all                                                 t)
@@ -42,13 +42,13 @@
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
 ;; inline errors
-(use-package flycheck :ensure)
+(use-package flycheck :ensure nil)
 
 ;; Create / cleanup rust scratch projects quickly
-(use-package rust-playground :ensure)
+(use-package rust-playground :ensure nil)
 
 ;; for Cargo.toml and other config files
-(use-package toml-mode :ensure)
+(use-package toml-mode :ensure nil)
 
 
 (provide 'hc-rust)
