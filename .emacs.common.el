@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Oct 28 (Fri) 15:23:00 by Harold Carr.
+;;;; Last Modified : 2022 Dec 02 (Fri) 09:08:27 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -505,35 +505,6 @@
 (with-no-warnings
 (use-package hc-git)
 )
-
-;; ------------------------------------------------------------------------------
-;; * Clojure/Cider
-
-;; http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html
-
-(hcSection "Clojure")
-
-(declare-function cider-current-connection "")
-(declare-function cider-repl-return "")
-(declare-function cider-last-sexp "")
-;; modified from cider-interaction.el
-(defun hc-cider-insert-in-repl (form)
-  "Insert FORM in the REPL buffer and switch to it.
-If EVAL is non-nil the form will also be evaluated."
-  (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
-    (setq form (replace-match "" t t form)))
-  (with-current-buffer (cider-current-connection)
-    (goto-char (point-max))
-    (let ((beg (point)))
-      (insert form)
-      (indent-region beg (point)))
-    (cider-repl-return)))
-
-(defun hc-cider-insert-last-sexp-in-repl (&optional arg)
-  "Insert the expression preceding point in the REPL buffer.
-If invoked with a prefix ARG eval the expression after inserting it."
-  (interactive "P")
-  (hc-cider-insert-in-repl (cider-last-sexp)))
 
 ;; ------------------------------------------------------------------------------
 ;; * Send diagram text to SDEDIT (UML sequence diagrams)

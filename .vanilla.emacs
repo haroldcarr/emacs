@@ -286,6 +286,170 @@
                        1 2 3)))
 
 ;; ------------------------------------------------------------------------------
+;; * Line Numbers
+
+;; http://www.emacswiki.org/LineNumbers
+
+(hcSection "Line Numbers")
+
+(use-package linum :defer t
+;;  :config (setq global-linum-mode t) ;; always on
+)
+
+;; ------------------------------------------------------------------------------
+(defvar hc-dev-machines '("o2020" "o2015" "hcmb-air"))
+
+;; ------------------------------------------------------------------------------
+;; * Python
+
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "Python")
+  (use-package hc-python)
+)
+
+;; ------------------------------------------------------------------------------
+;; * Haskell
+
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "Haskell")
+  (use-package hc-haskell)
+)
+
+;; ------------------------------------------------------------------------------
+;; * Rust
+
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "Rust")
+  (use-package hc-rust)
+)
+
+;; ------------------------------------------------------------------------------
+;; * Agda
+
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "Agda")
+  (use-package hc-agda))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Java")
+
+(defvar *hcJavaMode* 'not-google)
+(declare-function  google-set-c-style ".")
+(add-hook 'java-mode-hook
+  (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
+
+;; M-x google-set-c-style
+(use-package google-c-style)
+
+;; Make java mode support Java 1.5 annotations.
+(declare-function auto-complete-mode ".")
+(use-package java-mode-indent-annotations
+  :config
+  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
+  (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
+
+(defvar *compile-threshold*)
+(setq *compile-threshold* " -XX:CompileThreshold=2 ")
+
+(defun HC-JAVA_HOME () "."
+  (cond ((getenv "JAVA_HOME"))
+	(t (error "No default JDK"))))
+(defun HC-JAVA_HOME-bin     () "." (concat (HC-JAVA_HOME) "/bin"))
+(defun HC-JAVA_HOME-classes () "." (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Scala")
+
+(defvar scala-indent:step)
+(use-package scala-mode2
+  :defer t
+  :config
+  (setq scala-indent:step 4))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "Clojure/Cider")
+
+;; http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html
+
+(declare-function cider-current-connection "")
+(declare-function cider-repl-return "")
+(declare-function cider-last-sexp "")
+;; modified from cider-interaction.el
+(defun hc-cider-insert-in-repl (form)
+  "Insert FORM in the REPL buffer and switch to it.
+If EVAL is non-nil the form will also be evaluated."
+  (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
+    (setq form (replace-match "" t t form)))
+  (with-current-buffer (cider-current-connection)
+    (goto-char (point-max))
+    (let ((beg (point)))
+      (insert form)
+      (indent-region beg (point)))
+    (cider-repl-return)))
+
+(defun hc-cider-insert-last-sexp-in-repl (&optional arg)
+  "Insert the expression preceding point in the REPL buffer.
+If invoked with a prefix ARG eval the expression after inserting it."
+  (interactive "P")
+  (hc-cider-insert-in-repl (cider-last-sexp)))
+
+(defvar clojure-enable-fancify-symbols)
+(use-package cider-mode
+  :defer nil ;; HC so cider can find 'clojure-project-dir'
+;; :pin melpa-stable
+  :config
+  (progn
+    ;;(define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
+    (setq clojure-enable-fancify-symbols t)
+    ))
+
+(use-package cider
+  :defer t
+;;  :pin melpa-stable
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "LISP and Scheme and Clojure")
+
+(use-package hc-lisps)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(hcSection "C")
+
+;;(load "c-mode")
+
+(defvar c-indent-level)
+(setq c-indent-level 4)
+;(setq c-continued-statement-offset 4)
+;(setq c-brace-offset -4)
+;(setq c-argdecl-indent 4)
+;(setq c-label-offset -2)
+
+;;(load "c++-mode")
+
+(add-to-list 'auto-mode-alist '("\\.idl$"  . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.c$"    . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.h$"    . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cc$"   . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.hh$"   . c++-mode))
+
+;; ------------------------------------------------------------------------------
+;; This should come AFTER all language-specific setup above.
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "LSP")
+  (use-package hc-lsp-pick))
+
+;; ------------------------------------------------------------------------------
+;; * Images
+
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html
+
+(hcSection "Images")
+
+(defvar image-dired-dir)
+(setq image-dired-dir "/tmp/emacs-image-dired/")
+
+;; ------------------------------------------------------------------------------
 ;; * Calendar and Diary
 
 ;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Calendar_002fDiary.html#Calendar_002fDiary
@@ -341,56 +505,6 @@
 
 ;; M-x cfw:open-diary-calendar
 (use-package calfw-cal :defer t)
-
-;; ------------------------------------------------------------------------------
-;; * Line Numbers
-
-;; http://www.emacswiki.org/LineNumbers
-
-(hcSection "Line Numbers")
-
-(use-package linum :defer t
-;;  :config (setq global-linum-mode t) ;; always on
-)
-
-;; ------------------------------------------------------------------------------
-;; * Python
-
-(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
-  (hcSection "Python")
-  (use-package hc-python)
-)
-
-;; ------------------------------------------------------------------------------
-;; * Haskell
-
-(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
-  (hcSection "Haskell")
-  (use-package hc-haskell)
-  (use-package hc-haskell-pick)
-)
-
-;;(use-package intero
-;;  :config (progn (add-hook 'haskell-mode-hook 'intero-mode)
-;;                 ;; https://github.com/commercialhaskell/intero/issues/208
-;;                 (setq flycheck-check-syntax-automatically '(mode-enabled save))))
-
-;; ------------------------------------------------------------------------------
-;; * Agda
-
-(when (member (hcMachineName) '("o2020" "o2015" "hcmb-air"))
-  (hcSection "Agda")
-  (use-package hc-agda))
-
-;; ------------------------------------------------------------------------------
-;; * Images
-
-;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html
-
-(hcSection "Images")
-
-(defvar image-dired-dir)
-(setq image-dired-dir "/tmp/emacs-image-dired/")
 
 ;; ------------------------------------------------------------------------------
 ;; * Align
@@ -577,85 +691,6 @@
                       (read-shell-command "Open current file with: "))
                     " "
                     buffer-file-name))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Java")
-
-(defvar *hcJavaMode* 'not-google)
-(declare-function  google-set-c-style ".")
-(add-hook 'java-mode-hook
-  (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
-
-;; M-x google-set-c-style
-(use-package google-c-style)
-
-;; Make java mode support Java 1.5 annotations.
-(declare-function auto-complete-mode ".")
-(use-package java-mode-indent-annotations
-  :config
-  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
-  (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
-
-(defvar *compile-threshold*)
-(setq *compile-threshold* " -XX:CompileThreshold=2 ")
-
-(defun HC-JAVA_HOME () "."
-  (cond ((getenv "JAVA_HOME"))
-	(t (error "No default JDK"))))
-(defun HC-JAVA_HOME-bin     () "." (concat (HC-JAVA_HOME) "/bin"))
-(defun HC-JAVA_HOME-classes () "." (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Scala")
-
-(defvar scala-indent:step)
-(use-package scala-mode2
-  :defer t
-  :config
-  (setq scala-indent:step 4))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Clojure")
-
-(defvar clojure-enable-fancify-symbols)
-(use-package cider-mode
-  :defer nil ;; HC so cider can find 'clojure-project-dir'
-;; :pin melpa-stable
-  :config
-  (progn
-    ;;(define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
-    (setq clojure-enable-fancify-symbols t)
-    ))
-
-(use-package cider
-  :defer t
-;;  :pin melpa-stable
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "LISP and Scheme and Clojure")
-
-(use-package hc-lisps)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "C")
-
-;;(load "c-mode")
-
-(defvar c-indent-level)
-(setq c-indent-level 4)
-;(setq c-continued-statement-offset 4)
-;(setq c-brace-offset -4)
-;(setq c-argdecl-indent 4)
-;(setq c-label-offset -2)
-
-;;(load "c++-mode")
-
-(add-to-list 'auto-mode-alist '("\\.idl$"  . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.c$"    . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.h$"    . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.cc$"   . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.hh$"   . c++-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Appearance")
