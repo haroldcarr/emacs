@@ -1,7 +1,22 @@
 ;; https://github.com/haskell/haskell-language-server
 ;; https://ianyepan.github.io/posts/emacs-ide/
 
-(use-package lsp
+(add-hook 'haskell-mode-hook          #'lsp-mode)
+(add-hook 'haskell-literate-mode-hook #'lsp-mode)
+
+(defvar hc-lsp-mode-keymap-prefix "C-c l")
+
+(use-package lsp-mode
+  :hook (lsp-mode . (lambda ()
+                      (let ((lsp-keymap-prefix hc-lsp-mode-keymap-prefix))
+                        (lsp-enable-which-key-integration))))
+  :config
+  (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
+  ;; https://emacs.stackexchange.com/a/54976/5176
+  (setq lsp-enable-file-watchers nil
+        lsp-enable-snippet       nil
+        lsp-file-watch-threshold 512
+        )
   :custom
   ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
 ;;(lsp-completion-provider            :capf)
@@ -19,24 +34,8 @@
   (lsp-signature-render-documentation t)
 )
 
-(add-hook 'haskell-mode-hook          #'lsp)
-(add-hook 'haskell-literate-mode-hook #'lsp)
-
-(defvar hc-lsp-mode-keymap-prefix "C-c l")
-
-(use-package lsp-mode
-  :hook (lsp-mode . (lambda ()
-                      (let ((lsp-keymap-prefix hc-lsp-mode-keymap-prefix))
-                        (lsp-enable-which-key-integration))))
-  :config
-  (define-key lsp-mode-map (kbd hc-lsp-mode-keymap-prefix) lsp-command-map)
-  ;; https://emacs.stackexchange.com/a/54976/5176
-  (setq lsp-enable-file-watchers nil
-        lsp-enable-snippet       nil
-        lsp-file-watch-threshold 512
-
-  )
-)
+(add-hook 'haskell-mode-hook          #'lsp-mode)
+(add-hook 'haskell-literate-mode-hook #'lsp-mode)
 
 (use-package lsp-ui
 ;;:custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
