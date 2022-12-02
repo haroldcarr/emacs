@@ -56,6 +56,15 @@ brew info            emacs-plus
 
 brew install         emacs-plus --with-ctags --without-spacemacs-icon
 
+28.2
+September 15, 2022
+brew tap  d12frosted/emacs-plus
+brew uninstall       emacs-plus@28
+# NO NATIVE COMP DUE TO
+# configure: error: ELisp native compiler was requested, but libgccjit was not found.
+brew install         emacs-plus --with-ctags --with-imagemagick
+
+
 28.1
 April 16, 2022
 brew tap  d12frosted/emacs-plus

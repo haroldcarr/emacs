@@ -5,7 +5,7 @@
 ;;; Code:
 
 (use-package spaceline
-  :ensure t
+  :ensure nil
   :config (require 'spaceline-config))
 
 (defvar hc-mode-line-left
@@ -41,13 +41,27 @@
     (erc-track :when active)            ;; new messages in IRC channel
     (global :when active)))             ;; ??
 
-(defun hc-mode-Line ()
+(defun hc-spaceline ()
   "."
   (interactive)
   (spaceline-install hc-mode-line-left hc-mode-line-right)
   (setq-default mode-line-format '("%e" (:eval (spaceline-ml-main)))))
 
-(hc-mode-Line)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package doom-modeline
+  :ensure nil)
+
+(defun hc-doom-modeline ()
+  "."
+  (interactive)
+  (doom-modeline-mode 1))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(hc-spaceline)
+;;(hc-doom-modeline)
 
 (provide 'hc-mode-line)
 
