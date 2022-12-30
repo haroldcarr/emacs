@@ -11,6 +11,23 @@
 (defvar hc-emacs "hcev")
 
 ;; ------------------------------------------------------------------------------
+;; STARTUP
+;; https://blog.d46.us/advanced-emacs-startup/
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+;; See END STARTUP below
+;; Make startup faster by reducing the frequency of garbage collection.
+;; Default is 800 kilobytes.
+(setq gc-cons-threshold (* 50 1000000))
+
+;; ------------------------------------------------------------------------------
 ;; * SETUP
 
 ;; (hcSection "Packages")
@@ -815,6 +832,11 @@ If invoked with a prefix ARG eval the expression after inserting it."
        (modify-syntax-entry ?. "w" (standard-syntax-table))
        (modify-syntax-entry ?* "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))))
+
+;; ------------------------------------------------------------------------------
+;; END STARTUP
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000000))
 
 (provide '.vanilla.emacs)
 
