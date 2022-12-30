@@ -38,7 +38,7 @@
           helm-locate-fuzzy-match        t
           helm-recentf-fuzzy-match       t
           helm-M-x-use-completion-styles nil)
-    (require 'helm-config)
+    ;;(require 'helm-config)
     (helm-mode)))
 
 ;; SYNC WITH HELM ABOVE IF THIS CHANGES
