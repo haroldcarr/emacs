@@ -129,10 +129,10 @@
 
   ;; https://github.com/stathissideris/ditaa (old http://ditaa.org/ditaa/)
   ;; jar comes with org-mode in contrib/scripts (but override to ensure latest)
-  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa-0.11.0-standalone.jar"))
+  (setq org-ditaa-jar-path    (concat (hcUlhcd) "/java/ditaa/ditaa.jar"))
 
   ;; http://plantuml.sourceforge.net/
-  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.1.2019.6.jar"))
+  (setq org-plantuml-jar-path (concat (hcUlhcd) "/java/plantuml/plantuml.jar"))
 
   (add-hook 'org-babel-after-execute-hook 'hc/display-inline-images 'append)
 

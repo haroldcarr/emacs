@@ -29,8 +29,13 @@
     ;; The default for 'nix' does not specify a ':test-suffix', so specify my choice here.
     (projectile-update-project-type
      'nix
-      :test-suffix "Spec"))
-
+      :test-suffix "Spec")
+    ;; these do not work
+    ;;(push "Setup.hs"          projectile-globally-ignored-files)
+    ;;(push "^\\dist-newstyle$" projectile-globally-ignored-directories)
+                            ;;projectile-globally-ignored-file-suffixes
+                            ;;projectile-globally-ignored-modes
+)
 (provide 'hc-projectile)
 
 ;;; hc-projectile.el ends here

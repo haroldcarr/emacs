@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 09:08:27 by Harold Carr.
+;;;; Last Modified : 2023 Feb 05 (Sun) 17:29:18 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -205,6 +205,7 @@
 ;; move/copy between two dired windows
 (defvar dired-dwim-target)
 (setq dired-dwim-target t)
+(use-package hc-dired)
 
 ;; This must be ON for haskell-mode to work.
 (with-no-warnings
