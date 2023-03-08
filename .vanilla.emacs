@@ -233,7 +233,7 @@
 
 (defun server-started-p ()
   "Return non-nil if this Emacs has a server started."
-  (and (boundp server-process) server-process))
+  (and (boundp 'server-process) server-process))
 
 (if (functionp 'window-system)
     (when (and (window-system)

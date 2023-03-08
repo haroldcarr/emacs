@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 08:09:18 by Harold Carr.
+;;;; Last Modified : 2023 Mar 07 (Tue) 21:18:09 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -43,7 +43,7 @@
 ;;:custom-face ;; gray35/tango-dark; white/zenburn; autumn-light/mv/gray50
 ;;(lsp-ui-doc-background              ((t (:background "gray50"))))
   :custom
-  (lsp-ui-doc-enable                 t)
+  (lsp-ui-doc-enable                 nil)
   (lsp-ui-doc-position               'top)
   (lsp-ui-doc-show-with-cursor       t)
   (lsp-ui-doc-show-with-mouse        t)
