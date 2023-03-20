@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 09:28:09 by Harold Carr.
+;;;; Last Modified : 2023 Mar 10 (Fri) 10:58:47 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -17,11 +17,18 @@
 (defun hc-pick-lsp-support ()
   "Prompt pick from a list."
   (interactive)
-  (let ((choices '("lsp" "none")))
+  (let ((choices '("eglot" "lsp" "none")))
     (message "%s" (ido-completing-read "lsp?: " choices))))
 
 (let ((pick (hc-pick-lsp-support)))
-  (cond ((equal pick "lsp")
+  (cond (;; -------------------------
+         (equal pick "eglot")
+         (message "Using hc-eglot-haskell")
+         (use-package hc-eglot-haskell)
+         (setq hc-haskell-pick 'hc-eglot-haskell)
+         )
+        (;; -------------------------
+         (equal pick "lsp")
          (message "Using hc-lsp-haskell")
          (use-package hc-lsp-haskell)
          (setq hc-haskell-pick 'hc-lsp-haskell)
@@ -29,7 +36,8 @@
          (use-package hc-lsp-rust)
          (setq hc-rust-pick    'hc-lsp-rust)
         )
-        ((equal pick "none")
+        (;; -------------------------
+         (equal pick "none")
          (message "NO LSP SUPPORT")
          (setq hc-haskell-pick 'none)
          (setq hc-rust-pick    'none)

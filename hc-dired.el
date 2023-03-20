@@ -44,7 +44,7 @@ narrowed to the line."
   (when (re-search-forward " +[0-9]+" nil t 1)
     (add-text-properties (match-beginning 0) (match-end 0) '(invisible t))))
 
-(when (member (hcMachineName) '("o2020"))
+(when (member (hcMachineName) '()) ;;'("o2020"))
   (use-package dired
     :config
     (setq dired-listing-switches "-alh --time-style=long-iso")

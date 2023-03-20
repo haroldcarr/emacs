@@ -140,6 +140,9 @@
 ;; Enable ESC : to evaluate emacs Lisp commands.
 (put 'eval-expression 'disabled nil)
 
+;; do not minimize
+(global-unset-key (kbd "C-z"))
+
 ;; ** Mode line
 
 ;; http://www.emacswiki.org/emacs/DisplayTime
@@ -317,12 +320,11 @@
 (defvar hc-dev-machines '("o2020" "o2015" "hcmb-air"))
 
 ;; ------------------------------------------------------------------------------
-;; * Python
+;; * Agda
 
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Python")
-  (use-package hc-python)
-)
+  (hcSection "Agda")
+  (use-package hc-agda))
 
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
@@ -330,6 +332,14 @@
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "Haskell")
   (use-package hc-haskell)
+)
+
+;; ------------------------------------------------------------------------------
+;; * Python
+
+(when (member (hcMachineName) hc-dev-machines)
+  (hcSection "Python")
+  (use-package hc-python)
 )
 
 ;; ------------------------------------------------------------------------------
@@ -341,11 +351,12 @@
 )
 
 ;; ------------------------------------------------------------------------------
-;; * Agda
+;; * Typescript
 
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Agda")
-  (use-package hc-agda))
+  (hcSection "Typescript")
+  (use-package typescript)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Java")
@@ -453,8 +464,10 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;; ------------------------------------------------------------------------------
 ;; This should come AFTER all language-specific setup above.
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "LSP")
-  (use-package hc-lsp-pick))
+  (hcSection "LSP and EGLOT")
+  (use-package hc-lsp-pick)
+  (use-package hc-eglot)
+  )
 
 ;; ------------------------------------------------------------------------------
 ;; * Images
@@ -698,6 +711,9 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Open current buffer's associated file in an external program")
 
+(use-package hc-run-command-package)
+
+;; TODO : delete
 (defun prelude-open-with ()
   "To open the underlying file of a buffer in an external program."
   (interactive)
