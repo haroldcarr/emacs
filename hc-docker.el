@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://github.com/Silex/docker.el
 (use-package docker
   :bind ("C-c d" . docker))

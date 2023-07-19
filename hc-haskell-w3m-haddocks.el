@@ -4,6 +4,10 @@
 
 ;; https://github.com/haskell/haskell-mode/wiki/Browsing-Haddocks
 
+;;; Code:
+
+(eval-when-compile (require 'use-package))
+
 (use-package w3m
   :defer t
   :config

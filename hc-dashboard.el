@@ -6,9 +6,10 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://github.com/rakanalh/emacs-dashboard
 
-(with-no-warnings
 (use-package dashboard
    :config
    (progn
@@ -22,7 +23,6 @@
                              ;;(registers . 5)
                              ))
      ))
-)
 
 (defun hc-dashboard () ""
   (dashboard-insert-startupify-lists)

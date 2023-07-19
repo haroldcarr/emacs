@@ -8,6 +8,7 @@
 ;; treemacs
 ;; https://github.com/Alexander-Miller/treemacs/tree/d6acbaf81abf719c58d577a3a5bc18010fa85fbd
 
+(eval-when-compile (require 'use-package))
 
 (use-package treemacs
   :ensure nil

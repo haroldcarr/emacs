@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package idris-mode)
 (use-package helm-idris)
 

@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; ------------------------------------------------------------------------------
 ;; KUBERNETES-EL
 ;; Chris Barrett : https://github.com/chrisbarrett/kubernetes-el

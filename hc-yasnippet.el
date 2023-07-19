@@ -1,8 +1,10 @@
-;;; hc-yasnippet -*- mode: emacs-lisp -*-
+;;; hc-yasnippet --- -*- mode: emacs-lisp -*-
 
 ;;; Commentary:
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (use-package yasnippet
   :ensure nil
@@ -18,7 +20,7 @@
       (concat (downcase (substring cap 0 1))
               (substring cap 1)))
 
-    (unbind-key "TAB" yas-minor-mode-map)
+    (unbind-key "TAB"   yas-minor-mode-map)
     (unbind-key "<tab>" yas-minor-mode-map)))
 
 (bind-key "M-/" #'hippie-expand)

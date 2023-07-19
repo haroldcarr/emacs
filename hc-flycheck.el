@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 08:48:03 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:37:51 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (use-package flycheck
   :ensure nil

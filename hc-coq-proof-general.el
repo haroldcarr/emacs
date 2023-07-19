@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (add-to-list 'load-path (concat (hcEmacsDir) "/ProofGeneral/generic"))
 
 (use-package proof-site

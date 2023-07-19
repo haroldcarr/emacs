@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package spaceline
   :ensure nil
   :config (require 'spaceline-config))
@@ -29,17 +31,18 @@
 ;;                 :priority 9)
 ;;    (((minor-modes                      ;; currently enabled minor modes
 ;;       :separator spaceline-minor-modes-separator) process) :when active)
+    (version-control :when active)      ;; e.g., GIT, ...
     ((flycheck-error                    ;; number of errors
       flycheck-warning                  ;; number of warnings
       flycheck-info)                    ;; number of notifications
      :when active)
-    (version-control :when active)      ;; e.g., GIT, ...
     ))
 
 (defvar hc-mode-line-right
-  '(which-function
-    (erc-track :when active)            ;; new messages in IRC channel
-    (global :when active)))             ;; ??
+  '())
+  ;; '(which-function
+  ;;   (erc-track :when active)            ;; new messages in IRC channel
+  ;;   (global :when active)))             ;; ??
 
 (defun hc-spaceline ()
   "."

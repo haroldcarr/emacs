@@ -4,23 +4,25 @@
 
 ;;;;
 ;;;; Created       : 2023 Mar 08 (Wed) 10:34:09 by Harold Carr.
-;;;; Last Modified : 2023 Mar 20 (Mon) 19:33:52 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:37:37 by Harold Carr.
 ;;;;
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://joaotavora.github.io/eglot/
 
-;;(defvar hc-eglot-mode-keymap-prefix "C-c l")
+;;(defvar hc-eglot-mode-keymap-prefix "C-c e")
 
 (use-package eglot
   :config
   ;;(define-key eglot-mode-map (kbd hc-eglot-mode-keymap-prefix) eglot-mode-map)
   :bind (:map eglot-mode-map
-              ("C-c l G r"   . xref-find-references)
-              ("C-c l h h"   . eldoc)
-              ("C-c l f b"   . flymake-show-buffer-diagnostics)
-              ("C-c l f p"   . flymake-show-project-diagnostics)
+              ("C-c e G r"   . xref-find-references)
+              ("C-c e h h"   . eldoc)
+              ("C-c e f b"   . flymake-show-buffer-diagnostics)
+              ("C-c e f p"   . flymake-show-project-diagnostics)
         )
 )
 

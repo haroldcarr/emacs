@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; a failed experiment to have no buffer and no output
 ;; ;; https://macowners.club/posts/custom-functions-1-baseline/
 ;; (defun timu-baseline-async-shell-command-no-window (command _buffer-base-name _output-buffer)
@@ -27,6 +29,12 @@
       :command-name "Quick Look"
       :command-line (format "qlmanage -p '%s'" filename)
       :display (format "qlmanage -p '%s'" filename)
+      :runner 'run-command-runner-compile))
+   (when-let ((filename (thing-at-point 'filename t)))
+     (list
+      :command-name "file"
+      :command-line (format "file '%s'" filename)
+      :display (format "file '%s'" filename)
       :runner 'run-command-runner-compile))
   ))
 

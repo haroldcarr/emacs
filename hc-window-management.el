@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package e2wm)
 ;; M-x e2wm:start-management
 

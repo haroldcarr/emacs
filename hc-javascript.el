@@ -7,6 +7,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (defvar js2-mode)
 (defvar js-mode-map)
 (use-package js2-mode

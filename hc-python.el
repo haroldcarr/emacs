@@ -4,15 +4,16 @@
 
 ;;; Code:
 
-(with-no-warnings
-  (use-package python-mode
-    :ensure nil)
+(eval-when-compile (require 'use-package))
 
-  (use-package elpy
-    :ensure nil
-    :defer  t
-    :init
-    (advice-add 'python-mode :before 'elpy-enable))
+(use-package python-mode
+  :ensure nil)
+
+(use-package elpy
+  :ensure nil
+  :defer  t
+  :init
+  (advice-add 'python-mode :before 'elpy-enable))
 
   ;; If elpy cannot find the symbol then try a rgrep search.
   ;;
@@ -23,7 +24,6 @@
   ;;     (error (elpy-rgrep-symbol (thing-at-point 'symbol)))))
 
   ;; (define-key elpy-mode-map (kbd "M-.") 'goto-def-or-rgrep)
-)
 
 (provide 'hc-python)
 

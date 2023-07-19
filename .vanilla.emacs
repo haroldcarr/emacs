@@ -106,7 +106,7 @@
 
 (hcSection "Top level misc stuff")
 
-(when (member (hcMachineName) '("o2020"))
+(when (member (hcMachineName) '("o2023" "o2020"))
   (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.
@@ -317,7 +317,7 @@
 )
 
 ;; ------------------------------------------------------------------------------
-(defvar hc-dev-machines '("o2020" "o2015" "hcmb-air"))
+(defvar hc-dev-machines '("o2023" "o2020" "o2015" "hcmb-air"))
 
 ;; ------------------------------------------------------------------------------
 ;; * Agda

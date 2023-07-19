@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (add-to-list 'auto-mode-alist '("\\.el$"      . lisp-interaction-mode))
 
 (add-to-list 'auto-mode-alist '("\\.cl$"      . scheme-mode))

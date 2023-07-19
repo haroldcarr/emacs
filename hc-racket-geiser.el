@@ -4,14 +4,14 @@
 
 ;;; Code:
 
-(with-no-warnings
-  (use-package geiser
-    :config (progn (setq geiser-racket-binary
-                         "/Applications/Racket v6.9/bin/racket")
-                   (setq geiser-racket-gracket-binary
-                         "/Applications/Racket v6.9/bin/gracket-text")
-            )
-  )
+(eval-when-compile (require 'use-package))
+
+(use-package geiser
+  :config (progn (setq geiser-racket-binary
+                       "/Applications/Racket v6.9/bin/racket")
+                 (setq geiser-racket-gracket-binary
+                       "/Applications/Racket v6.9/bin/gracket-text")
+          )
 )
 
 (provide 'hc-racket-geiser)

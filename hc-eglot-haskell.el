@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2023 Mar 10 (Fri) 11:00:40 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:37:25 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (use-package hc-lsp)
 

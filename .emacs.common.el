@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2023 Feb 05 (Sun) 17:29:18 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:28:10 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -47,11 +47,8 @@
 (hcRequire use-package)
 
 ;; ------------------------------------------------------------------------------
-;; * Beans
-
-;; Never access a variable directly.
-
 (hcSection "Beans")
+;; Never access a variable directly.
 
 (defmacro hcDefineBean (name &rest body) "NAME BODY."
   (let ((var-name (intern (concat "*" (format "%s" name) "*"))))
@@ -60,8 +57,6 @@
        (defun ,name () ,var-name))))
 
 ;; ------------------------------------------------------------------------------
-;; * Predicates
-
 (hcSection "Predicates")
 
 (defun hcIsVersionP    (x) "X." (string-match x (emacs-version)))
@@ -78,12 +73,10 @@
                                (shell-command-to-string "uname -n")))
 
 ;; ------------------------------------------------------------------------------
-;; * Key Bindings
+(hcSection "Key Bindings")
 
 ;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html#Key-Bindings
 ;; http://www.emacswiki.org/emacs/KeyBindingDiscussion
-
-(hcSection "Key Bindings")
 
 ;; the following swaps the default kill/copy
 (global-set-key "\M-w" 'kill-region)
@@ -107,8 +100,6 @@
 (global-set-key "\C-c\C-k" 'describe-char)
 
 ;; ------------------------------------------------------------------------------
-;; * Executing shell commands
-
 (hcSection "Shell Commands")
 
 ;; SHELLS
@@ -152,11 +143,9 @@
 	       (t (setq ,varName (hcShExecCmd ',name))))))))
 
 ;; ------------------------------------------------------------------------------
-;; * Locations
+(hcSection "Locations")
 
 ;; Important (to me) directories.
-
-(hcSection "Locations")
 
 (defun hcExpandFileName (forExternalProgramP path)
   "FOREXTERNALPROGRAMP PATH."
@@ -188,9 +177,9 @@
 (hcShDefCmd     hcLlavaMainClass ())
 
 ;; ------------------------------------------------------------------------------
-;; * Top level misc
-
 (hcSection "Top level misc stuff")
+
+(advice-add 'risky-local-variable-p :override #'ignore)
 
 ;; https://www.emacswiki.org/emacs/GccEmacs#h5o-13
 ;; tell package.el to do ahead-of-time native compilation
@@ -208,10 +197,8 @@
 (use-package hc-dired)
 
 ;; This must be ON for haskell-mode to work.
-(with-no-warnings
 (use-package flycheck
              :config (global-flycheck-mode 1))
-)
 ;; Ask before exit.
 (setq confirm-kill-emacs
       (lambda (e)
@@ -231,14 +218,13 @@
 (setq         indicate-empty-lines      t)
 
 ;; highlight text beyond nth column
-(with-no-warnings
 (use-package whitespace
   :config
   (progn
     (setq whitespace-style '(face lines-tail))
     (setq whitespace-line-column 1000)
     (global-whitespace-mode t)))
-)
+
 ;; so list-buffers won't jump back to top
 (defvar global-auto-revert-non-file-buffers)
 (setq global-auto-revert-non-file-buffers nil)
@@ -256,11 +242,15 @@
 ;; stop backup changing file creation date of original file
 (setq backup-by-copying t)
 
-(with-no-warnings
 (use-package grep
   :config
   ;; List of names of sub-directories which `rgrep' shall not recurse into.
-  (setq grep-find-ignored-directories (cons ".stack-work" grep-find-ignored-directories)))
+  (setq grep-find-ignored-directories
+        (cons "dist-newstyle"
+        (cons ".stack-work"
+        (cons "target"
+         grep-find-ignored-directories)))
+  )
 )
 
 ;; Useful in *Org Agenda* buffer.
@@ -332,14 +322,14 @@
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
 
-(when (member (hcMachineName) '("o2020" "o2015"))
+(when (member (hcMachineName) '("o2023" "o2020" "o2015"))
   (hcSection "Markdown")
   (use-package hc-markdown))
 
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(when (member (hcMachineName) '("o2020" "o2015"))
+(when (member (hcMachineName) '("o2023" "o2020" "o2015"))
   (hcSection "PDF")
   (use-package hc-pdf))
 
@@ -448,7 +438,8 @@
   :config
   (progn (use-package hc-org-mode)
          (hc-org-mode)
-         (use-package hc-noter)))
+         (when (member (hcMachineName) '("o2023" "o2020"))
+           (use-package hc-noter))))
 )
 ;; ------------------------------------------------------------------------------
 ;; * Tags

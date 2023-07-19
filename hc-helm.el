@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;;(defmacro helm-aif (test then &optional else)
 ;;  `(let ((it ,test))
 ;;     (if it ,then ,else)))

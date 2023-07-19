@@ -7,6 +7,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (defun hcOrgMobile ()
   (setq org-directory                  (concat (hcFtptmp)    "/org-directory"))           ; location of org files (TODO: sym links?)
   (setq org-mobile-files              '(org-agenda-files))                                ; use ones I list in agenda

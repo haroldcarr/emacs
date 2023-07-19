@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 08:18:36 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:43:40 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (use-package hc-lsp)
 
@@ -20,7 +22,20 @@
   (lsp-haskell-floskell-on           nil)
   (lsp-haskell-fourmolu-on           nil)
   (lsp-haskell-ormolu-on             nil)
+  (lsp-haskell-formatting-provider   "stylish-haskell")
 )
+
+(add-hook 'lsp-after-initialize-hook
+          '(lambda ()
+             (lsp--set-configuration
+              '(:haskell
+                (:formattingProvider "stylish-haskell")
+                (:plugin
+                 (:tactics (:config (:timeout_duration 5)))
+                 (:ghcide-completions (:config (:autoExtendOn false)))
+                )
+               )
+           )))
 
 (provide 'hc-lsp-haskell)
 

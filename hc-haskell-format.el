@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Oct 28 (Fri) 12:16:51 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:39:36 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 ;;; Haskell Packages
 

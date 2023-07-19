@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2020 Apr 23 (Thu) 14:29:14 by Harold Carr.
-;;;; Last Modified : 2020 Apr 24 (Fri) 18:47:07 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:47:43 by Harold Carr.
 ;;;;
 
 ;; https://org-roam.readthedocs.io/en/
@@ -12,6 +12,9 @@
 ;; this is abandoned
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org-roam

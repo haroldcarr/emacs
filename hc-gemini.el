@@ -2,8 +2,9 @@
 
 ;;; Commentary:
 
-
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 ;; https://thelambdalab.xyz/elpher/
 (use-package elpher)

@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package org-noter  ;; https://github.com/weirdNox/org-noter
                         ;; https://www.youtube.com/watch?v=lCc3UoQku-E
   :config

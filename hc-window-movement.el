@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; SHIFT + arrow keys to move
 (windmove-default-keybindings)
 

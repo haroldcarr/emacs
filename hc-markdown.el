@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://jblevins.org/projects/markdown-mode/
 
 (use-package markdown-mode

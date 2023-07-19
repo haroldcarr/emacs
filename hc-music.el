@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://www.gnu.org/software/emms/manual/
 (use-package emms-setup
   :custom

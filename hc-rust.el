@@ -5,6 +5,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; rustic = basic rust-mode + additions
 (use-package rustic
   :ensure nil

@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package prot-eww)
 (use-package prot-eww-key-bindings)
 

@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Dec 02 (Fri) 08:48:21 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:41:14 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (require 'ido)
 

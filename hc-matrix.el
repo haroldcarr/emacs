@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 ;; https://github.com/alphapapa/ement.el
 
 (package-install 'quelpa-use-package)

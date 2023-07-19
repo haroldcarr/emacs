@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package eimp
   :init (add-hook 'image-mode-hook 'eimp-mode)
   )

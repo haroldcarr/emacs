@@ -4,10 +4,12 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2023 Mar 07 (Tue) 21:18:09 by Harold Carr.
+;;;; Last Modified : 2023 Jul 18 (Tue) 18:44:13 by Harold Carr.
 ;;;;
 
 ;;; Code:
+
+(eval-when-compile (require 'use-package))
 
 (defvar hc-lsp-mode-keymap-prefix "C-c l")
 

@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(eval-when-compile (require 'use-package))
+
 (use-package bookmark+
   :ensure nil
   :config (setq bmkp-prompt-for-tags-flag t))
