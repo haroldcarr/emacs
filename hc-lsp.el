@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2023 Jul 18 (Tue) 18:44:13 by Harold Carr.
+;;;; Last Modified : 2023 Sep 05 (Tue) 09:07:54 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -26,12 +26,17 @@
         )
   :custom
   ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
+
+  ;; these two should have the same value
+  (lsp-auto-guess-root                t)
+  (lsp-guess-root-without-session     t)
 ;;(lsp-completion-provider            :capf)
 ;;(lsp-completion-show-detail         t)
 ;;(lsp-completion-show-kind           t)
 ;;(lsp-diagnostics-provider           :auto)
   (lsp-eldoc-enable-hover             t)
   (lsp-enable-symbol-highlighting     t)
+  (lsp-completion-enable-additional-text-edit nil) ;; do not auto insert missing imports
   (lsp-headerline-breadcrumb-enable   t)
   (lsp-lens-enable                    t)
   (lsp-modeline-code-actions-enable   t)

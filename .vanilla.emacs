@@ -674,6 +674,21 @@ If invoked with a prefix ARG eval the expression after inserting it."
         (minutes-seconds (* nminutes            60)))
     (/ ntx (+ days-seconds hours-seconds minutes-seconds nseconds))))
 
+;; https://emacs.stackexchange.com/a/73152
+(defun hc-reverse-dependencies (package-name)
+  (let ((needle package-name)
+        (resolve-deps-recursively t)
+        curr-deps
+        all-rdeps)
+    (dolist (curr package-archive-contents all-rdeps)
+      ;; (car curr) => pkg
+      ;; (cadr curr) => pkg-desc
+      (setq curr-deps (if nil ;; resolve-deps-recursively
+                          (package--dependencies (car curr))
+                        (mapcar #'car (package-desc-reqs (cadr curr)))))
+      (when (memq needle curr-deps)
+        (push (car curr) all-rdeps)))))
+
 ;; ------------------------------------------------------------------------------
 ;; * Features used but not customized
 

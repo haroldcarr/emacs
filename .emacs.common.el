@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2023 Jul 18 (Tue) 18:28:10 by Harold Carr.
+;;;; Last Modified : 2023 Oct 06 (Fri) 14:46:47 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -300,6 +300,34 @@
 ;; (setq      split-window-preferred-function-ORIG split-window-preferred-function)
 ;; (setq      split-window-preferred-function #'hc-split-window-sensibly)
 ;; (setq helm-split-window-preferred-function #'hc-split-window-sensibly)
+
+
+;; ------------------------------------------------------------------------------
+;; * Time
+
+(hcSection "Time")
+
+;; https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+(use-package time
+  :custom
+  (world-clock-list
+   '(("America/Los_Angeles"  "San Francisco")
+     ("America/Denver"       "Salt Lake City")
+     ("America/Chicago"      "Austin")
+     ("America/New_York"     "New York")
+     ("Europe/London"        "London")
+     ("Europe/Paris"         "Paris")
+     ;;("Asia/Calcutta"        "Bangalore")
+     ;;("Asia/Tokyo"           "Tokyo")
+     ("Pacific/Auckland"     "Wellington, New Zealand")
+     )))
+
+;; ------------------------------------------------------------------------------
+;; * Images
+
+(hcSection "Images")
+
+(use-package hc-image)
 
 ;; ------------------------------------------------------------------------------
 ;; * Sync

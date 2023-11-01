@@ -10,6 +10,17 @@
   (require 'wid-edit))
 
 (defvar *hc-sync-to*)
+(defvar *hc-sync-what*)
+(declare-function hcLocation "")
+
+(defmacro hc-sync-to-what (what)
+  `(progn
+     (widget-create 'checkbox
+                    :notify #'(lambda (_w &rest _ignore)
+                                (setq *hc-sync-what* ,what)
+                                (message (prin1-to-string *hc-sync-what*)))
+                    nil)
+     (widget-insert (concat " " ,what))))
 
 (defun hc-sync ()
   "Synchronize data between machines."
@@ -41,7 +52,7 @@
     (widget-create
      'push-button
      :notify
-       #'(lambda (&rest ignore)
+       #'(lambda (&rest _ignore)
            (message *hc-sync-what*)
            (hc-run-sync *hc-sync-what*))
      "sync")
@@ -52,15 +63,6 @@
     ;; --------------------------------------------------
     (use-local-map widget-keymap)
     (widget-setup)))
-
-(defmacro hc-sync-to-what (what)
-  `(progn
-     (widget-create 'checkbox
-                    :notify #'(lambda (w &rest ignore)
-                                (setq *hc-sync-what* ,what)
-                                (message (prin1-to-string *hc-sync-what*)))
-                    nil)
-     (widget-insert (concat " " ,what))))
 
 (defun hc-run-sync (sync-name)
   (hcRunCommandInBuffer (concat "*" sync-name "*") sync-name))

@@ -44,13 +44,20 @@ narrowed to the line."
   (when (re-search-forward " +[0-9]+" nil t 1)
     (add-text-properties (match-beginning 0) (match-end 0) '(invisible t))))
 
-(when (member (hcMachineName) '()) ;;'("o2020"))
-  (use-package dired
-    :config
-    (setq dired-listing-switches "-alh --time-style=long-iso")
-    :hook
-    ((dired-mode-hook . g-dired-disable-line-wrapping)
-     (dired-after-readin-hook . g-dired-postprocess-ls-output))))
+(cond ((member (hcMachineName) '()) ;;'("o2020"))
+       (use-package dired
+         :config
+         (setq dired-listing-switches "-alh --time-style=long-iso")
+         :hook
+         ((dired-mode-hook . g-dired-disable-line-wrapping)
+          (dired-after-readin-hook . g-dired-postprocess-ls-output))))
+      (t
+       (use-package all-the-icons-dired
+         ;; M-x all-the-icons-install-fonts
+         :ensure nil
+         :commands (all-the-icons-dired-mode)
+         :config (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
