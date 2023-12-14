@@ -385,6 +385,8 @@
 (defun HC-JAVA_HOME-bin     () "." (concat (HC-JAVA_HOME) "/bin"))
 (defun HC-JAVA_HOME-classes () "." (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
 
+(use-package hc-lsp-dap-java)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Scala")
 
