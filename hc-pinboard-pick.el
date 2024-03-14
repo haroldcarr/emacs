@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2022 Oct 28 (Fri) 12:19:26 by Harold Carr.
+;;;; Last Modified : 2024 Jan 23 (Tue) 15:38:36 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -18,7 +18,7 @@
   (let ((choices '("pinboard-el" "pinboard-list")))
     (message "%s" (ido-completing-read "which pinboard?: " choices))))
 
-(defun hc-pinboard ()
+(defun hc-pinboard-pick ()
   "Pinboard."
   (interactive)
   (let ((pick (hc-pick-pinboard-support)))

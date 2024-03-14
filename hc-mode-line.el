@@ -20,12 +20,13 @@
      remote-host)                       ;; the host for remote buffers
     ((line-column                       ;; L:C
       buffer-position                   ;; Top | percentage | Bottom
-      hud                               ;; graphic that shows position in buffer (when not at Top or Bottom)
-      buffer-size                       ;; total size
-      buffer-encoding-abbrev)           ;; e.g., 'unix', 'utf-8'
+      ;;hud                               ;; graphic that shows position in buffer (when not at Top or Bottom)
+      ;;buffer-size                       ;; total size
+      ;;buffer-encoding-abbrev            ;; e.g., 'unix', 'utf-8'
+     )
      :separator " | ")
     input-method                        ;; ??
-    selection-info                      ;; number of characters or lines selected
+    ;;selection-info                      ;; number of characters or lines selected
     (major-mode  :priority 79)          ;; current major mode e.g., Emacs-Lisp, LitHaskell
 ;;    (minor-modes :when active
 ;;                 :priority 9)

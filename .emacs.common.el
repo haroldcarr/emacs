@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2023 Oct 06 (Fri) 14:46:47 by Harold Carr.
+;;;; Last Modified : 2024 Mar 14 (Thu) 13:26:05 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -196,6 +196,8 @@
 (setq dired-dwim-target t)
 (use-package hc-dired)
 
+(setq tab-bar-show nil)
+
 ;; This must be ON for haskell-mode to work.
 (use-package flycheck
              :config (global-flycheck-mode 1))
@@ -311,11 +313,14 @@
 (use-package time
   :custom
   (world-clock-list
-   '(("America/Los_Angeles"  "San Francisco")
+   '(("Pacific/Honolulu"     "Honolulu")
+     ("America/Los_Angeles"  "San Francisco")
      ("America/Denver"       "Salt Lake City")
      ("America/Chicago"      "Austin")
      ("America/New_York"     "New York")
+     ("America/Santiago"     "Santiago, Chile")
      ("Europe/London"        "London")
+     ("Europe/Amsterdam"     "Amsterdam")
      ("Europe/Paris"         "Paris")
      ;;("Asia/Calcutta"        "Bangalore")
      ;;("Asia/Tokyo"           "Tokyo")
