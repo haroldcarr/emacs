@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2023 Jul 18 (Tue) 18:43:40 by Harold Carr.
+;;;; Last Modified : 2024 Mar 29 (Fri) 11:17:00 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -22,6 +22,7 @@
   (lsp-haskell-floskell-on           nil)
   (lsp-haskell-fourmolu-on           nil)
   (lsp-haskell-ormolu-on             nil)
+  (lsp-haskell-plugin-ghcide-completions-config-auto-extend-on nil)
   (lsp-haskell-formatting-provider   "stylish-haskell")
 )
 

@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2024 Mar 14 (Thu) 13:26:05 by Harold Carr.
+;;;; Last Modified : 2024 May 18 (Sat) 14:19:14 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -345,6 +345,18 @@
 
 (hcSection "Pinboard")
 (use-package hc-pinboard)
+
+;; ------------------------------------------------------------------------------
+;; * ChatGPT
+
+(hcSection "ChatGPT")
+(use-package hc-chat-gpt)
+
+;; ------------------------------------------------------------------------------
+;; * Browser History
+
+(hcSection "Browser History")
+(use-package hc-browser-history)
 
 ;; ------------------------------------------------------------------------------
 ;; * Themes
