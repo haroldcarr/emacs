@@ -250,13 +250,6 @@
 (use-package hc-projectile)
 
 ;; ------------------------------------------------------------------------------
-;; Bookmarks
-
-;;(hcSection "Bookmarks")
-;;
-;;(use-package hc-bookmark-plus)
-
-;; ------------------------------------------------------------------------------
 ;; * Emacs Code Browser (ECB)
 
 ;; http://www.emacswiki.org/emacs/EmacsCodeBrowser

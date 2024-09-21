@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2024 May 18 (Sat) 14:19:14 by Harold Carr.
+;;;; Last Modified : 2024 Sep 20 (Fri) 19:12:52 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -445,11 +445,13 @@
 (hcSection "Bookmarks")
 
 (defvar bookmark-save-flag)
+(setq   bookmark-save-flag 1)
 (defvar bookmark-sort-flag)
+(setq   bookmark-sort-flag nil)
 (defvar bookmark-default-file)
-(setq bookmark-save-flag 1)
-(setq bookmark-sort-flag nil)
-(setq bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+(setq   bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
+
+;;(use-package hc-bookmark-plus)
 
 ;; ------------------------------------------------------------------------------
 ;; * Web Browsing
@@ -542,6 +544,11 @@
 (with-no-warnings
 (use-package hc-git)
 )
+
+;; I am not sure, but I think after I set these to nil, emacs started leaving *~ files around
+;; even though the editted files were under source control.
+;;(setopt vc-follow-symlinks nil)
+;;(setopt vc-handled-backends nil)
 
 ;; ------------------------------------------------------------------------------
 ;; * Send diagram text to SDEDIT (UML sequence diagrams)

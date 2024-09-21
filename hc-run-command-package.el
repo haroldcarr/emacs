@@ -22,20 +22,26 @@
      (list
       :command-name "Open"
       :command-line (format "open '%s'" filename)
-      :display (format "open '%s'" filename)
-      :runner 'run-command-runner-compile))
+      :display      (format "open '%s'" filename)
+      :runner       'run-command-runner-compile))
+   (when-let ((filename (thing-at-point 'filename t)))
+     (list
+      :command-name "Audacity"
+      :command-line (format "/Applications/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
+      :display      (format "/Applications/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
+      :runner       'run-command-runner-compile))
    (when-let ((filename (thing-at-point 'filename t)))
      (list
       :command-name "Quick Look"
       :command-line (format "qlmanage -p '%s'" filename)
-      :display (format "qlmanage -p '%s'" filename)
-      :runner 'run-command-runner-compile))
+      :display      (format "qlmanage -p '%s'" filename)
+      :runner       'run-command-runner-compile))
    (when-let ((filename (thing-at-point 'filename t)))
      (list
       :command-name "file"
       :command-line (format "file '%s'" filename)
-      :display (format "file '%s'" filename)
-      :runner 'run-command-runner-compile))
+      :display      (format "file '%s'" filename)
+      :runner       'run-command-runner-compile))
   ))
 
 (use-package run-command

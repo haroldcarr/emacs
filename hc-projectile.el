@@ -23,7 +23,18 @@
   ;; before nix, Make, stack, etc.
   ;; TODO : make this deterministic.
   (setq projectile-project-types (reverse projectile-project-types))
+  ;; The version built-in to projectile does not specify :test-dir nor :test-suffix
+  (projectile-register-project-type 'rust-cargo '("Cargo.toml")
+                                    :project-file "Cargo.toml"
+                                    :compile "cargo build"
+                                    :test "cargo test"
+                                    :run "cargo run"
+                                    :test-dir "tests"
+                                    :test-suffix "-test")
+
 )
+
+
 (provide 'hc-projectile)
 
 ;;; hc-projectile.el ends here

@@ -23,6 +23,21 @@
               ("C-c C-c h" . lsp-ui-doc-glance))
   )
 
+;; ;; https://www.reddit.com/r/emacs/comments/1b1d9l6/dapmode_lldb_debug_template_for_rust/
+;; (add-hook 'rustic-mode-hook (lambda ()
+;;    (dap-register-debug-template "Rust LLDB Debug Configuration"
+;; 	  (list :type "cppdbg"
+;; 	      :request "launch"
+;; 	      :name "Rust::Run"
+;; 	      :MIMode "lldb"
+;; 	      :gdbpath "rust-lldb"
+;; 	      :program (concat (projectile-project-root) "target/debug/" (projectile-project-name)) ;; Requires that the rust project is a project in projectile
+;; 	      :environment []
+;; 	      :cwd (projectile-project-root)))))
+
+;; (use-package dap-cpptools)
+;; ;;(use-package dap-gdb)
+
 (use-package hc-flycheck)
 
 ;; create / cleanup rust scratch projects quickly
