@@ -16,6 +16,10 @@
 
 (eval-when-compile (require 'use-package))
 
+;; WORKAROUND
+;; https://www.reddit.com/r/emacs/comments/1h4xjts/magit_issues/
+(defvar git-commit-filename-regexp nil)
+
 (use-package magit
   :config
   (progn
