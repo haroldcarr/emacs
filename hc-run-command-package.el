@@ -26,9 +26,15 @@
       :runner       'run-command-runner-compile))
    (when-let ((filename (thing-at-point 'filename t)))
      (list
-      :command-name "Audacity"
+      :command-name "Audacity NEW"
       :command-line (format "/Applications/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
       :display      (format "/Applications/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
+      :runner       'run-command-runner-compile))
+   (when-let ((filename (thing-at-point 'filename t)))
+     (list
+      :command-name "Audacity OLD"
+      :command-line (format "/Applications/Audacity/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
+      :display      (format "/Applications/Audacity/Audacity.app/Contents/MacOS/Audacity '%s'" filename)
       :runner       'run-command-runner-compile))
    (when-let ((filename (thing-at-point 'filename t)))
      (list
