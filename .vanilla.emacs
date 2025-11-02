@@ -349,6 +349,7 @@
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "Typescript")
   (use-package typescript)
+  (setq typescript-indent-level 2)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

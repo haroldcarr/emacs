@@ -9,8 +9,6 @@
 
 (eval-when-compile (require 'use-package))
 
-;; https://www.emacswiki.org/emacs/BookmarkPlus
-
 (use-package quelpa-use-package)
 
 (use-package eat

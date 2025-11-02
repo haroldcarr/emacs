@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2024 Sep 20 (Fri) 19:12:52 by Harold Carr.
+;;;; Last Modified : 2025 Sep 23 (Tue) 18:48:09 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -191,6 +191,8 @@
   (interactive)
   (native-compile-async (concat (hcEmacsDir) "/.vanilla.emacs.d/elpa")  'recursively))
 
+(use-package hc-buffer-control)
+
 ;; move/copy between two dired windows
 (defvar dired-dwim-target)
 (setq dired-dwim-target t)
@@ -349,8 +351,8 @@
 ;; ------------------------------------------------------------------------------
 ;; * ChatGPT
 
-(hcSection "ChatGPT")
-(use-package hc-chat-gpt)
+;;(hcSection "ChatGPT")
+;;(use-package hc-chat-gpt)
 
 ;; ------------------------------------------------------------------------------
 ;; * Browser History
