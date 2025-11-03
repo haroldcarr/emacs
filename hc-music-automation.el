@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Nov 03 (Mon) 13:31:48 by Harold Carr.
+;;;; Last Modified : 2025 Nov 03 (Mon) 13:42:55 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -36,7 +36,8 @@
 (defvar hc-audacity     "/Applications/Audacity.app/Contents/MacOS/Audacity")
 (defvar hc-vlc          "/Applications/VLC.app/Contents/MacOS/VLC")
 
-(defvar hc-current-tunes (list hc-2010-Beowawe hc-2010-Georgia))
+(defvar hc-current-tunes
+  (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25"))
 
 (defmacro hc-play-what (what)
   `(progn
@@ -98,26 +99,28 @@
    dir
    (concat "\\." (regexp-quote ext) "$")))
 
-
 ;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
 
 (require 'dash)
 (require 's)
 
-(defun hc-filter-file-lines (in out substring)
-  "Read IN, keep lines containing SUBSTRING, and write them to OUT."
+(defun hc-get-tune-names (in substring)
+  "Read IN, return lines containing SUBSTRING."
   (let* ((lines (with-temp-buffer
                   (insert-file-contents in)
                   (s-lines (buffer-string))))
          (filtered (-filter
                     (lambda (line) (and (s-contains? substring line)
                                         (s-contains? "./Carr_tunes/" line)))
-                    lines))
-         (tune-names (mapcar #'hc-extract-tune-name filtered))
-         (with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
+                    lines)))
+    (mapcar #'hc-extract-tune-name filtered)))
+
+(defun hc-write-candidate-file (tune-names out)
+  "Write lines to OUT after adding header."
+  (let* ((with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
          (result (concat (s-join "\n" with-header) "\n")))
     (with-temp-file out (insert result))
-    (message "Wrote %d matching lines to %s" (length filtered) out)))
+    (message "Wrote %d matching lines to %s" (length tune-names) out)))
 
 (defun hc-extract-tune-name (line)
   "From a LINE like \"./Carr_tunes/1976-Transformation/ ...\",
@@ -127,7 +130,10 @@ return \"1976-Transformation\"."
        (-filter (lambda (x) (not (s-blank? x)))) ; drop empty lines
        (-third-item)))
 
-;;(hc-filter-file-lines (concat hc-music "/0-AAA-TUNE-LIST.org") "/tmp/XXX" "Z25")
+;;(hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
+;;(hc-write-candidate-file
+;; (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
+;; "/tmp/XXX")
 
 (provide 'hc-music-automation)
 
