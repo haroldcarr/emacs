@@ -1,0 +1,107 @@
+;;; hc-music-automation --- Summary -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;;;;
+;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
+;;;; Last Modified : 2025 Nov 03 (Mon) 08:06:21 by Harold Carr.
+;;;;
+
+;;; Code:
+
+(eval-when-compile (require 'use-package))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'dash)
+(require 'hc-run-command)
+(require 'hc-ssh)
+(require 's)
+(require 'widget)
+
+(eval-when-compile
+  (require 'wid-edit))
+
+(eval-when-compile
+  (require 'wid-edit))
+
+(declare-function hcLocation "")
+
+(defvar *hc-play-what*)
+
+(defvar hc-music        (hcLocation "music"))
+(defvar hc-Carr_tunes   (concat hc-music "/Carr_tunes"))
+(defvar hc-2010-Beowawe (concat hc-Carr_tunes "/2010-Beowawe"))
+(defvar hc-2010-Georgia (concat hc-Carr_tunes "/2010-Georgia"))
+(defvar hc-audacity     "/Applications/Audacity.app/Contents/MacOS/Audacity")
+(defvar hc-vlc          "/Applications/VLC.app/Contents/MacOS/VLC")
+
+(defvar hc-current-tunes (list hc-2010-Beowawe hc-2010-Georgia))
+
+(defmacro hc-play-what (what)
+  `(progn
+     (widget-create 'checkbox
+                    :notify #'(lambda (_w &rest _ignore)
+                                (setq *hc-play-what* ,what)
+                                (message (prin1-to-string *hc-play-what*)))
+                    nil)
+     (widget-insert (concat " " ,what))))
+
+(defun hc-play-music ()
+  "Play a tune from a list."
+  (interactive)
+  (switch-to-buffer "*HC Play It*")
+  (kill-all-local-variables)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+  (remove-overlays)
+
+  (let* ((candidates
+          (-filter
+           (lambda (x) (not (--any? (s-contains? it x) '("Z-SIB"))))
+           (-filter
+            (lambda (x) (--any? (s-contains? it x) hc-current-tunes))
+            (hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")))))
+
+    ;; --------------------------------------------------
+    (-each candidates
+      #'(lambda (c)
+          (widget-insert "\n")
+          (hc-play-what c)))
+
+    ;; --------------------------------------------------
+    (widget-insert "\n\n")
+    (widget-create
+     'push-button
+     :notify
+       #'(lambda (&rest _ignore)
+           (message *hc-play-what*)
+           (hc-play-it *hc-play-what*))
+     "play")
+
+    ;; --------------------------------------------------
+    (widget-insert "\n")
+
+    ;; --------------------------------------------------
+    (use-local-map widget-keymap)
+    (widget-setup)))
+
+(defun hc-play-it (filename)
+  (async-shell-command (concat hc-vlc " --loop " filename) (concat "*" filename "*")))
+
+;;(hc-play-it (concat hc-2010-Beowawe "/2023-Beowawe.mp3"))
+;;(hc-play-it (concat hc-2010-Georgia "/2010-Georgia.mp3"))
+
+(defun hc-directory-files-recursively-with-extension (dir ext)
+  "Return a list of absolute paths for all files under DIR ending with EXT."
+  (directory-files-recursively
+   dir
+   (concat "\\." (regexp-quote ext) "$")))
+
+
+;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
+
+(provide 'hc-music-automation)
+
+;;; hc-music-automation.el ends here
+
