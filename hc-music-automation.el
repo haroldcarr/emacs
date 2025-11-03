@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Nov 03 (Mon) 08:06:21 by Harold Carr.
+;;;; Last Modified : 2025 Nov 03 (Mon) 13:31:48 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -100,6 +100,34 @@
 
 
 ;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
+
+(require 'dash)
+(require 's)
+
+(defun hc-filter-file-lines (in out substring)
+  "Read IN, keep lines containing SUBSTRING, and write them to OUT."
+  (let* ((lines (with-temp-buffer
+                  (insert-file-contents in)
+                  (s-lines (buffer-string))))
+         (filtered (-filter
+                    (lambda (line) (and (s-contains? substring line)
+                                        (s-contains? "./Carr_tunes/" line)))
+                    lines))
+         (tune-names (mapcar #'hc-extract-tune-name filtered))
+         (with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
+         (result (concat (s-join "\n" with-header) "\n")))
+    (with-temp-file out (insert result))
+    (message "Wrote %d matching lines to %s" (length filtered) out)))
+
+(defun hc-extract-tune-name (line)
+  "From a LINE like \"./Carr_tunes/1976-Transformation/ ...\",
+return \"1976-Transformation\"."
+  (->> line
+       (s-split "/")                             ; split on slashes
+       (-filter (lambda (x) (not (s-blank? x)))) ; drop empty lines
+       (-third-item)))
+
+;;(hc-filter-file-lines (concat hc-music "/0-AAA-TUNE-LIST.org") "/tmp/XXX" "Z25")
 
 (provide 'hc-music-automation)
 
