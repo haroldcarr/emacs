@@ -1,8 +1,10 @@
-;;; hc-music.el --- music          -*- lexical-binding: t; -*-
+;;; hc-music-emms.el --- music          -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
 ;;; Code:
+
+(require 'hc-music-volume)
 
 (eval-when-compile (require 'use-package))
 
@@ -42,22 +44,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'cl-lib)
-
-(defun hc-mac-volume-get ()
-  "Return current Mac-OS audio volume."
-  (string-to-number (shell-command-to-string (concat "hcMacVolumeGet"))))
-
-(defun hc-mac-volume-change (amount)
-  "Change Mac-OS audio volume by AMOUNT."
-  (let ((new-vol (+ (hc-mac-volume-get) amount)))
-    (if (zerop (shell-command (format "hcMacVolumeSet %s" new-vol)))
-        (message "Volume is %s%%" (hc-mac-volume-get))
-      (message "non zero exit status: hcMacVolumeSet"))))
-
 (setq emms-volume-change-function 'hc-mac-volume-change)
 (setq emms-volume-change-amount 10)
 
-(provide 'hc-music)
+(provide 'hc-music-emms)
 
-;;; hc-music.el ends here
+;;; hc-music-emms.el ends here
