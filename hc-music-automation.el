@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Dec 25 (Thu) 14:02:24 by Harold Carr.
+;;;; Last Modified : 2025 Dec 25 (Thu) 14:36:42 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -30,6 +30,12 @@
 
 (defvar hc-music-others "/Volumes/exFAT-exter/MusicOthers")
 
+(defun hc-play-play-along ()
+  "Play play along."
+  (interactive)
+  (hc-play-music hc-music-others '("skylark") '("mp3" "wav" "flac")))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HC music
 
@@ -39,8 +45,6 @@
 (defvar hc-Carr_tunes   (concat hc-music "/Carr_tunes"))
 (defvar hc-2010-Beowawe (concat hc-Carr_tunes "/2010-Beowawe"))
 (defvar hc-2010-Georgia (concat hc-Carr_tunes "/2010-Georgia"))
-(defvar hc-audacity     "/Applications/Audacity.app/Contents/MacOS/Audacity")
-(defvar hc-vlc          "/Applications/VLC.app/Contents/MacOS/VLC")
 
 (defun hc-get-tune-names (in substring)
   "Read IN, return lines containing SUBSTRING."
@@ -73,10 +77,13 @@ return \"1976-Transformation\"."
 (defun hc-play-zcm-2025 ()
   "Play ZCM 2025."
   (interactive)
-  (hc-play-music hc-current-tunes hc-Carr_tunes "mp3"))
+  (hc-play-music hc-Carr_tunes hc-current-tunes '("mp3")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic
+
+(defvar hc-audacity "/Applications/Audacity.app/Contents/MacOS/Audacity")
+(defvar hc-vlc      "/Applications/VLC.app/Contents/MacOS/VLC")
 
 (defvar *hc-play-what*)
 
@@ -89,7 +96,7 @@ return \"1976-Transformation\"."
                     nil)
      (widget-insert (concat " " ,what))))
 
-(defun hc-play-music (want dir-to-search ext)
+(defun hc-play-music (dir-to-search want extensions)
   "Play a tune from a list."
   (interactive)
   (switch-to-buffer "*HC Play It*")
@@ -101,9 +108,7 @@ return \"1976-Transformation\"."
   (let* ((candidates
           (-filter
            (lambda (x) (not (--any? (s-contains? it x) '("Z-SIB"))))
-           (-filter
-            (lambda (x) (--any? (s-contains? it x) want))
-            (hc-directory-files-recursively-with-extension dir-to-search ext)))))
+           (directory-files-recursively-with-names-and-extensions dir-to-search want extensions))))
 
     ;; --------------------------------------------------
     (-each candidates
@@ -129,7 +134,15 @@ return \"1976-Transformation\"."
     (widget-setup)))
 
 (defun hc-play-it (filename)
-  (async-shell-command (concat hc-vlc " --loop " filename) (concat "*" filename "*")))
+  (async-shell-command
+   (concat hc-vlc " --loop " (hc-quote-if-spaces filename))
+   (concat "*" filename "*")))
+
+(defun hc-quote-if-spaces (s)
+  "Return S quoted if it contains whitespace, otherwise return S unchanged."
+  (if (string-match-p "[[:space:]]" s)
+      (format "%S" s)
+    s))
 
 ;;(hc-play-it (concat hc-2010-Beowawe "/2023-Beowawe.mp3"))
 ;;(hc-play-it (concat hc-2010-Georgia "/2010-Georgia.mp3"))
