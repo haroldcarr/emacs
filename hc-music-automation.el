@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Dec 25 (Thu) 12:42:26 by Harold Carr.
+;;;; Last Modified : 2025 Dec 25 (Thu) 14:02:24 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -28,7 +28,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; play along
 
-
+(defvar hc-music-others "/Volumes/exFAT-exter/MusicOthers")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HC music
@@ -141,6 +141,19 @@ return \"1976-Transformation\"."
    (concat "\\." (regexp-quote ext) "$")))
 
 ;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
+;;(hc-directory-files-recursively-with-extension hc-music-others "m3u")
+
+(defun directory-files-recursively-with-names-and-extensions (dir names exts)
+  "Return absolute paths for files under DIR whose basenames contain
+any substring in NAMES and whose extensions contain any substring in EXTS.
+Matching is case-insensitive."
+  (let* ((case-fold-search t)
+         (names-re (regexp-opt names))
+         (exts-re  (regexp-opt exts))
+         (re (concat names-re ".*\\." exts-re "\\'")))
+    (directory-files-recursively dir re)))
+
+;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; utilities
