@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Nov 04 (Tue) 14:44:04 by Harold Carr.
+;;;; Last Modified : 2025 Dec 25 (Thu) 12:42:26 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -25,9 +25,15 @@
 (eval-when-compile
   (require 'wid-edit))
 
-(declare-function hcLocation "")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; play along
 
-(defvar *hc-play-what*)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HC music
+
+(declare-function hcLocation "")
 
 (defvar hc-music        (hcLocation "music"))
 (defvar hc-Carr_tunes   (concat hc-music "/Carr_tunes"))
@@ -47,6 +53,11 @@
                     lines)))
     (mapcar #'hc-extract-tune-name filtered)))
 
+;;(hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
+;;(hc-write-candidate-file
+;; (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
+;; "/tmp/XXX")
+
 (defun hc-extract-tune-name (line)
   "From a LINE like \"./Carr_tunes/1976-Transformation/ ...\",
 return \"1976-Transformation\"."
@@ -55,8 +66,19 @@ return \"1976-Transformation\"."
        (-filter (lambda (x) (not (s-blank? x)))) ; drop empty lines
        (-third-item)))
 
+;; after the necessary functions defined
 (defvar hc-current-tunes
   (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25"))
+
+(defun hc-play-zcm-2025 ()
+  "Play ZCM 2025."
+  (interactive)
+  (hc-play-music hc-current-tunes hc-Carr_tunes "mp3"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; generic
+
+(defvar *hc-play-what*)
 
 (defmacro hc-play-what (what)
   `(progn
@@ -67,7 +89,7 @@ return \"1976-Transformation\"."
                     nil)
      (widget-insert (concat " " ,what))))
 
-(defun hc-play-music ()
+(defun hc-play-music (want dir-to-search ext)
   "Play a tune from a list."
   (interactive)
   (switch-to-buffer "*HC Play It*")
@@ -80,8 +102,8 @@ return \"1976-Transformation\"."
           (-filter
            (lambda (x) (not (--any? (s-contains? it x) '("Z-SIB"))))
            (-filter
-            (lambda (x) (--any? (s-contains? it x) hc-current-tunes))
-            (hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")))))
+            (lambda (x) (--any? (s-contains? it x) want))
+            (hc-directory-files-recursively-with-extension dir-to-search ext)))))
 
     ;; --------------------------------------------------
     (-each candidates
@@ -120,17 +142,15 @@ return \"1976-Transformation\"."
 
 ;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; utilities
+
 (defun hc-write-candidate-file (tune-names out)
   "Write lines to OUT after adding header."
   (let* ((with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
          (result (concat (s-join "\n" with-header) "\n")))
     (with-temp-file out (insert result))
     (message "Wrote %d matching lines to %s" (length tune-names) out)))
-
-;;(hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
-;;(hc-write-candidate-file
-;; (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25")
-;; "/tmp/XXX")
 
 (provide 'hc-music-automation)
 

@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2024 Mar 29 (Fri) 11:17:00 by Harold Carr.
+;;;; Last Modified : 2025 Dec 25 (Thu) 12:44:48 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -27,16 +27,16 @@
 )
 
 (add-hook 'lsp-after-initialize-hook
-          '(lambda ()
-             (lsp--set-configuration
-              '(:haskell
-                (:formattingProvider "stylish-haskell")
-                (:plugin
-                 (:tactics (:config (:timeout_duration 5)))
-                 (:ghcide-completions (:config (:autoExtendOn false)))
-                )
-               )
-           )))
+          #'(lambda ()
+              (lsp--set-configuration
+               '(:haskell
+                 (:formattingProvider "stylish-haskell")
+                 (:plugin
+                  (:tactics (:config (:timeout_duration 5)))
+                  (:ghcide-completions (:config (:autoExtendOn false)))
+                  )
+                 )
+               )))
 
 (provide 'hc-lsp-haskell)
 
