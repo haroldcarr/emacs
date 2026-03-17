@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2025 Dec 25 (Thu) 14:36:42 by Harold Carr.
+;;;; Last Modified : 2026 Jan 17 (Sat) 10:21:42 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -33,8 +33,40 @@
 (defun hc-play-play-along ()
   "Play play along."
   (interactive)
-  (hc-play-music hc-music-others '("skylark") '("mp3" "wav" "flac")))
-
+  (hc-play-music
+   "PLAY ALONG"
+   hc-music-others
+   '(
+     "airegin"
+     "all the things you are"
+     "Body and Soul" "Body & Soul"
+     "bolivia"
+     "Fee-Fi-Fo-Fum" "Fee Fi Fo Fum"
+     "foolish dog" "foolish door"
+     "round midnight" "round about midnight"
+     "skylark"
+     )
+   '(
+     "199x-Stray"
+     "2009-12-22-rehearsal"
+     "2010-01-04-rehearsal"
+     "2010-01-18-rehearsal"
+     "2010-01-20-City-Art"
+     "2010-07-14-Wayne"
+     "2010-10-26-John-Stowell"
+     "2021-spring"
+     "2022-05-07-Foolish_Door"
+     "2022-06-02-Emilee"
+     "2022-07-28-Emilee"
+     "2022-08-18-keith"
+     "2022-10-03-goran"
+     "2022-10-08-goran"
+     "2022-10-28-flanders"
+     "2024-06-01-tony-elison"
+     "2024-08-29-josh"
+     "._Foolish_Door"
+     )
+   '("flac" "m4a" "mp3" "wav")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HC music
@@ -71,13 +103,13 @@ return \"1976-Transformation\"."
        (-third-item)))
 
 ;; after the necessary functions defined
-(defvar hc-current-tunes
+(defvar hc-zcm-2025-tunes
   (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25"))
 
 (defun hc-play-zcm-2025 ()
   "Play ZCM 2025."
   (interactive)
-  (hc-play-music hc-Carr_tunes hc-current-tunes '("mp3")))
+  (hc-play-music "ZCM 2025" hc-Carr_tunes hc-zcm-2025-tunes '("Z-SIB") '("mp3")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic
@@ -96,10 +128,10 @@ return \"1976-Transformation\"."
                     nil)
      (widget-insert (concat " " ,what))))
 
-(defun hc-play-music (dir-to-search want extensions)
+(defun hc-play-music (playlist-name dir-to-search want do-not-want extensions)
   "Play a tune from a list."
   (interactive)
-  (switch-to-buffer "*HC Play It*")
+  (switch-to-buffer (concat "*" playlist-name "*"))
   (kill-all-local-variables)
   (let ((inhibit-read-only t))
     (erase-buffer))
@@ -107,7 +139,7 @@ return \"1976-Transformation\"."
 
   (let* ((candidates
           (-filter
-           (lambda (x) (not (--any? (s-contains? it x) '("Z-SIB"))))
+           (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
            (directory-files-recursively-with-names-and-extensions dir-to-search want extensions))))
 
     ;; --------------------------------------------------
@@ -157,7 +189,7 @@ return \"1976-Transformation\"."
 ;;(hc-directory-files-recursively-with-extension hc-music-others "m3u")
 
 (defun directory-files-recursively-with-names-and-extensions (dir names exts)
-  "Return absolute paths for files under DIR whose basenames contain
+  "Return absolute paths for files under DIR whose names contain
 any substring in NAMES and whose extensions contain any substring in EXTS.
 Matching is case-insensitive."
   (let* ((case-fold-search t)

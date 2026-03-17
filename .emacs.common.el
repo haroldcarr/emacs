@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2025 Sep 23 (Tue) 18:48:09 by Harold Carr.
+;;;; Last Modified : 2026 Mar 09 (Mon) 15:51:33 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -39,12 +39,17 @@
 
 ;; see: https://github.com/jwiegley/use-package
 (defmacro hcRequire (name &rest body)
-  "NAME BODY: poor man's use-package."
+  "NAME BODY: poor man's 'use-package'."
   `(if (require ',name nil t)
        (progn ,@body)
      (warn (concat (format "%s" ',name) " NOT FOUND"))))
 
 (hcRequire use-package)
+
+;; https://github.com/emacs-mirror/emacs/commit/881be95cddcab3cf37373678002c35334c177c97
+(setq package-review-policy t
+      package-review-diff-command
+      '("git" "diff" "--no-index" "--color=never" "--diff-filter=d"))
 
 ;; ------------------------------------------------------------------------------
 (hcSection "Beans")
@@ -251,9 +256,10 @@
   ;; List of names of sub-directories which `rgrep' shall not recurse into.
   (setq grep-find-ignored-directories
         (cons "dist-newstyle"
+        (cons "node_modules"
         (cons ".stack-work"
         (cons "target"
-         grep-find-ignored-directories)))
+         grep-find-ignored-directories))))
   )
 )
 
@@ -365,6 +371,12 @@
 
 (hcSection "Themes")
 (use-package hc-theme-switch)
+
+;; ------------------------------------------------------------------------------
+;; * Finance
+
+(hcSection "Finance")
+(use-package hc-finance)
 
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
