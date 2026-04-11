@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2026 Mar 09 (Mon) 15:51:33 by Harold Carr.
+;;;; Last Modified : 2026 Apr 07 (Tue) 20:43:43 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -186,6 +186,10 @@
 
 (advice-add 'risky-local-variable-p :override #'ignore)
 
+;; https://emacsredux.com/blog/2026/04/04/read-extended-command-predicate/
+(setq read-extended-command-predicate
+      #'command-completion-default-include-p)
+
 ;; https://www.emacswiki.org/emacs/GccEmacs#h5o-13
 ;; tell package.el to do ahead-of-time native compilation
 ;;
@@ -352,7 +356,7 @@
 ;; * Pinboard
 
 (hcSection "Pinboard")
-(use-package hc-pinboard)
+(use-package hc-pinboard-pick)
 
 ;; ------------------------------------------------------------------------------
 ;; * ChatGPT

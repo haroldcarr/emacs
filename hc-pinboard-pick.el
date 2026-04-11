@@ -1,10 +1,10 @@
-;;; hc-pinboard --- Summary
+;;; hc-pinboard-pick --- Summary
 
 ;;; Commentary:
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2024 Jan 23 (Tue) 15:38:36 by Harold Carr.
+;;;; Last Modified : 2026 Apr 07 (Tue) 20:45:28 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -46,7 +46,7 @@
 
 ;;;;;;;;;;;;;
 
-(provide 'hc-pinboard)
+(provide 'hc-pinboard-pick)
 
-;;; hc-pinboard.el ends here
+;;; hc-pinboard-pick.el ends here
 

@@ -11,9 +11,11 @@
   :demand
   :diminish ""
   :init
-  (progn
-    (setq company-idle-delay 0.3)
-    (global-company-mode)))
+  (setq company-idle-delay 0.3)
+  :config
+  (setq company-backends '(company-capf))
+  (global-company-mode)
+)
 
 (provide 'hc-company)
 

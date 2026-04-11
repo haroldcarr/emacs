@@ -310,7 +310,7 @@
 )
 
 ;; ------------------------------------------------------------------------------
-(defvar hc-dev-machines '("o2023" "o2020" "o2015" "hcmb-air"))
+(defvar hc-dev-machines '("hc2025" "o2023" "o2020" "o2015" "hcmb-air"))
 
 ;; ------------------------------------------------------------------------------
 ;; * Agda
@@ -330,10 +330,10 @@
 ;; ------------------------------------------------------------------------------
 ;; * Python
 
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Python")
-  (use-package hc-python)
-)
+;; (when (member (hcMachineName) hc-dev-machines)
+;;   (hcSection "Python")
+;;   (use-package hc-python)
+;; )
 
 ;; ------------------------------------------------------------------------------
 ;; * Rust
