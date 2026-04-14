@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2026 Apr 07 (Tue) 20:43:43 by Harold Carr.
+;;;; Last Modified : 2026 Apr 11 (Sat) 15:28:47 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -171,6 +171,7 @@
 (hcDefineBean hcFtptmp       (hcLocation  'ftptmp))
 (hcDefineBean hcHome         (hcLocation  'home))
 (hcDefineBean hcM2Repository (hcShExecCmd 'hcM2Repository))
+(hcDefineBean hcMusic        (hcLocation  'music))
 (hcDefineBean hcRpt          (hcLocation  'rpt))
 (hcDefineBean hcSync         (hcLocation  'sync))
 (hcDefineBean hcUlhcd        (hcLocation  'ulhcd))

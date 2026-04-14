@@ -80,7 +80,8 @@
   (setq org-agenda-files
         (list
          (concat (hcRpt)      "/TODO-WORK.org")
-         (concat (hcFinance)  "/01-TODO.org")
+         (concat (hcFinance)  "/0-TODO-FINANCE.org")
+         (concat (hcMusic)    "/0-TODO-MUSIC.txt")
          (concat (hcFsync)    "/TODO-ME.org")
          ;; (hcRpt)
          ;; (concat (hcRpt)   "/.past/2014")

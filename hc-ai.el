@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Apr 10 (Fri) 17:07:49 by Harold Carr.
+;;;; Last Modified : 2026 Apr 12 (Sun) 20:24:04 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -38,39 +38,43 @@
     (package-install-file dir)
     (message "Done. Restart Emacs or (require 'gptel)")))
 
-;; - ~M-x hc-install-gptel-from-github~
+;; ~M-x hc-install-gptel-from-github~
 
-;; - Installs to =~/.emacs.d/elpa/gptel-<date>/=
-;; - Subsequent ~M-x package-refresh-contents~ may override with MELPA version
-;; - To pin to this version: add to ~package-pinned-packages~ : ~'(gptel . "manual")~
+;; Installs to =~/.emacs.d/elpa/gptel-<date>/=
+;; Subsequent ~M-x package-refresh-contents~ may override with MELPA version
+;; To pin to this version: add to ~package-pinned-packages~ : ~'(gptel . "manual")~
 
 ;; Verification:
-;; - ~M-x describe-package RET gptel RET~ should show installed
-;; - ~M-x gptel! : mode line should show ~[Ollama:qwen2.5-coder:14b]~
+;; ~M-x describe-package RET gptel RET~ should show installed
+;; ~M-x gptel! : mode line should show ~[Ollama:qwen2.5-coder:14b]~
 
 (require 'gptel)
 
-(gptel-make-ollama "local-qwen2.5-coder:14b"
-  :host "localhost:11434"
-  :models '("qwen2.5-coder:14b")
-)
-(gptel-make-ollama "local-qwen2.5:14b"
-  :host "localhost:11434"
-  :models '("qwen2.5:14b")
-)
-;(setq gptel-model "qwen2.5-coder:14b")
+(defmacro hc-gptel-make-ollama (model-name &rest args)
+  `(gptel-make-ollama ,(concat "local-" model-name)
+     :host "localhost:11434"
+     :models '(,model-name)
+     ,@args))
+
+(hc-gptel-make-ollama "qwen3-coder:30b")
+(hc-gptel-make-ollama "qwen3.5:35b")
+
+(gptel-make-openai "OpenAI"
+  :key "PASTE KEY HERE" ;; TODO : get from .authinfo
+  :models '("gpt-4o"))
+
 (setq gptel-default-mode 'org-mode)
-;(setq gptel-stream t)
+(setq gptel-stream t)
 
-;; - failing:
-;;   - Check gptel version: `M-x package-describe-package RET gptel`
-;;   - Update if < 7.0: `M-x package-refresh-contents` then `M-x package-install RET gptel`
-;; - Fallback test:
-;;   - `curl -X POST http://localhost:11434/api/generate -d '{"model":"qwen2.5-coder:14b","prompt":"hi"}'`
-;;   - If curl works but Emacs fails → gptel config issue, not Ollama
+;; if gptel fails:
+;; - Check gptel version: `M-x package-describe-package RET gptel`
+;; - Update if < 7.0: `M-x package-refresh-contents` then `M-x package-install RET gptel`
+;; Fallback test:
+;; - curl -X POST http://localhost:11434/api/generate -d '{"model":"qwen2.5-coder:14b","prompt":"hi"}'
+;; If curl works but Emacs fails → gptel config issue, not Ollama
 
-;;(require 'gptel)
-;; say hello to harold using my_hello_world tool. Do not worry about the specific form of the greeting.  Just call the tool and show me what it returns.
+;; say hello to John Doe using my_hello_world tool. Do not worry about the specific form of the greeting.  Just call the tool and show me what it returns.
+
 (gptel-make-tool
  :name "my_hello_world"
  :function (lambda (x) (message "hellO WoRlD %s" x) (concat "heLLo woRld: " x))
@@ -80,7 +84,25 @@
           :description "the person to say hello to"))
  :description "When I ask you to say hello, call the function with the name given.")
 
-;;(setq gptel-tools "my_hello_world")
+;;; TOOLS
+
+(require 'cl-lib)
+
+(defun git-clone-url-in-dir (url target-directory)
+  "Clones the GIT repository located at URL into TARGET-DIRECTORY."
+  (interactive "sGit URL: \nsTarget Directory: ")
+  (unless (file-exists-p target-directory)
+    (error "Directory %s does not exist." target-directory))
+  (let ((default-directory target-directory))
+    (with-temp-buffer
+      (if (zerop (call-process "git" nil t nil "clone" url))
+          (message "Git repository cloned successfully.")
+        (error "git clone failed")))))
+
+;; (git-clone-url-in-dir "git@github.com:karthink/gptel-agent.git" (hcLocation 'emacs))
+;; add gptel-agent to .gitignore
+;; M-x package-install-file <on the gptel-agent repo directory>
+(require 'gptel-agent)
 
 (provide 'hc-ai)
 
