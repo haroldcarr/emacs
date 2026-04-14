@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Apr 12 (Sun) 20:24:04 by Harold Carr.
+;;;; Last Modified : 2026 Apr 14 (Tue) 09:52:27 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -50,14 +50,15 @@
 
 (require 'gptel)
 
-(defmacro hc-gptel-make-ollama (model-name &rest args)
-  `(gptel-make-ollama ,(concat "local-" model-name)
+(defmacro hc-gptel-make-ollama (prefix model-name &rest args)
+  `(gptel-make-ollama ,(concat prefix "-" model-name)
      :host "localhost:11434"
      :models '(,model-name)
      ,@args))
 
-(hc-gptel-make-ollama "qwen3-coder:30b")
-(hc-gptel-make-ollama "qwen3.5:35b")
+(hc-gptel-make-ollama "local" "qwen3-coder:30b")
+(hc-gptel-make-ollama "local" "qwen3.5:35b")
+(hc-gptel-make-ollama "cloud" "minimax-m2.7:cloud")
 
 (gptel-make-openai "OpenAI"
   :key "PASTE KEY HERE" ;; TODO : get from .authinfo
