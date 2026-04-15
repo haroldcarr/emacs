@@ -135,6 +135,10 @@
      (hcSection ,(symbol-name name))
      (use-package ,name)))
 
+(defmacro hcSectionLoadOnDevMachines (name)
+  `(when (member (hcMachineName) hc-dev-machines)
+     (hcSectionLoad ,name)))
+
 (setq debug-on-error t)
 
 (defmacro comment (&rest x) "X." nil)
@@ -390,24 +394,12 @@
 (hcSectionLoad hc-theme-switch)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-finance)
-
 ;; ------------------------------------------------------------------------------
-;; * Markdown
-
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Markdown")
-  (use-package hc-markdown))
-
+(hcSectionLoadOnDevMachines hc-markdown)
 ;; ------------------------------------------------------------------------------
-;; * PDF
-
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSection "PDF")
-  (use-package hc-pdf))
-
+(hcSectionLoadOnDevMachines hc-pdf)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-gnus)
-
 ;; ------------------------------------------------------------------------------
 ;; * Registers and Bookmarks
 
@@ -431,12 +423,10 @@
 (setq   bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
 
 ;;(use-package hc-bookmark-plus)
-
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-web-browsing)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-timestamp)
-
 ;; ------------------------------------------------------------------------------
 ;; * org-mode
 
@@ -469,12 +459,6 @@
 
 ;; END   .emacs.common
 ;; ------------------------------------------------------------------------------
-
-;; ------------------------------------------------------------------------------
-;; * named keyboard macros
-
-(fset 'ecp
-   (kmacro-lambda-form [?\C-s ?\[ ?l ?a ?b ?e ?l ?= ?\" ?E ?C ?P ?\C-e backspace backspace backspace ?\C-d ?\C-d ?\C-d] 0 "%d"))
 
 ;; ------------------------------------------------------------------------------
 ;; * Top level misc
@@ -638,42 +622,30 @@
 )
 
 ;; ------------------------------------------------------------------------------
-;; * Agda
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSectionLoad hc-agda))
+(hcSectionLoadOnDevMachines hc-agda)
 ;; ------------------------------------------------------------------------------
-;; * Haskell
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSectionLoad hc-haskell))
+(hcSectionLoadOnDevMachines hc-haskell)
 ;; ------------------------------------------------------------------------------
-;; * Python
-;; (when (member (hcMachineName) hc-dev-machines)
-;;   (hcSectionLoad hc-python))
+;; (hcSectionLoadOnDevMachines hc-python)
 ;; ------------------------------------------------------------------------------
-;; * Rust
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSectionLoad hc-rust))
+(hcSectionLoadOnDevMachines hc-rust)
 ;; ------------------------------------------------------------------------------
 ;; * Typescript
-
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "Typescript")
   (use-package typescript)
   (setq typescript-indent-level 2))
-
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-java)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-lisps)
-
 ;; ------------------------------------------------------------------------------
 ;; This should come AFTER all language-specific setup above.
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "LSP and EGLOT")
   (use-package hc-lsp-pick)
   (use-package hc-eglot)
-  )
-
+)
 ;; ------------------------------------------------------------------------------
 ;; * Images
 
@@ -683,7 +655,6 @@
 
 (defvar image-dired-dir)
 (setq image-dired-dir "/tmp/emacs-image-dired/")
-
 ;; ------------------------------------------------------------------------------
 ;; * Calendar and Diary
 
@@ -860,14 +831,6 @@
 (use-package google-maps :defer t)
 
 ;; ------------------------------------------------------------------------------
-;; * Twitter
-
-;; http://www.emacswiki.org/emacs/TwitteringMode
-
-(hcSection "Twitter")
-(use-package twittering-mode :defer t)
-
-;; ------------------------------------------------------------------------------
 ;; * Misc
 
 (hcSection "Misc")
@@ -893,34 +856,6 @@
                         (mapcar #'car (package-desc-reqs (cadr curr)))))
       (when (memq needle curr-deps)
         (push (car curr) all-rdeps)))))
-
-;; ------------------------------------------------------------------------------
-;; * Features used but not customized
-
-;; ** Dired
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html#Dired
-;; - http://emacswiki.org/emacs/DiredMode
-;; ** Dynamic Abbreviations
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Dynamic-Abbrevs.html#Dynamic-Abbrevs
-;; - http://emacswiki.org/emacs/DynamicAbbreviations
-;; ** Speedbar
-;; - http://www.gnu.org/software/emacs/manual/html_mono/speedbar.html
-;; - http://emacswiki.org/emacs/SpeedBar
-;; ** Keyboard Macros
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Keyboard-Macros.html#Keyboard-Macros
-;; - http://emacswiki.org/emacs/KeyboardMacros
-;; ** Document Viewing
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Document-View.html#Document-View
-;; - http://www.emacswiki.org/emacs/DocViewMode
-;; ** Color Themes and rainbow-mode
-;; - http://emacsredux.com/blog/2013/08/21/color-themes-redux/
-;; - http://julien.danjou.info/projects/emacs-packages#rainbow-mode
-;; ** DIG (interface to DNS dig command)
-;; - /Applications/MacPorts/Emacs.app/Contents/Resources/lisp/net/dig.el.gz
-;; - http://stuff.mit.edu/afs/athena/astaff/project/emacs/source/emacs-23.1/lisp/net/dig.el
-
-;; ------------------------------------------------------------------------------
-;; * Non Literate
 
 ;; ------------------------------------------------------------------------------
 
