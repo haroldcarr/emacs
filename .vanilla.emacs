@@ -132,6 +132,11 @@
          (setq *hcSection* title)
          (message title))))
 
+(defmacro hcSectionLoad (name)
+  `(progn
+     (hcSection ,(symbol-name name))
+     (use-package ,name)))
+
 (setq debug-on-error t)
 
 (defmacro comment (&rest x) "X." nil)
@@ -440,47 +445,17 @@
      )))
 
 ;; ------------------------------------------------------------------------------
-;; * Images
-
-(hcSection "Images")
-
-(use-package hc-image)
-
+(hcSectionLoad hc-image)
 ;; ------------------------------------------------------------------------------
-;; * Sync
-
-(hcSection "Sync")
-(use-package hc-sync)
-
+(hcSectionLoad hc-sync)
 ;; ------------------------------------------------------------------------------
-;; * Pinboard
-
-(hcSection "Pinboard")
-(use-package hc-pinboard-pick)
-
+(hcSectionLoad hc-pinboard-pick)
 ;; ------------------------------------------------------------------------------
-;; * ChatGPT
-
-;;(hcSection "ChatGPT")
-;;(use-package hc-chat-gpt)
-
+(hcSectionLoad hc-browser-history)
 ;; ------------------------------------------------------------------------------
-;; * Browser History
-
-(hcSection "Browser History")
-(use-package hc-browser-history)
-
+(hcSectionLoad hc-theme-switch)
 ;; ------------------------------------------------------------------------------
-;; * Themes
-
-(hcSection "Themes")
-(use-package hc-theme-switch)
-
-;; ------------------------------------------------------------------------------
-;; * Finance
-
-(hcSection "Finance")
-(use-package hc-finance)
+(hcSectionLoad hc-finance)
 
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
@@ -572,27 +547,10 @@
 ;;(use-package hc-bookmark-plus)
 
 ;; ------------------------------------------------------------------------------
-;; * Web Browsing
-
-(hcSection "Web Browsing")
-(use-package hc-web-browsing)
-
+(hcSectionLoad hc-web-browsing)
 ;; ------------------------------------------------------------------------------
-;; * Timestamp
+(hcSectionLoad hc-timestamp)
 
-;; - ftp://202.5.194.21/SW_ebooks/EMAGAZINE/Writing_GNU_Emacs_Extensions.pdf
-;;   - starting on page 47
-
-(hcSection "Timestamp")
-
-;; when running on samsun nc10; cygwin; startxwin; emacs; this is defined with
-;; the computer name and my name and it screws up - so eval this by hand
-;; TODO : it doesn't get redefined below because hcWin32P is false
-;; because the window-system is x
-;;(defun user-full-name () "Harold Carr")
-(with-no-warnings
-(use-package hc-timestamp)
-)
 ;; ------------------------------------------------------------------------------
 ;; * org-mode
 
@@ -654,20 +612,7 @@
 (defun hcVtm ()"."(interactive) (visit-tags-table (hcTagsMessageBusDst)))
 
 ;; ------------------------------------------------------------------------------
-;; * Version Control and Magit
-
-(hcSection "Version Control and Magit")
-
-(hcSection "git")
-(with-no-warnings
-(use-package hc-git)
-)
-
-;; I am not sure, but I think after I set these to nil, emacs started leaving *~ files around
-;; even though the editted files were under source control.
-;;(setopt vc-follow-symlinks nil)
-;;(setopt vc-handled-backends nil)
-
+(hcSectionLoad hc-git)
 ;; ------------------------------------------------------------------------------
 ;; * Send diagram text to SDEDIT (UML sequence diagrams)
 
@@ -727,10 +672,7 @@
   (hcFonts (* n 10) (* n 15)))
 
 ;; ------------------------------------------------------------------------------
-;; * directory tree
-
-(hcSection "directory tree")
-(load-library "hc-dir-tree.el")
+(hcSectionLoad hc-dir-tree)
 
 ;; ------------------------------------------------------------------------------
 ;; * EPUB
@@ -809,12 +751,6 @@
   (global-set-key (kbd "M-] Y") "Ψ")
   (global-set-key (kbd "M-] W") "Ω")
 )
-
-(provide '.emacs.common)
-
-;;; .emacs.common.el ends here
-
-
 
 ;; END   .emacs.common
 ;; ------------------------------------------------------------------------------
@@ -928,11 +864,7 @@
 (use-package hc-company)
 
 ;; ------------------------------------------------------------------------------
-;; * yasnippet
-
-(hcSection "yasnippet")
-
-(use-package hc-yasnippet)
+(hcSectionLoad hc-yasnippet)
 
 ;; ------------------------------------------------------------------------------
 ;; * daemon / emacsclient
@@ -969,9 +901,7 @@
       (server-start)))
 
 ;; ------------------------------------------------------------------------------
-;; * Projectile
-
-(use-package hc-projectile)
+(hcSectionLoad hc-projectile)
 
 ;; ------------------------------------------------------------------------------
 ;; * Emacs Code Browser (ECB)
@@ -1040,32 +970,24 @@
 ;; * Agda
 
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Agda")
-  (use-package hc-agda))
+  (hcSectionLoad hc-agda))
 
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
 
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Haskell")
-  (use-package hc-haskell)
-)
-
+  (hcSectionLoad hc-haskell))
 ;; ------------------------------------------------------------------------------
 ;; * Python
 
 ;; (when (member (hcMachineName) hc-dev-machines)
-;;   (hcSection "Python")
-;;   (use-package hc-python)
-;; )
+;;   (hcSectionLoad hc-python))
 
 ;; ------------------------------------------------------------------------------
 ;; * Rust
 
 (when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Rust")
-  (use-package hc-rust)
-)
+  (hcSectionLoad hc-rust))
 
 ;; ------------------------------------------------------------------------------
 ;; * Typescript
@@ -1073,8 +995,7 @@
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "Typescript")
   (use-package typescript)
-  (setq typescript-indent-level 2)
-)
+  (setq typescript-indent-level 2))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (hcSection "Java")
@@ -1156,12 +1077,10 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;;  :pin melpa-stable
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "LISP and Scheme and Clojure")
+;; ------------------------------------------------------------------------------
+(hcSectionLoad hc-lisps)
 
-(use-package hc-lisps)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ------------------------------------------------------------------------------
 (hcSection "C")
 
 ;;(load "c-mode")
