@@ -1,0 +1,63 @@
+;;; hc-greek.el --- git          -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
+
+(progn
+  (global-set-key (kbd "M-] a") "α")
+  (global-set-key (kbd "M-] b") "β")
+  (global-set-key (kbd "M-] g") "γ")
+  (global-set-key (kbd "M-] d") "δ")
+  (global-set-key (kbd "M-] e") "ε")
+  (global-set-key (kbd "M-] z") "ζ")
+  (global-set-key (kbd "M-] h") "η")
+  (global-set-key (kbd "M-] q") "θ")
+  (global-set-key (kbd "M-] i") "ι")
+  (global-set-key (kbd "M-] k") "κ")
+  (global-set-key (kbd "M-] l") "λ")
+  (global-set-key (kbd "M-] m") "μ")
+  (global-set-key (kbd "M-] n") "ν")
+  (global-set-key (kbd "M-] x") "ξ")
+  (global-set-key (kbd "M-] o") "ο")
+  (global-set-key (kbd "M-] p") "π")
+  (global-set-key (kbd "M-] r") "ρ")
+  (global-set-key (kbd "M-] s") "σ")
+  (global-set-key (kbd "M-] t") "τ")
+  (global-set-key (kbd "M-] u") "υ")
+  (global-set-key (kbd "M-] f") "ϕ")
+  (global-set-key (kbd "M-] j") "φ")
+  (global-set-key (kbd "M-] c") "χ")
+  (global-set-key (kbd "M-] y") "ψ")
+  (global-set-key (kbd "M-] w") "ω")
+  (global-set-key (kbd "M-] A") "Α")
+  (global-set-key (kbd "M-] B") "Β")
+  (global-set-key (kbd "M-] G") "Γ")
+  (global-set-key (kbd "M-] D") "Δ")
+  (global-set-key (kbd "M-] E") "Ε")
+  (global-set-key (kbd "M-] Z") "Ζ")
+  (global-set-key (kbd "M-] H") "Η")
+  (global-set-key (kbd "M-] Q") "Θ")
+  (global-set-key (kbd "M-] I") "Ι")
+  (global-set-key (kbd "M-] K") "Κ")
+  (global-set-key (kbd "M-] L") "Λ")
+  (global-set-key (kbd "M-] M") "Μ")
+  (global-set-key (kbd "M-] N") "Ν")
+  (global-set-key (kbd "M-] X") "Ξ")
+  (global-set-key (kbd "M-] O") "Ο")
+  (global-set-key (kbd "M-] P") "Π")
+  (global-set-key (kbd "M-] R") "Ρ")
+  (global-set-key (kbd "M-] S") "Σ")
+  (global-set-key (kbd "M-] T") "Τ")
+  (global-set-key (kbd "M-] U") "Υ")
+  (global-set-key (kbd "M-] F") "Φ")
+  (global-set-key (kbd "M-] J") "Φ")
+  (global-set-key (kbd "M-] C") "Χ")
+  (global-set-key (kbd "M-] Y") "Ψ")
+  (global-set-key (kbd "M-] W") "Ω")
+)
+
+(provide 'hc-greek)
+
+;;; hc-greek.el ends here

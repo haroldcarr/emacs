@@ -21,11 +21,9 @@
 
 ;;; Code:
 
-;; two flycheck warnings : 1st I understand; no idea where 2nd comes from
-;; 57   1 warning         cl package required at runtime (emacs-lisp)
-;; 734   1 warning         the following functions might not be defined at runtime: neo-buffer--unlock-width, neo-buffer--lock-width (emacs-lisp)
-
 (defvar hc-emacs "hcev")
+
+(defvar hc-dev-machines '("hc2025" "o2023" "o2020" "o2015" "hcmb-air"))
 
 ;; ------------------------------------------------------------------------------
 ;; STARTUP
@@ -211,23 +209,6 @@
 ;; ------------------------------------------------------------------------------
 (hcSection "Shell Commands")
 
-;; SHELLS
-;; eshell
-;;   Implemented in Elisp. Integrated with Emacs. Runs on Windows.
-;;   Does not support terminal manipulation capabilities (e.g., ncdu, nmtui, ...).
-;; shell
-;;    Uses standard shell (e.g., bash). reads input from Emacs, sends it to shell, displays shell output.
-;;    Does not support interactive commands that handle how output should be displayed (e.g., htop).
-;; term
-;;    Terminal emulator written in Elisp. Runs a shell (like terminal emulator Gnome Terminal).
-;;    Program output can manipulate output using escape codes. So htop will work
-;;    But term and ansi-term do not implement all escapes codes.
-;;    Some programs do not work properly. Has inferior performance.
-;; vterm
-;;    https://github.com/akermu/emacs-libvterm
-;;    Terminal emulator. Core is written in C, libvterm.
-;;    Fast and works with most terminal applications.
-
 (defun hcShExecCmd (name &rest args)
   "NAME ARGS: execute a shell command."
   (shell-command-to-string
@@ -395,55 +376,8 @@
 ;; have 'M-x dictionary-search' use
 (setq dictionary-server "dict.org")
 
-;;(when (hcIsVersionP "28")
-;;  (setc tab-bar-format '(tab-bar-format-global)
-;;        tab-bar-mode t))
-
-;; (defun hc-split-window-sensibly (&optional window)
-;;   "WINDOW.  Replace `split-window-sensibly' with one that prefers vertical splits."
-;;   (interactive)
-;;   (if (and (fboundp 'window-in-direction)
-;;                        ;; Don't try to split when starting in a minibuffer
-;;                        ;; e.g M-: and try to use helm-show-kill-ring.
-;;                        (not (minibufferp helm-current-buffer)))
-;;       (let ((window (or window (selected-window))))
-;;         ;; (or (and (window-splittable-p window t)
-;;         ;;          (with-selected-window window
-;;         ;;            (split-window-right)))
-;;         ;;     (and (window-splittable-p window)
-;;         ;;          (with-selected-window window
-;;         ;;            (split-window-below)))))))
-;;         (if (window-splittable-p window)
-;;             (with-selected-window window (split-window-below))))))
-
-;; (setq      split-window-preferred-function-ORIG split-window-preferred-function)
-;; (setq      split-window-preferred-function #'hc-split-window-sensibly)
-;; (setq helm-split-window-preferred-function #'hc-split-window-sensibly)
-
-
 ;; ------------------------------------------------------------------------------
-;; * Time
-
-(hcSection "Time")
-
-;; https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-(use-package time
-  :custom
-  (world-clock-list
-   '(("Pacific/Honolulu"     "Honolulu")
-     ("America/Los_Angeles"  "San Francisco")
-     ("America/Denver"       "Salt Lake City")
-     ("America/Chicago"      "Austin")
-     ("America/New_York"     "New York")
-     ("America/Santiago"     "Santiago, Chile")
-     ("Europe/London"        "London")
-     ("Europe/Amsterdam"     "Amsterdam")
-     ("Europe/Paris"         "Paris")
-     ;;("Asia/Calcutta"        "Bangalore")
-     ;;("Asia/Tokyo"           "Tokyo")
-     ("Pacific/Auckland"     "Wellington, New Zealand")
-     )))
-
+(hcSectionLoad hc-time)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-image)
 ;; ------------------------------------------------------------------------------
@@ -460,67 +394,19 @@
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
 
-(when (member (hcMachineName) '("hc2025" "o2023" "o2020" "o2015"))
+(when (member (hcMachineName) hc-dev-machines)
   (hcSection "Markdown")
   (use-package hc-markdown))
 
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(when (member (hcMachineName) '("hc2025" "o2023" "o2020" "o2015"))
+(when (member (hcMachineName) hc-dev-machines)
   (hcSection "PDF")
   (use-package hc-pdf))
 
 ;; ------------------------------------------------------------------------------
-;; * GNUS
-
-(hcSection "GNUS")
-
-;; https://whereofwecannotspeak.wordpress.com/2009/07/15/getting-gnus-to-read-mail-over-imap/
-
-;; Get an app-specific password: https://support.google.com/accounts/answer/185833
-
-;;;; RECEIVE
-;; https://lars.ingebrigtsen.no/2020/01/06/whatever-happened-to-news-gmane-org/comment-page-1/#comment-36418
-(defvar gnus-select-method)
-(setq gnus-select-method
-      '(nntp "news.gmane.io")
-      )
-(comment
-(defvar gnus-secondary-select-methods)
-(setq gnus-secondary-select-methods
-      '((nnimap "gmail"
-                (nnimap-address "imap.gmail.com")
-                (nnimap-server-port 993)
-                (nnimap-authenticator login)
-                (nnimap-expunge-on-close 'never)
-                (nnimap-stream ssl))))
-)
-;; Original value was  "%U%R%z%I%(%[%4L: %-23,23f%]%) %s\n"
-(defvar gnus-summary-line-format)
-(defvar gnus-user-date-format-alist)
-(setq gnus-summary-line-format "%&user-date;%U%R%z%I%(%[%4L: %-23,23f%]%) %s\n"
-      gnus-user-date-format-alist '((t . "%Y-%m-%d")))
-
-;;;; SEND
-(defvar message-send-mail-function)
-(defvar smtpmail-starttls-credentials)
-(defvar smtpmail-auth-credentials)
-(defvar smtpmail-default-smtp-server)
-(defvar smtpmail-smtp-server)
-(defvar smtpmail-smtp-service)
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-      smtpmail-auth-credentials '(("smtp.gmail.com" 587 "harold.carr@gmail.com" nil))
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      mail-host-address "harold.carr@gmail.com") ;; gets rid of "tickle me"
-
-;; M-x gnus
-
-;; when it prompts for your password, give app-specific password
-;; -  (and optionally let it store that password ---unprotected--- in =~/.authinfo=)
+(hcSectionLoad hc-gnus)
 
 ;; ------------------------------------------------------------------------------
 ;; * Registers and Bookmarks
@@ -561,196 +447,25 @@
   :config
   (progn (use-package hc-org-mode)
          (hc-org-mode)
-         (when (member (hcMachineName) '("hc2025" "o2023" "o2020"))
+         (when (member (hcMachineName) hc-dev-machines)
            (use-package hc-noter))))
 )
 ;; ------------------------------------------------------------------------------
-;; * Tags
-
-;; - http://www.emacswiki.org/emacs/BuildTags
-;; - http://www.gnu.org/software/emacs/manual/html_node/emacs/Tags.html#Tags
-;; - http://emacswiki.org/emacs/EmacsTags
-
-(hcSection "Tags")
-
-;; alternate way to create using etags
-;; cd <...>
-;; need a regex instead of "*" - also only files
-;; find . -name "*" -print -o -name SCCS -name RCS -prune | .../bin/etags -
-
-(defun hcTagsCreate (dir-name &optional tags-dir-path-filename)
-  "DIR-NAME TAGS-DIR-PATH-FILENAME: Create tags file."
-  (interactive "DDirectory: ")
-  ;; ctags via nix
-  (let* ((dir (directory-file-name dir-name))
-         (ctags-filename (if (null tags-dir-path-filename) (concat dir "/TAGS") tags-dir-path-filename)))
-    (shell-command
-     (format "ctags -f %s -e -R %s" ctags-filename dir))))
-
-(defun        hcTagsDir       (x)"X."(concat (hcEsync)        "/TAGS/" x))
-(hcDefineBean hcTagsCatalogSrc       (concat (hcWs)           "/catalog-service/subprojects/catalog-core/src/"))
-(hcDefineBean hcTagsCatalogDst       (hcTagsDir               "TAGS-CATALOG"))
-(hcDefineBean hcTagsJavaSrc          "/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/src")
-(hcDefineBean hcTagsJavaDst          (hcTagsDir               "TAGS-JAVA"))
-(hcDefineBean hcTagsBuzzSrc          (concat (hcWs)           "/buzz-message-bus/src"))
-(hcDefineBean hcTagsBuzzDst          (hcTagsDir               "TAGS-BUZZ"))
-(hcDefineBean hcTagsMessageBusSrc    (concat (hcM2Repository) "/com/oracle/commons/fmw-commons/12.1.4-0-0-SNAPSHOT/sources/src"))
-(hcDefineBean hcTagsMessageBusDst    (hcTagsDir               "TAGS-MESSAGE-BUS"))
-(defun hcTagsCreateCatalog    ()"."(interactive) (hcTagsCreate (hcTagsCatalogSrc)    (hcTagsCatalogDst)))
-(defun hcTagsCreateJava       ()"."(interactive) (hcTagsCreate (hcTagsJavaSrc)       (hcTagsJavaDst)))
-(defun hcTagsCreateBuzz       ()"."(interactive) (hcTagsCreate (hcTagsBuzzSrc)       (hcTagsBuzzDst)))
-(defun hcTagsCreateMessageBus ()"."(interactive) (hcTagsCreate (hcTagsMessageBusSrc) (hcTagsMessageBusDst)))
-(defun hcTagsCreateAll () "."
-  (interactive)
-  (hcTagsCreateCatalog)
-  (hcTagsCreateJava)
-  (hcTagsCreateBuzz)
-  (hcTagsCreateMessageBus))
-(defun hcVtc ()"."(interactive) (visit-tags-table (hcTagsCatalogDst)))
-(defun hcVtj ()"."(interactive) (visit-tags-table (hcTagsJavaDst)))
-(defun hcVtb ()"."(interactive) (visit-tags-table (hcTagsBuzzDst)))
-(defun hcVtm ()"."(interactive) (visit-tags-table (hcTagsMessageBusDst)))
-
+(hcSectionLoad hc-tags)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-git)
 ;; ------------------------------------------------------------------------------
-;; * Send diagram text to SDEDIT (UML sequence diagrams)
-
-;; http://sdedit.sourceforge.net/
-
-;; When the current buffer contains SDEDIT diagram text, just do
-;; M-x sdedit
-
-;; Be sure the sdedit program is up and running as a service.
-
-(hcSection "SDEDIT")
-
-(defun hcSdedit () "."
-  (interactive)
-  (let ((p (open-network-stream "*HC-SDEDIT*" "*HC-SDEDIT-CONNECTION*" "localhost" "60001")))
-    (process-send-string p (concat (buffer-name) "
-" (buffer-string)))
-    (delete-process p)))
-
-;; ------------------------------------------------------------------------------
-;; * frame/font size
-
-(hcSection "frame/font size")
-
-;; C-U C-X : shows current font
-
-;; C-x C-- : decrease font size
-;; C-x C-+ : increase font size
-;; C-x C-0 : reset to default size
-;; these run text-scale-adjust
-
-(defun hc-h (n)    "N."   (interactive) (set-frame-height (selected-frame) n))
-(defun hc-w (n)    "N."   (interactive) (set-frame-width (selected-frame) n))
-(defun hc-hw (x y) "X Y." (interactive) (hc-h x) (hc-w y))
-(defun hc-hwd ()   "."    (interactive) (hc-h 27) (hc-w 101))
-
-(defun hcFonts (default-height variable-pitch-height)
-  "DEFAULT-HEIGHT VARIABLE-PITCH-HEIGHT."
-  (interactive)
-  (set-face-attribute 'default nil
-                      :family "Monaco"
-                      :height default-height)
-  (set-face-attribute 'variable-pitch nil
-                      :family "Monaco"
-                      :height variable-pitch-height
-                      :weight 'regular))
-
-(defun hcDoFonts () "."
-  (interactive)
-  (when window-system
-    (cond ((> (x-display-pixel-width) 1800)
-           (hcFonts 200 300))
-          (t (hcFonts 175 200)))))
-
-(defun hc-font-size (n) "N."
-  (interactive "nSize: ")
-  (hcFonts (* n 10) (* n 15)))
-
+(hcSectionLoad hc-sdedit)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-dir-tree)
-
 ;; ------------------------------------------------------------------------------
-;; * EPUB
-
-(hcSection "EPUB")
-
-;; https://github.com/wasamasa/nov.el
-(with-no-warnings
-(use-package nov
-  :config (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
-)
+(hcSectionLoad hc-epub)
 
 ;; ------------------------------------------------------------------------------
 ;; * HEXL-MODE : view/edit at files like in "hex dump" format
-
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Editing-Binary-Files.html
-
-
-(defun hc-signed-off-by ()
-  "X."
-  (interactive)
-  (insert "Signed-off-by: Harold Carr harold.carr@oracle.com"))
-
 ;; ------------------------------------------------------------------------------
-;; * greek
-
-(progn
-  (global-set-key (kbd "M-] a") "α")
-  (global-set-key (kbd "M-] b") "β")
-  (global-set-key (kbd "M-] g") "γ")
-  (global-set-key (kbd "M-] d") "δ")
-  (global-set-key (kbd "M-] e") "ε")
-  (global-set-key (kbd "M-] z") "ζ")
-  (global-set-key (kbd "M-] h") "η")
-  (global-set-key (kbd "M-] q") "θ")
-  (global-set-key (kbd "M-] i") "ι")
-  (global-set-key (kbd "M-] k") "κ")
-  (global-set-key (kbd "M-] l") "λ")
-  (global-set-key (kbd "M-] m") "μ")
-  (global-set-key (kbd "M-] n") "ν")
-  (global-set-key (kbd "M-] x") "ξ")
-  (global-set-key (kbd "M-] o") "ο")
-  (global-set-key (kbd "M-] p") "π")
-  (global-set-key (kbd "M-] r") "ρ")
-  (global-set-key (kbd "M-] s") "σ")
-  (global-set-key (kbd "M-] t") "τ")
-  (global-set-key (kbd "M-] u") "υ")
-  (global-set-key (kbd "M-] f") "ϕ")
-  (global-set-key (kbd "M-] j") "φ")
-  (global-set-key (kbd "M-] c") "χ")
-  (global-set-key (kbd "M-] y") "ψ")
-  (global-set-key (kbd "M-] w") "ω")
-  (global-set-key (kbd "M-] A") "Α")
-  (global-set-key (kbd "M-] B") "Β")
-  (global-set-key (kbd "M-] G") "Γ")
-  (global-set-key (kbd "M-] D") "Δ")
-  (global-set-key (kbd "M-] E") "Ε")
-  (global-set-key (kbd "M-] Z") "Ζ")
-  (global-set-key (kbd "M-] H") "Η")
-  (global-set-key (kbd "M-] Q") "Θ")
-  (global-set-key (kbd "M-] I") "Ι")
-  (global-set-key (kbd "M-] K") "Κ")
-  (global-set-key (kbd "M-] L") "Λ")
-  (global-set-key (kbd "M-] M") "Μ")
-  (global-set-key (kbd "M-] N") "Ν")
-  (global-set-key (kbd "M-] X") "Ξ")
-  (global-set-key (kbd "M-] O") "Ο")
-  (global-set-key (kbd "M-] P") "Π")
-  (global-set-key (kbd "M-] R") "Ρ")
-  (global-set-key (kbd "M-] S") "Σ")
-  (global-set-key (kbd "M-] T") "Τ")
-  (global-set-key (kbd "M-] U") "Υ")
-  (global-set-key (kbd "M-] F") "Φ")
-  (global-set-key (kbd "M-] J") "Φ")
-  (global-set-key (kbd "M-] C") "Χ")
-  (global-set-key (kbd "M-] Y") "Ψ")
-  (global-set-key (kbd "M-] W") "Ω")
-)
+;;(hcSectionLoad hc-greek)
 
 ;; END   .emacs.common
 ;; ------------------------------------------------------------------------------
@@ -766,7 +481,7 @@
 
 (hcSection "Top level misc stuff")
 
-(when (member (hcMachineName) '("hc2025" "o2023" "o2020"))
+(when (member (hcMachineName) hc-dev-machines)
   (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.
@@ -857,49 +572,11 @@
 ;; http://emacsredux.com/blog/2013/04/05/recently-visited-files/
 
 ;; ------------------------------------------------------------------------------
-;; * completion
-
-(hcSection "completion (company)")
-
-(use-package hc-company)
-
+(hcSectionLoad hc-completion)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-yasnippet)
-
 ;; ------------------------------------------------------------------------------
-;; * daemon / emacsclient
-
-(hcSection "daemon / emacsclient")
-
-;; See (I could not get C-c e to work in IntelliJ)
-;; http://spin.atomicobject.com/2014/08/07/intellij-emacs/
-
-;; # manual start
-;; ./bin-hosted/emacs --daemon
-;; # manual use
-;; ./bin-hosted/emacsclient -c <any file/dir name>
-;; # manual kill
-;; # - from within emacs
-;; M-x kill-emacs
-;; or
-;; M-x save-buffers-kill-emacs
-;; # from outside of emacs
-;; emacsclient -e '(kill-emacs)'
-;; or
-;; emacsclient -e '(client-save-kill-emacs)'
-
-(require 'server)
-
-(defun server-started-p ()
-  "Return non-nil if this Emacs has a server started."
-  (and (boundp 'server-process) server-process))
-
-(if (functionp 'window-system)
-    (when (and (window-system)
-               (>= emacs-major-version 24)
-               (not (server-started-p)))
-      (server-start)))
-
+(hcSectionLoad hc-daemon-emacsclient)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-projectile)
 
@@ -953,42 +630,29 @@
                        1 2 3)))
 
 ;; ------------------------------------------------------------------------------
-;; * Line Numbers
-
-;; http://www.emacswiki.org/LineNumbers
-
 (hcSection "Line Numbers")
 
+;; http://www.emacswiki.org/LineNumbers
 (use-package linum :defer t
 ;;  :config (setq global-linum-mode t) ;; always on
 )
 
 ;; ------------------------------------------------------------------------------
-(defvar hc-dev-machines '("hc2025" "o2023" "o2020" "o2015" "hcmb-air"))
-
-;; ------------------------------------------------------------------------------
 ;; * Agda
-
 (when (member (hcMachineName) hc-dev-machines)
   (hcSectionLoad hc-agda))
-
 ;; ------------------------------------------------------------------------------
 ;; * Haskell
-
 (when (member (hcMachineName) hc-dev-machines)
   (hcSectionLoad hc-haskell))
 ;; ------------------------------------------------------------------------------
 ;; * Python
-
 ;; (when (member (hcMachineName) hc-dev-machines)
 ;;   (hcSectionLoad hc-python))
-
 ;; ------------------------------------------------------------------------------
 ;; * Rust
-
 (when (member (hcMachineName) hc-dev-machines)
   (hcSectionLoad hc-rust))
-
 ;; ------------------------------------------------------------------------------
 ;; * Typescript
 
@@ -997,108 +661,10 @@
   (use-package typescript)
   (setq typescript-indent-level 2))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Java")
-
-(defvar *hcJavaMode* 'not-google)
-(declare-function  google-set-c-style ".")
-(add-hook 'java-mode-hook
-  (lambda () (if (eq *hcJavaMode* 'google) (google-set-c-style))))
-
-;; M-x google-set-c-style
-(use-package google-c-style)
-
-;; Make java mode support Java 1.5 annotations.
-(declare-function auto-complete-mode ".")
-(use-package java-mode-indent-annotations
-  :config
-  (add-hook 'java-mode-hook 'java-mode-indent-annotations-setup)
-  (add-hook 'java-mode-hook (lambda () (auto-complete-mode 1))))
-
-(defvar *compile-threshold*)
-(setq *compile-threshold* " -XX:CompileThreshold=2 ")
-
-(defun HC-JAVA_HOME () "."
-  (cond ((getenv "JAVA_HOME"))
-	(t (error "No default JDK"))))
-(defun HC-JAVA_HOME-bin     () "." (concat (HC-JAVA_HOME) "/bin"))
-(defun HC-JAVA_HOME-classes () "." (concat (HC-JAVA_HOME) "/jre/lib/rt.jar"))
-
-(use-package hc-lsp-dap-java)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Scala")
-
-(defvar scala-indent:step)
-(use-package scala-mode2
-  :defer t
-  :config
-  (setq scala-indent:step 4))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(hcSection "Clojure/Cider")
-
-;; http://jr0cket.co.uk/2015/09/spacemacs-for-clojure-development-configure-clojure.html
-
-(declare-function cider-current-connection "")
-(declare-function cider-repl-return "")
-(declare-function cider-last-sexp "")
-;; modified from cider-interaction.el
-(defun hc-cider-insert-in-repl (form)
-  "Insert FORM in the REPL buffer and switch to it.
-If EVAL is non-nil the form will also be evaluated."
-  (while (string-match "\\`[ \t\n\r]+\\|[ \t\n\r]+\\'" form)
-    (setq form (replace-match "" t t form)))
-  (with-current-buffer (cider-current-connection)
-    (goto-char (point-max))
-    (let ((beg (point)))
-      (insert form)
-      (indent-region beg (point)))
-    (cider-repl-return)))
-
-(defun hc-cider-insert-last-sexp-in-repl (&optional arg)
-  "Insert the expression preceding point in the REPL buffer.
-If invoked with a prefix ARG eval the expression after inserting it."
-  (interactive "P")
-  (hc-cider-insert-in-repl (cider-last-sexp)))
-
-(defvar clojure-enable-fancify-symbols)
-(use-package cider-mode
-  :defer nil ;; HC so cider can find 'clojure-project-dir'
-;; :pin melpa-stable
-  :config
-  (progn
-    ;;(define-key cider-mode-map (kbd "C-c C-e") #'hc-cider-insert-last-sexp-in-repl)
-    (setq clojure-enable-fancify-symbols t)
-    ))
-
-(use-package cider
-  :defer t
-;;  :pin melpa-stable
-)
-
+;; ------------------------------------------------------------------------------
+(hcSectionLoad hc-java)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-lisps)
-
-;; ------------------------------------------------------------------------------
-(hcSection "C")
-
-;;(load "c-mode")
-
-(defvar c-indent-level)
-(setq c-indent-level 4)
-;(setq c-continued-statement-offset 4)
-;(setq c-brace-offset -4)
-;(setq c-argdecl-indent 4)
-;(setq c-label-offset -2)
-
-;;(load "c++-mode")
-
-(add-to-list 'auto-mode-alist '("\\.idl$"  . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.c$"    . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.h$"    . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.cc$"   . c++-mode))
-(add-to-list 'auto-mode-alist '("\\.hh$"   . c++-mode))
 
 ;; ------------------------------------------------------------------------------
 ;; This should come AFTER all language-specific setup above.
@@ -1356,13 +922,13 @@ If invoked with a prefix ARG eval the expression after inserting it."
 ;; ------------------------------------------------------------------------------
 ;; * Non Literate
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ------------------------------------------------------------------------------
 
 ;; XML/HTML
 (defvar sgml-basic-offset)
 (setq sgml-basic-offset 4)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ------------------------------------------------------------------------------
 (hcSection "Open current buffer's associated file in an external program")
 
 (use-package hc-run-command-package)
@@ -1378,8 +944,9 @@ If invoked with a prefix ARG eval the expression after inserting it."
                       (read-shell-command "Open current file with: "))
                     " "
                     buffer-file-name))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ------------------------------------------------------------------------------
+(hcSectionLoad hc-font-size-frame-size)
+;; ------------------------------------------------------------------------------
 (hcSection "Appearance")
 
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -1472,7 +1039,7 @@ If invoked with a prefix ARG eval the expression after inserting it."
 (cond ((hcDarwinP)
        (hcMacFW)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ------------------------------------------------------------------------------
 (hcSection "Syntax")
 
 ;; Make -, * and . letters.

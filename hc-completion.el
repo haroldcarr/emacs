@@ -1,4 +1,4 @@
-;;; hc-company.el --- completion                     -*- lexical-binding: t; -*-
+;;; hc-completion.el --- completion                     -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -17,6 +17,6 @@
   (global-company-mode)
 )
 
-(provide 'hc-company)
+(provide 'hc-completion)
 
-;;; hc-company.el ends here
+;;; hc-completion.el ends here
