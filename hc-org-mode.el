@@ -97,8 +97,8 @@
               (org-defkey org-mode-map "\C-c]"    'undefined)))
 
   (setq org-highest-priority ?A)
-  (setq org-lowest-priority  ?E)
-  (setq org-default-priority ?E)
+  (setq org-lowest-priority  ?F)
+  (setq org-default-priority ?F)
 
   (setq org-todo-keywords
         '((sequence "NEXT(n)" "INPG(i)" "TODO(t)" "SUSP(s)" "|" "DONE(d!/!)" "DROP(D!/!)")

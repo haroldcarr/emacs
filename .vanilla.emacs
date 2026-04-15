@@ -2,6 +2,23 @@
 
 ;;; Commentary:
 
+;;  1. LOAD personal leim-list.el (in load-path)
+;;  2. LOAD ~/.emacs.d/early-init.el — skipped with -q/-Q/--batch                               (Emacs 27+)
+;;  3. RUN package-activate-all — skipped with -q/-Q/--batch or package-enable-at-startup = nil (Emacs 27+)
+;;  4. RUN before-init-hook                                                                     (Emacs 27+)
+;;  5. LOAD site-start.el — skipped with -Q/--no-site-file
+;;  6. LOAD ~/.emacs.d/init.el (or ~/.emacs) — skipped with -q/-Q/--batch
+;;  7. LOAD default.el — skipped with -q/-Q/--batch/inhibit-default-init
+;;  8. LOAD abbrevs from abbrev-file-name
+;;  9. RUN after-init-hook
+;; 10. RUN delayed-warnings-hook                                                                (Emacs 27+)
+;; 11. LOAD terminal-specific library
+;; 12. RUN tty-setup-hook
+;; 13. RUN emacs-startup-hook                                                                   (Emacs 27+)
+;; 14. RUN frame-notice-user-settings                                                           (Emacs 27+)
+;; 15. RUN window-setup-hook                                                                    (Emacs 27+)
+;; 16. RUN server-start (daemon)
+
 ;;; Code:
 
 ;; two flycheck warnings : 1st I understand; no idea where 2nd comes from
@@ -106,7 +123,7 @@
 
 (hcSection "Top level misc stuff")
 
-(when (member (hcMachineName) '("o2023" "o2020"))
+(when (member (hcMachineName) '("hc2025" "o2023" "o2020"))
   (desktop-save-mode 1))
 
 ;; Store customizations in a separate file.

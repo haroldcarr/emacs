@@ -9,7 +9,7 @@
 
 ;;;;
 ;;;; Created       : a long time ago ...        by Harold Carr.
-;;;; Last Modified : 2026 Apr 11 (Sat) 15:28:47 by Harold Carr.
+;;;; Last Modified : 2026 Apr 14 (Tue) 21:09:15 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -386,14 +386,14 @@
 ;; ------------------------------------------------------------------------------
 ;; * Markdown
 
-(when (member (hcMachineName) '("o2023" "o2020" "o2015"))
+(when (member (hcMachineName) '("hc2025" "o2023" "o2020" "o2015"))
   (hcSection "Markdown")
   (use-package hc-markdown))
 
 ;; ------------------------------------------------------------------------------
 ;; * PDF
 
-(when (member (hcMachineName) '("o2023" "o2020" "o2015"))
+(when (member (hcMachineName) '("hc2025" "o2023" "o2020" "o2015"))
   (hcSection "PDF")
   (use-package hc-pdf))
 
@@ -504,7 +504,7 @@
   :config
   (progn (use-package hc-org-mode)
          (hc-org-mode)
-         (when (member (hcMachineName) '("o2023" "o2020"))
+         (when (member (hcMachineName) '("hc2025" "o2023" "o2020"))
            (use-package hc-noter))))
 )
 ;; ------------------------------------------------------------------------------
