@@ -1,4 +1,5 @@
 ;;; hc-ssh.el --- Support for remote logins using ssh.
+;;; HC : used by hc-sync <-------------
 
 ;; Copyright (C) 1996, 97, 98, 2001, Noah S. Friedman
 ;; Copyright (C) 2010-2012, Ian Eure
