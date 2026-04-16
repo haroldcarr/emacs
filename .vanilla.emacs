@@ -578,24 +578,6 @@
         (push (car curr) all-rdeps)))))
 
 ;; ------------------------------------------------------------------------------
-(hcSection "Open current buffer's associated file in an external program")
-
-(use-package hc-run-command-package)
-
-;; TODO : delete
-(defun prelude-open-with ()
-  "To open the underlying file of a buffer in an external program."
-  (interactive)
-  (when buffer-file-name
-    (shell-command (concat
-                    (if (eq system-type 'darwin)
-                        "open -a '/Applications/Google Chrome.app'"
-                      (read-shell-command "Open current file with: "))
-                    " "
-                    buffer-file-name))))
-;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-font-size-frame-size)
-;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-appearance)
 ;; ------------------------------------------------------------------------------
 ;; END STARTUP
