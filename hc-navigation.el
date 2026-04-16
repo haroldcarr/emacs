@@ -1,4 +1,4 @@
-;;; hc-helm --- helm -*- mode: emacs-lisp -*-
+;;; hc-navigation --- navigate -*- mode: emacs-lisp -*-
 
 ;;; Commentary:
 
@@ -53,7 +53,32 @@
     (setq projectile-completion-system 'helm)
     (helm-projectile-on)))
 
-(provide 'hc-helm)
+;; ------------------------------------------------------------------------------
 
-;;; hc-helm.el ends here
+;; ** Incremental/Interactively switching buffers or finding files
+
+;; IDO
+;; http://emacswiki.org/emacs/InteractivelyDoThings
+
+;; Note:
+;; - C-x C-f     : "interactively" finds a file
+;; - C-x C-f C-f : uses the old find-file
+
+;(use-package ido
+;  :ensure t
+;  :config
+;  (ido-mode t)
+;  (setq ido-enable-flex-matching t))
+
+;; TODO
+;; http://www.emacswiki.org/emacs-en/kill-ring-ido.el
+
+;; ** Recently visited files
+
+;; TODO
+;; http://emacsredux.com/blog/2013/04/05/recently-visited-files/
+
+(provide 'hc-navigation)
+
+;;; hc-navigation.el ends here
 

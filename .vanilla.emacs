@@ -401,28 +401,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-gnus)
 ;; ------------------------------------------------------------------------------
-;; * Registers and Bookmarks
-
-;; - Registers
-;;   - http://www.gnu.org/software/emacs/manual/html_node/emacs/Registers.html#Registers
-;;   - http://emacswiki.org/emacs/Registers
-;; - Bookmarks (like registers, but persistent)
-;;   - http://www.gnu.org/software/emacs/manual/html_node/emacs/Bookmarks.html#Bookmarks
-;;   - http://emacswiki.org/emacs/BookMarks
-
-;; TODO
-;; - http://www.emacswiki.org/emacs-en/BookmarkPlus
-
-(hcSection "Bookmarks")
-
-(defvar bookmark-save-flag)
-(setq   bookmark-save-flag 1)
-(defvar bookmark-sort-flag)
-(setq   bookmark-sort-flag nil)
-(defvar bookmark-default-file)
-(setq   bookmark-default-file (concat (hcEmacsDir) "/.emacs.bmk"))
-
-;;(use-package hc-bookmark-plus)
+(hcSectionLoad hc-bookmarks)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-web-browsing)
 ;; ------------------------------------------------------------------------------
@@ -450,10 +429,6 @@
 (hcSectionLoad hc-dir-tree)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-epub)
-
-;; ------------------------------------------------------------------------------
-;; * HEXL-MODE : view/edit at files like in "hex dump" format
-;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Editing-Binary-Files.html
 ;; ------------------------------------------------------------------------------
 ;;(hcSectionLoad hc-greek)
 
@@ -525,36 +500,7 @@
   (setq uniquify-separator ":"))
 
 ;; ------------------------------------------------------------------------------
-;; * Naviation
-
-(hcSection "navigation (ido | helm")
-
-;; ** Incremental/Interactively switching buffers or finding files
-
-;; IDO
-;; http://emacswiki.org/emacs/InteractivelyDoThings
-
-;; Note:
-;; - C-x C-f     : "interactively" finds a file
-;; - C-x C-f C-f : uses the old find-file
-
-;(use-package ido
-;  :ensure t
-;  :config
-;  (ido-mode t)
-;  (setq ido-enable-flex-matching t))
-
-;; TODO
-;; http://www.emacswiki.org/emacs-en/kill-ring-ido.el
-
-;; HELM
-(use-package hc-helm)
-
-;; ** Recently visited files
-
-;; TODO
-;; http://emacsredux.com/blog/2013/04/05/recently-visited-files/
-
+(hcSectionLoad hc-navigation)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-completion)
 ;; ------------------------------------------------------------------------------
@@ -563,56 +509,8 @@
 (hcSectionLoad hc-daemon-emacsclient)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-projectile)
-
 ;; ------------------------------------------------------------------------------
-;; * Emacs Code Browser (ECB)
-
-;; http://www.emacswiki.org/emacs/EmacsCodeBrowser
-
-;; - Go to directories : "C-c . g d" ;; window 0
-;; - Go to sources     : "C-c . g s" ;; window 1
-;; - Go to methods     : "C-c . g m" ;; window 2
-;; - Go to history     : "C-c . g h" ;; window 3
-;; - Main buffer       : "C-c . g 1"
-
-(hcSection "ECB")
-
-(defvar ecb-options-version)
-(defvar ecb-source-path)
-(defvar ecb-tip-of-the-day)
-(defvar ecb-windows-width)
-(defvar ecb-layout-name)
-(use-package ecb
-  :defer t
-  :config
-  (setq ecb-options-version "2.40")
-  (setq ecb-source-path     '(("/" "/")))
-  (setq ecb-tip-of-the-day  nil)
-  (setq ecb-windows-width   0.15)
-  (setq ecb-layout-name     "left9") ;; only the methods window
-)
-
-;; ------------------------------------------------------------------------------
-;; * Compilation
-
-;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Building.html#Building
-;; - see Compilation, Compilation Mode and Compilation Shell
-;; http://emacswiki.org/emacs/CompilationMode
-
-;; For extending it to work with Maven:
-
-;; http://praveen.kumar.in/2011/03/09/making-gnu-emacs-detect-custom-error-messages-a-maven-example/
-
-(hcSection "Compilation")
-
-(use-package compile
-  :defer t
-  :config
-  (add-to-list 'compilation-error-regexp-alist 'maven)
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(maven "\\[ERROR\\] \\(.+?\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\].*"
-                       1 2 3)))
-
+(hcSectionLoad hc-compilation)
 ;; ------------------------------------------------------------------------------
 (hcSection "Line Numbers")
 
@@ -647,189 +545,11 @@
   (use-package hc-eglot)
 )
 ;; ------------------------------------------------------------------------------
-;; * Images
-
-;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Image_002dDired.html
-
-(hcSection "Images")
-
-(defvar image-dired-dir)
-(setq image-dired-dir "/tmp/emacs-image-dired/")
+(hcSectionLoad hc-calendar)
 ;; ------------------------------------------------------------------------------
-;; * Calendar and Diary
-
-;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Calendar_002fDiary.html#Calendar_002fDiary
-;; http://emacswiki.org/emacs/CalendarMode
-
-(hcSection "Calendar and Diary")
-
-(defvar view-diary-entries-initially)
-(defvar number-of-diary-entries)
-(defvar calendar-latitude)
-(defvar calendar-longitude)
-(defvar diary-list-include-blanks)
-(defun hcCalendar () "."
-  (setq diary-file (concat (hcFsync) "/.emacs.diary"))
-  ;(setq calendar-week-start-day 1) ; monday
-  (setq calendar-offset -1)
-  (setq view-diary-entries-initially t)
-  (setq number-of-diary-entries 2)
-  ;; This causes a debug error in emacs 24
-  ;(setq mark-diary-entries-in-calendar t)
-  ;; This causes fancy not to be displayed
-  ;;(setq view-calendar-holidays-initially t)
-  ;;(setq holidays-in-diary-buffer nil)
-  (setq calendar-latitude  40.785188)
-  (setq calendar-longitude -111.863011)
-
-  (add-hook 'diary-display-hook 'fancy-diary-display)
-  (setq diary-list-include-blanks t)
-  ;; not working: (add-hook 'list-diary-entries-hook 'sort-diary-entries t)
-  ;; Make sure starting calendar comes after auto-resizing of frame.
-  ;; (if (hcLucidP)
-  ;;    (defun diary-remind (form number)
-  ;;      (eval form)))
-  ;; Do not automatically show calendar on startup
-  ;(if (file-exists-p diary-file)
-  ;    (calendar))
-  ;; Customize appt.el
-  ;;(use-package appt :defer t)
-  (cond (nil
-	 ;; This seems to cause emacs to crash on nt
-	 ;; and does not exist in xemacs
-	 (setq appt-message-warning-time 15) ;; minutes
-	 (setq appt-display-duration 60) ;; seconds
-	 (add-hook 'diary-hook 'appt-make-list)
-	 (let ((diary-display-hook 'ignore))
-	   (diary)))))
-
-(use-package calendar :defer t :config (hcCalendar))
-
-;; ** Calendar Framework
-
-;; https://github.com/kiwanami/emacs-calfw
-
-;; M-x cfw:open-diary-calendar
-(use-package calfw-cal :defer t)
-
+(hcSectionLoad hc-alignment)
 ;; ------------------------------------------------------------------------------
-;; * Align
-
-;; https://gist.github.com/700416
-;; http://stackoverflow.com/questions/3633120/emacs-hotkey-to-align-equal-signs
-;; - uses http://www.emacswiki.org/emacs/rx
-
-(hcSection "Align")
-
-(defmacro hcMakeAlignCmd (name char) "NAME CHAR."
-  `(defun ,name (begin end)
-     ,(concat "Align region to " char " signs")
-     (interactive "r")
-     (align-regexp begin end
-                   (rx (group (zero-or-more (syntax whitespace))) ,char)
-                   1 1)))
-
-(hcMakeAlignCmd align-to-colon        ":")
-(hcMakeAlignCmd align-to-equals       "=")
-(hcMakeAlignCmd align-to-hash         "=>")
-(hcMakeAlignCmd align-to-comma-before ",")
-
-(defun align-to-comma-after (begin end)
-  "BEGIN END: Align region to , signs."
-  (interactive "r")
-  (align-regexp begin end
-                (rx "," (group (zero-or-more (syntax whitespace))) ) 1 1 ))
-
-;; ------------------------------------------------------------------------------
-;; * Google Search
-
-;; http://emacsredux.com/blog/2013/03/28/google/
-
-(hcSection "Google Search")
-
-(defun hcGoogle ()
-  "Google the selected region if any, display a query prompt otherwise."
-  (interactive)
-  (browse-url ;; results in default browser
-   (concat
-    "http://www.google.com/search?ie=utf-8&oe=utf-8&q="
-    (url-hexify-string (if mark-active
-                           (buffer-substring (region-beginning) (region-end))
-                         (read-string "Google: "))))))
-
-;; ------------------------------------------------------------------------------
-;; * Google Contacts
-
-;; http://julien.danjou.info/projects/emacs-packages#google-contacts
-
-(hcSection "Google Contacts")
-
-;; uses oauth2 (in ELPA)
-
-;; M-x google-contacts
-
-;; key bindings:
-;; n or p : go the next or previous record;
-;; g      : refresh the result, bypassing the cache;
-;; m      : send an e-mail to a contact;
-;; s      : new search;
-;; q      : quit.
-(use-package google-contacts :defer t)
-
-;; integrate directly Google Contacts into Gnus;
-;; (use-package google-contacts-gnus :defer t)
-;; Then use ; to go to contact info while reading an e-mail.
-
-;; integrate directly Google Contacts into message-mode;
-;; (use-package google-contacts-message :defer t)
-;; Then use TAB to go to complete e-mail addresses in the header fields.
-
-;; First time use:
-;; - M-x google-contacts
-;; - "Enter the code your browser displayed: "
-;; - browser shows accounts.google.com/... saying
-;;   google-oauth-el would like to manage your contacts
-;;   CLICK: Accept
-;; - Gives code.
-;; - Cut/paste into above.
-;; - "Passphrase for PLSTORE  plstore .../.emacs.d/oauth.plstore
-;; - enter and store in password manager"
-
-;; ------------------------------------------------------------------------------
-;; * Google Maps
-
-;; http://julien.danjou.info/projects/emacs-packages#google-maps
-
-;; M-x google-maps
-;; - type a location.
-;;
-;; key bindings:
-;;
-;; + or - to zoom in or out;
-;; left, right, up, down to move;
-;; z to set a zoom level via prefix;
-;; q to quit;
-;; m to add or remove markers;
-;; c to center the map on a place;
-;; C to remove centering;
-;; t to change the maptype;
-;; w to copy the URL of the map to the kill-ring;
-;; h to show your home.
-
-;; Integrate into Org-mode:
-
-(use-package org-location-google-maps :defer t)
-
-;; Then use C-c M-L to enter a location assisted by Google geocoding service.
-;; Pressing C-c M-l will show you a map.
-
-;; Advanced: look at google-maps-static-show and google-maps-geocode-request functions.
-
-;; NOTE: home set via calendar-latitude/calendar-longitude
-
-(hcSection "Google Maps")
-(use-package google-maps :defer t)
-
+(hcSectionLoad hc-google)
 ;; ------------------------------------------------------------------------------
 ;; * Misc
 
@@ -858,12 +578,6 @@
         (push (car curr) all-rdeps)))))
 
 ;; ------------------------------------------------------------------------------
-
-;; XML/HTML
-(defvar sgml-basic-offset)
-(setq sgml-basic-offset 4)
-
-;; ------------------------------------------------------------------------------
 (hcSection "Open current buffer's associated file in an external program")
 
 (use-package hc-run-command-package)
@@ -882,129 +596,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-font-size-frame-size)
 ;; ------------------------------------------------------------------------------
-(hcSection "Appearance")
-
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-;;(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-;;This turns of the mac os x menu bar
-;;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-
-(defun hcMacFW () "."
-  (interactive)
-  (hc-w 88) ;; 100
-  (hc-h 23) ;;  27                                              20
-  (set-face-font 'default "-apple-Monaco-medium-normal-normal-*-24-*-*-*-m-0-iso10646-1")
-  )
-
-(defun hcColorZB () "."
-   (interactive)
-   (set-foreground-color "#DCDCCC")
-   (set-background-color "#3F3F3F")
-   (set-cursor-color     "#FFFFEF"))
-
-(defun hcColorBW () "."
-   (interactive)
-   (set-foreground-color "#FFFFFF")
-   (set-background-color "#000000")
-   (set-cursor-color     "#FFFFFF"))
-
-(defun hcHostedAppearance () "."
-  (interactive)
-  ;;(set-face-background 'default "grey")
-  ;;(set-face-background 'default "gray19")
-  ;;(set-face-background 'default "gray14")
-  ;;(set-face-background 'default "gray10")
-  (set-scroll-bar-mode 'right)
-  ;;(set-face-font 'default "-unknown-DejaVu LGC Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1")
-  (set-face-font 'default "-PfEd-TlwgTypewriter-normal-normal-normal-*-24-*-*-*-*-0-iso10646-1")
-  ;;(hc-w 160)
-  ;;(hc-h 43)
-  )
-
-;; type fc-list on command line to see fonts installed
-
-;;(set-face-attribute 'default nil :family "courier" :height 140)
-;;(set-face-font 'default "-*-Lucida Sans Typewriter-Medium-R-*-*-*-200-*-*-*-*-iso8859-1")
-;;(set-face-font 'modeline "-*-Lucida Sans Typewriter-medium-R-*-*-*-200-*-*-*-*-iso8859-1")
-
-;;; Background
-;;(set-face-background 'default "#9900991b99fe") ; grey
-;;(set-face-background 'default "#900060006000") ; earthy red
-;;(set-face-background 'default "#de00b8008700") ; earthy orange
-;;(set-face-background 'default "#737373737373") ; grey
-;;(set-face-background 'default "#6a6a6a6a6a6a") ; grey
-;;(set-face-background 'default "DarkSlateGrey")
-;;(set-face-background 'default "grey")
-;;(defined-colors)
-;; ("snow" "ghost white" "GhostWhite" "white smoke" "WhiteSmoke" "gainsboro" "floral white" "FloralWhite" "old lace" "OldLace" "linen" "antique white" ...)
-;;(set-face-background 'default "antique white")
-;;(set-face-background 'default "grey99")
-;;(set-face-background 'default "White")
-;;(set-face-background 'default "#b9b9b9b9b9b9")
-;;(set-face-background 'default "#dddddddddddd")
-;;(set-face-background 'default "#68006f008200") ; blue
-;;(set-face-background 'default "Black")
-
-;;; Foreground
-;;(set-face-foreground 'default "Green")
-;;(set-face-foreground 'default "DarkSlateGrey")
-;;(set-face-foreground 'default "#de00b8008700") ; earthy orange
-;;(set-face-foreground 'default "Black")
-;;(set-face-foreground 'default "white")
-
-;;; Mark to region.
-;;(set-face-background 'primary-selection "grey")
-;;(set-face-foreground 'primary-selection "black")))
-
-;;; Incremental search.
-;;(set-face-foreground 'isearch "black")
-;;(set-face-background 'isearch "green")))
-
-;;; Toolbar.
-
-;; Turn off font-lock?
-(defvar font-lock-auto-fontify)
-(defvar font-lock-mode-enable-list)
-(defun hcFontLockModeHook () "."
-  (if (fboundp 'global-font-lock-mode)
-      (global-font-lock-mode -1) ;; Emacs
-    (setq font-lock-auto-fontify nil))
-  (setq font-lock-mode-enable-list nil))
-
-(cond ((hcDarwinP)
-       (hcMacFW)))
-
-;; ------------------------------------------------------------------------------
-(hcSection "Syntax")
-
-;; Make -, * and . letters.
-
-(cond (nil
-       (modify-syntax-entry ?- "w" lisp-mode-syntax-table)
-       (modify-syntax-entry ?. "w" lisp-mode-syntax-table)
-       (modify-syntax-entry ?* "w" lisp-mode-syntax-table)
-       (modify-syntax-entry ?_ "w" lisp-mode-syntax-table)
-       (modify-syntax-entry ?: "w" lisp-mode-syntax-table)))
-
-;; NT: c-mode-syntax-table not defined *****
-(cond (nil
-       (modify-syntax-entry ?- "w" c-mode-syntax-table)
-       (modify-syntax-entry ?. "w" c-mode-syntax-table)
-       (modify-syntax-entry ?* "w" c-mode-syntax-table)
-       (modify-syntax-entry ?_ "w" c-mode-syntax-table)))
-
-(cond (nil
-       (modify-syntax-entry ?- "w" text-mode-syntax-table)
-       (modify-syntax-entry ?. "w" text-mode-syntax-table)
-       (modify-syntax-entry ?* "w" text-mode-syntax-table)
-       (modify-syntax-entry ?_ "w" text-mode-syntax-table)))
-
-(cond (nil
-       (modify-syntax-entry ?- "w" (standard-syntax-table))
-       (modify-syntax-entry ?. "w" (standard-syntax-table))
-       (modify-syntax-entry ?* "w" (standard-syntax-table))
-       (modify-syntax-entry ?_ "w" (standard-syntax-table))))
-
+(hcSectionLoad hc-appearance)
 ;; ------------------------------------------------------------------------------
 ;; END STARTUP
 ;; Make gc pauses faster by decreasing the threshold.
