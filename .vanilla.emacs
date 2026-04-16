@@ -407,18 +407,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-timestamp)
 ;; ------------------------------------------------------------------------------
-;; * org-mode
-
-(hcSection "OrgMode")
-(with-no-warnings
-(use-package org
-  :defer t
-  :config
-  (progn (use-package hc-org-mode)
-         (hc-org-mode)
-         (when (member (hcMachineName) hc-dev-machines)
-           (use-package hc-noter))))
-)
+(hcSectionLoad hc-org-mode)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-tags)
 ;; ------------------------------------------------------------------------------
