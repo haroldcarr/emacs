@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Apr 14 (Tue) 09:52:27 by Harold Carr.
+;;;; Last Modified : 2026 Apr 26 (Sun) 12:15:28 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -64,6 +64,14 @@
   :key "PASTE KEY HERE" ;; TODO : get from .authinfo
   :models '("gpt-4o"))
 
+(gptel-make-openai "llama.cpp"
+  :protocol "http"
+  :host "localhost:8080"
+  :endpoint "/v1/chat/completions"
+  :stream t
+  :key "dummy"
+  :models '(llama.cpp))
+
 (setq gptel-default-mode 'org-mode)
 (setq gptel-stream t)
 
@@ -73,8 +81,9 @@
 ;; Fallback test:
 ;; - curl -X POST http://localhost:11434/api/generate -d '{"model":"qwen2.5-coder:14b","prompt":"hi"}'
 ;; If curl works but Emacs fails → gptel config issue, not Ollama
-
-;; say hello to John Doe using my_hello_world tool. Do not worry about the specific form of the greeting.  Just call the tool and show me what it returns.
+;; say hello to John Doe using my_hello_world tool.
+;; Do not worry about the specific form of the greeting.
+;; Just call the tool and show me what it returns.
 
 (gptel-make-tool
  :name "my_hello_world"
