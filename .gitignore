@@ -1,6 +1,6 @@
 *~
 .DS_Store
-.authinfo
+.authinfo*
 .emacs.bmk
 .emacs.desktop
 .newsrc
@@ -15,6 +15,7 @@
 emacs-cheat-sheet.png
 flycheck_.vanilla.emacs
 gptel-agent
+hc-pp-to-auth-info-test.el
 hc-spotify.el
 java-mode-indent-annotations.el
 javaone.org
