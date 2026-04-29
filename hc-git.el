@@ -28,16 +28,24 @@
   )
 )
 
-;; https://github.com/syohex/emacs-git-gutter
-(use-package git-gutter
+(use-package diff-hl
+  :hook (dired-mode . diff-hl-dired-mode)
   :config
-  (progn
-    (global-git-gutter-mode t)
-    ;; HC: enabling this breaks git-gutter
-    ;; to use git-gutter and linum-mode
-    ;;(git-gutter:linum-setup)
-  )
-)
+  (global-diff-hl-mode 1)
+  (diff-hl-flydiff-mode 1)
+  (unless (display-graphic-p)
+    (diff-hl-margin-mode 1)))
+
+;; https://github.com/syohex/emacs-git-gutter
+;; (use-package git-gutter
+;;   :config
+;;   (progn
+;;     (global-git-gutter-mode t)
+;;     ;; HC: enabling this breaks git-gutter
+;;     ;; to use git-gutter and linum-mode
+;;     ;;(git-gutter:linum-setup)
+;;   )
+;; )
 
 (provide 'hc-git)
 

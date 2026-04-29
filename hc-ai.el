@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Apr 26 (Sun) 12:15:28 by Harold Carr.
+;;;; Last Modified : 2026 Apr 29 (Wed) 17:01:12 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -56,9 +56,10 @@
      :models '(,model-name)
      ,@args))
 
+(hc-gptel-make-ollama "cloud" "deepseek-v4-pro:cloud")
+(hc-gptel-make-ollama "cloud" "minimax-m2.7:cloud")
 (hc-gptel-make-ollama "local" "qwen3-coder:30b")
 (hc-gptel-make-ollama "local" "qwen3.5:35b")
-(hc-gptel-make-ollama "cloud" "minimax-m2.7:cloud")
 
 (gptel-make-openai "OpenAI"
   :key "PASTE KEY HERE" ;; TODO : get from .authinfo
@@ -67,7 +68,6 @@
 (gptel-make-openai "llama.cpp"
   :protocol "http"
   :host "localhost:8080"
-  :endpoint "/v1/chat/completions"
   :stream t
   :key "dummy"
   :models '(llama.cpp))
