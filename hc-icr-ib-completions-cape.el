@@ -1,0 +1,38 @@
+;;; hc-icr-ib-completions-cape.el --- hc-icr-ib-completions-cape          -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
+;; ------------------------------------------------------------------------------
+;; CAPE : The In-Buffer Backend Layer (completions)
+;; Corfu is frontend : how completions are displayed
+;; Cape  is backend  : what completions are available
+;; https://github.com/minad/cape
+
+(use-package cape
+  ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
+  ;; Press C-c p ? to for help.
+  :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+  ;; Alternatively bind Cape commands individually.
+  ;; :bind (("C-c p d" . cape-dabbrev)
+  ;;        ("C-c p h" . cape-history)
+  ;;        ("C-c p f" . cape-file)
+  ;;        ...)
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  (add-hook 'completion-at-point-functions #'cape-history)
+  (add-hook 'completion-at-point-functions #'cape-keyword)
+  ;; ...
+)
+
+(provide 'hc-icr-ib-completions-cape)
+
+;;; hc-icr-ib-completions-cape.el ends here

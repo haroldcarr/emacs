@@ -201,7 +201,7 @@
 ; C-x 5 o other-frame "frame.el"
 ; C-x o other-window "window.el"
 (global-set-key "\C-x\C-o" 'other-frame) ; overwrites: delete-blank-lines "simple.el"
-(global-set-key "\M-g" 'goto-line)
+;;(global-set-key "\M-g" 'goto-line) ; use corfu M-g g
 
 (autoload 'dabbrev "dabbrev" "dabbrev" t)
 (if (not (hcWin32P))
@@ -489,9 +489,7 @@
   (setq uniquify-separator ":"))
 
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-navigation)
-;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-completion)
+(hcSectionLoad hc-icr-mini-buffer-and-in-buffer-incremental-completing-read)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-yasnippet)
 ;; ------------------------------------------------------------------------------

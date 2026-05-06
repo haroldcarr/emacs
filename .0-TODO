@@ -1,3 +1,30 @@
+## Key Bindings That Are Set Multiple Times:
+
+1. **`C-x o` (other-window)** - This key binding is set in multiple files:
+   - In `.vanilla.emacs` line 203: `(global-set-key "\C-x\C-o" 'other-frame)`
+   - This appears to be a potential conflict as it's overriding
+     the default `other-window` binding, which is also `C-x o`
+
+2. **`C-w` (kill-ring-save)** - This is set in:
+   - `.vanilla.emacs`: `(global-set-key "\C-w" 'kill-ring-save)`
+   - `.haskell.emacs.d/init.el`: `(global-set-key "\C-w" 'kill-ring-save)`
+
+3. **`M-w` (kill-region)** - This is set in:
+   - `.vanilla.emacs`: `(global-set-key "\M-w" 'kill-region)`
+   - `.haskell.emacs.d/init.el`: `(global-set-key "\M-w" 'kill-region)`
+
+4. **`C-c C-k` (describe-char)** - This is set in:
+   - `.vanilla.emacs`: `(global-set-key "\C-c\C-k" 'describe-char)`
+
+## Variables Set Multiple Times:
+
+1. **`font-lock-auto-fontify`** - This variable is defined in `hc-appearance.el`:
+   - Line 158: `(setq font-lock-auto-fontify nil)`
+
+2. **`org-src-fontify-natively`** - This is set in:
+   - `hc-demo-it.el`: `org-src-fontify-natively t`
+
+------------------------------------------------------------------------------
 svg, scribble in emacs
 https://lifeofpenguin.blogspot.com/2021/10/svg-widget-in-gnu-emacs.html
 https://lifeofpenguin.blogspot.com/2021/11/spice-simulation-in-gnu-emacs-from.html
