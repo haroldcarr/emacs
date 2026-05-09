@@ -109,9 +109,6 @@
 (require 'use-package)
 
 ;; ------------------------------------------------------------------------------
-;; BEGIN .emacs.common
-
-;; ------------------------------------------------------------------------------
 ;; * Sections
 
 ;; Name each "section" in this .emacs file.
@@ -282,7 +279,6 @@
 
 ;; https://www.emacswiki.org/emacs/GccEmacs#h5o-13
 ;; tell package.el to do ahead-of-time native compilation
-;;
 ;; native-comp...
 (setq package-native-compile t)
 (defun hc-do-native-compile ()
@@ -295,8 +291,8 @@
 (setq tab-bar-show nil)
 
 ;; This must be ON for haskell-mode to work.
-(use-package flycheck
-             :config (global-flycheck-mode 1))
+(use-package flycheck :config (global-flycheck-mode 1))
+
 ;; Ask before exit.
 (setq confirm-kill-emacs
       (lambda (e)
@@ -315,6 +311,9 @@
 (setq-default show-trailing-whitespace  t)
 (setq         indicate-empty-lines      t)
 
+;; stop backup changing file creation date of original file
+(setq backup-by-copying t)
+
 ;; highlight text beyond nth column
 (use-package whitespace
   :config
@@ -327,18 +326,56 @@
 (defvar global-auto-revert-non-file-buffers)
 (setq global-auto-revert-non-file-buffers nil)
 
-;; ** Display full filepath in title
+;; TRAMP : do not ask to save passwords
+(setq auth-source-save-behavior nil)
 
+;; have 'M-x dictionary-search' use
+(setq dictionary-server "dict.org")
+
+(when (member (hcMachineName) hc-dev-machines)
+  (desktop-save-mode 1))
+
+;; Store customizations in a separate file.
+(setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
+(load custom-file)
+
+;; rather than highlight or off
+(setq blink-matching-paren (quote jump))
+
+;; Simplify prompts.
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Get rid of useless stuff.
+(dolist (mode '(tool-bar-mode)) ;; menu-bar-mode scroll-bar-mode
+  (when (fboundp mode) (funcall mode -1)))
+
+;; I have already seen it.
+(setq inhibit-startup-screen t)
+
+;; Do not want to destroy symbolic links.
+(setq backup-by-copying-when-linked t)
+
+;; Enable ESC : to evaluate emacs Lisp commands.
+(put 'eval-expression 'disabled nil)
+
+;; do not minimize
+(global-unset-key (kbd "C-z"))
+
+;; ** Mode line
+;; http://www.emacswiki.org/emacs/DisplayTime
+(load-file (concat (hcEmacsDir) "/hc-mode-line.el"))
+(load "time")
+(display-time)
+(line-number-mode)
+(column-number-mode)
+
+;; ** Display full filepath in title
 ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/
 
 (setq frame-title-format
       '((:eval (if (buffer-file-name)
                    (abbreviate-file-name (buffer-file-name))
                  "%b"))))
-
-
-;; stop backup changing file creation date of original file
-(setq backup-by-copying t)
 
 (use-package grep
   :config
@@ -369,11 +406,20 @@
 (defadvice other-frame         (after         other-frame-pulse activate) "." (pulse-line))
 (setq pulse-delay 0.20)
 
-;; TRAMP : do not ask to save passwords
-(setq auth-source-save-behavior nil)
+;; WHICH KEY
+(use-package which-key
+  :ensure t
+  :demand
+  :init (which-key-mode))
 
-;; have 'M-x dictionary-search' use
-(setq dictionary-server "dict.org")
+;; ** Make buffer names unique
+;; Use part of the path name for buffer name when visiting two different files with same name.
+;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Uniquify.html#Uniquify
+;; http://emacswiki.org/emacs/uniquify
+(use-package uniquify
+  :config
+  (setq uniquify-buffer-name-style 'post-forward)
+  (setq uniquify-separator ":"))
 
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-time)
@@ -420,74 +466,6 @@
 (hcSectionLoad hc-epub)
 ;; ------------------------------------------------------------------------------
 ;;(hcSectionLoad hc-greek)
-
-;; END   .emacs.common
-;; ------------------------------------------------------------------------------
-
-;; ------------------------------------------------------------------------------
-;; * Top level misc
-
-(hcSection "Top level misc stuff")
-
-(when (member (hcMachineName) hc-dev-machines)
-  (desktop-save-mode 1))
-
-;; Store customizations in a separate file.
-(setq custom-file (concat (hcEmacsDir) "/.vanilla.emacs.custom.el"))
-(load custom-file)
-
-(load-file (concat (hcEmacsDir) "/hc-mode-line.el"))
-
-;; WHICH KEY
-(use-package which-key
-  :ensure t
-  :demand
-  :init (which-key-mode))
-
-;; rather than highlight or off
-(setq blink-matching-paren (quote jump))
-
-;; Simplify prompts.
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; Get rid of useless stuff.
-(dolist (mode '(tool-bar-mode)) ;; menu-bar-mode scroll-bar-mode
-  (when (fboundp mode) (funcall mode -1)))
-
-;; I have already seen it.
-(setq inhibit-startup-screen t)
-
-;; Do not want to destroy symbolic links.
-(setq backup-by-copying-when-linked t)
-
-;; Enable ESC : to evaluate emacs Lisp commands.
-(put 'eval-expression 'disabled nil)
-
-;; do not minimize
-(global-unset-key (kbd "C-z"))
-
-;; ** Mode line
-
-;; http://www.emacswiki.org/emacs/DisplayTime
-
-(load "time")
-(display-time)
-
-(line-number-mode)
-(column-number-mode)
-
-;; ** Make buffer names unique
-
-;; Use part of the path name for buffer name when visiting two different files with same name.
-
-;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Uniquify.html#Uniquify
-;; http://emacswiki.org/emacs/uniquify
-
-(use-package uniquify
-  :config
-  (setq uniquify-buffer-name-style 'post-forward)
-  (setq uniquify-separator ":"))
-
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-icr-mini-buffer-and-in-buffer-incremental-completing-read)
 ;; ------------------------------------------------------------------------------
@@ -505,7 +483,6 @@
 (use-package linum :defer t
 ;;  :config (setq global-linum-mode t) ;; always on
 )
-
 ;; ------------------------------------------------------------------------------
 (hcSectionLoadOnDevMachines hc-agda)
 ;; ------------------------------------------------------------------------------
