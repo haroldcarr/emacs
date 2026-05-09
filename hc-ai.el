@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Apr 29 (Wed) 17:01:12 by Harold Carr.
+;;;; Last Modified : 2026 May 08 (Fri) 12:23:05 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -58,8 +58,12 @@
 
 (hc-gptel-make-ollama "cloud" "deepseek-v4-pro:cloud")
 (hc-gptel-make-ollama "cloud" "minimax-m2.7:cloud")
+
+(hc-gptel-make-ollama "local" "gemma4:31b")
+(hc-gptel-make-ollama "local" "gemma4:31b-coding-mtp-bf16")
 (hc-gptel-make-ollama "local" "qwen3-coder:30b")
 (hc-gptel-make-ollama "local" "qwen3.5:35b")
+(hc-gptel-make-ollama "local" "qwen3.6:35b")
 
 (gptel-make-openai "OpenAI"
   :key "PASTE KEY HERE" ;; TODO : get from .authinfo

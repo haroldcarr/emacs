@@ -43,4 +43,15 @@
 
 (provide 'hc-icr-mb-action-embark)
 
-;;; hc-hc-icr-mb-action-embark.el ends here
+
+;; use:
+;; C-. O   ;; reveal in Finder
+
+(with-eval-after-load 'embark
+  (define-key embark-file-map (kbd "O")
+    (lambda (f)
+      (interactive "fFile: ")
+      (call-process "open" nil 0 nil "-R" (expand-file-name f)))))
+
+;; see current bindings
+;; M-x describe-keymap RET embark-file-map
