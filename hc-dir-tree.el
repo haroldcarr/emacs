@@ -81,6 +81,29 @@
         ("C-x t C-t" . treemacs-find-file)
         ("C-x t M-t" . treemacs-find-tag)))
 
+;; 1 -> (treemacs-icons-dired--display-icons-for-subdir "/Users/carr/.sync/.fsync/finance/" #<marker at 1 in finance>)
+;; 1 <- treemacs-icons-dired--display-icons-for-subdir: !non-local\ exit!
+;;
+;; I instrumented the function in the trace with  (message "FILE=%S ICON=%S" file icon) ;; HC
+;; FILE="/Users/carr/ftptmp/.DS_Store" ICON=nil
+;;
+;; The following uses the fallback for all cases where these is no icon.
+(with-eval-after-load 'treemacs
+  (advice-add
+   'treemacs-icon-for-file
+   :filter-return
+   (lambda (icon)
+     (message "treemacs-icon-for-file %S" icon)
+     (or icon (treemacs-get-icon-value 'fallback)))))
+
+(with-eval-after-load 'treemacs
+  (advice-add
+   'treemacs-icon-for-dir
+   :filter-return
+   (lambda (icon)
+     (message "treemacs-icon-for-dir %S" icon)
+     (or icon (treemacs-get-icon-value 'fallback)))))
+
 ;;(use-package treemacs-evil
 ;;  :after (treemacs evil)
 ;;  :ensure nil)
