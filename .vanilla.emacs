@@ -292,11 +292,6 @@
 
 (use-package hc-buffer-control)
 
-;; move/copy between two dired windows
-(defvar dired-dwim-target)
-(setq dired-dwim-target t)
-(use-package hc-dired)
-
 (setq tab-bar-show nil)
 
 ;; This must be ON for haskell-mode to work.
@@ -416,6 +411,11 @@
 (hcSectionLoad hc-sdedit)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-dir-tree)
+;; ------------------------------------------------------------------------------
+;; move/copy between two dired windows
+(defvar dired-dwim-target)
+(setq dired-dwim-target t)
+;;(use-package hc-dired)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-epub)
 ;; ------------------------------------------------------------------------------

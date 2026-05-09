@@ -99,6 +99,11 @@
    ;; :preview-key "M-."
    :preview-key '(:debounce 0.4 any))
 
+  ;; HC : do not preview when selecting from the bookmark list.
+  (consult-customize
+   consult-bookmark
+   :preview-key nil)
+
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; "C-+"
