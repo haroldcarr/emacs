@@ -364,8 +364,8 @@
 ;; ** Mode line
 ;; http://www.emacswiki.org/emacs/DisplayTime
 (load-file (concat (hcEmacsDir) "/hc-mode-line.el"))
-(load "time")
-(display-time)
+;;(load "time")
+;;(display-time)
 (line-number-mode)
 (column-number-mode)
 

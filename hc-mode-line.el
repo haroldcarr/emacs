@@ -37,6 +37,7 @@
       flycheck-warning                  ;; number of warnings
       flycheck-info)                    ;; number of notifications
      :when active)
+    (global :when active)
     ))
 
 (defvar hc-mode-line-right
