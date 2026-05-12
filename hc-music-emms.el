@@ -62,6 +62,30 @@
 (setq emms-track-description-function #'hc-emms-track-description)
 
 ;; ------------------------------------------------------------------------------
+
+(defun hc-emms-play-file-at-point ()
+  "Play file path at point with EMMS."
+  (interactive)
+  (let ((f (thing-at-point 'filename t)))
+    (unless f
+      (user-error "No filename at point"))
+    (setq f (expand-file-name f))
+    (unless (file-exists-p f)
+      (user-error "File does not exist: %s" f))
+    (emms-play-file f)))
+
+;;(global-set-key (kbd "C-c e p") #'hc-emms-play-file-at-point)
+
+(defun hc-emms-add-file-at-point ()
+  "Add file at point to EMMS playlist."
+  (interactive)
+  (let ((f (thing-at-point 'filename t)))
+    (unless f (user-error "No filename at point"))
+    (emms-add-file (expand-file-name f))))
+
+;;(global-set-key (kbd "C-c e a") #'hc-emms-add-file-at-point)
+
+;; ------------------------------------------------------------------------------
 ;; OLD
 ;; (eval-when-compile (require 'use-package))
 

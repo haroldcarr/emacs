@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 Jan 17 (Sat) 10:21:42 by Harold Carr.
+;;;; Last Modified : 2026 May 12 (Tue) 16:53:18 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -73,8 +73,8 @@
 
 (declare-function hcLocation "")
 
-(defvar hc-music        (hcLocation "music"))
-(defvar hc-Carr_tunes   (concat hc-music "/Carr_tunes"))
+(defvar hc-music        (hcLocation           "music"))
+(defvar hc-Carr_tunes   (concat hc-music      "/Carr_tunes"))
 (defvar hc-2010-Beowawe (concat hc-Carr_tunes "/2010-Beowawe"))
 (defvar hc-2010-Georgia (concat hc-Carr_tunes "/2010-Georgia"))
 
@@ -110,6 +110,23 @@ return \"1976-Transformation\"."
   "Play ZCM 2025."
   (interactive)
   (hc-play-music "ZCM 2025" hc-Carr_tunes hc-zcm-2025-tunes '("Z-SIB") '("mp3")))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; HAJJ
+
+(defun hajj ()
+  (interactive)
+  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") ":HAJJ:")
+    #'(lambda (tune)
+        (princ (format "\n----------------------------------------------------------------------------\n"))
+        (princ (format "%s\n\n" tune))
+        (-each (directory-files-recursively-with-names-and-extensions
+                hc-Carr_tunes ;; dir-to-search
+                (list tune) ;;  want
+                '("mp3" "mscz" "sib" "pdf") ;; extensions
+                )
+          #'(lambda (x) (princ (format "%s\n" x)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; generic
@@ -193,9 +210,9 @@ return \"1976-Transformation\"."
 any substring in NAMES and whose extensions contain any substring in EXTS.
 Matching is case-insensitive."
   (let* ((case-fold-search t)
-         (names-re (regexp-opt names))
-         (exts-re  (regexp-opt exts))
-         (re (concat names-re ".*\\." exts-re "\\'")))
+         (names-re         (regexp-opt names))
+         (exts-re          (regexp-opt exts))
+         (re               (concat names-re ".*\\." exts-re "\\'")))
     (directory-files-recursively dir re)))
 
 ;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
