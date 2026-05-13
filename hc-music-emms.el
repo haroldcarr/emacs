@@ -20,8 +20,8 @@
 (setq emms-volume-change-function 'hc-mac-volume-change)
 (setq emms-volume-change-amount 10)
 
-(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/ZCM25_MP3")
-(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/2026-03-26-mixes")
+;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/ZCM25_MP3")
+;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/2026-03-26-mixes")
 
 ;; ------------------------------------------------------------------------------
 ;; EMMS playlist highlight config
@@ -84,6 +84,45 @@
     (emms-add-file (expand-file-name f))))
 
 ;;(global-set-key (kbd "C-c e a") #'hc-emms-add-file-at-point)
+
+;; ------------------------------------------------------------------------------
+;; add playable paths in buffer to EMMS
+;; for use after hc-music-automation (hajj)
+
+(defvar hc-emms-playable-extensions
+  '("mp3" "flac" "wav" "m4a" "aac" "ogg" "opus" "aiff" "aif")
+  "File extensions considered playable by EMMS.")
+
+(defun hc-emms-playable-file-p (path)
+  "Return non-nil if PATH looks like a playable existing file."
+  (and path
+       (file-exists-p path)
+       (member (downcase (or (file-name-extension path) ""))
+               hc-emms-playable-extensions)))
+
+(defun hc-emms-buffer-playable-files ()
+  "Return playable file paths from current buffer, top to bottom."
+  (let (files)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^/.*$" nil t)
+        (let ((path (string-trim (match-string-no-properties 0))))
+          (when (hc-emms-playable-file-p path)
+            (push path files)))))
+    (nreverse files)))
+
+(defun hc-emms-add-buffer-tracks ()
+  "Add all playable file paths in current buffer to EMMS playlist."
+  (interactive)
+  (let ((files (hc-emms-buffer-playable-files)))
+    (unless files
+      (user-error "No playable tracks found"))
+    (dolist (file files)
+      (emms-add-file file))
+    (message "Added %d tracks to EMMS playlist" (length files))))
+
+;; optional keybinding
+;; (global-set-key (kbd "C-c e b") #'hc-emms-add-buffer-tracks)
 
 ;; ------------------------------------------------------------------------------
 ;; OLD

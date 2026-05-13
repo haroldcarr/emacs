@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 12 (Tue) 16:53:18 by Harold Carr.
+;;;; Last Modified : 2026 May 12 (Tue) 17:01:14 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -121,11 +121,13 @@ return \"1976-Transformation\"."
     #'(lambda (tune)
         (princ (format "\n----------------------------------------------------------------------------\n"))
         (princ (format "%s\n\n" tune))
-        (-each (directory-files-recursively-with-names-and-extensions
-                hc-Carr_tunes ;; dir-to-search
-                (list tune) ;;  want
-                '("mp3" "mscz" "sib" "pdf") ;; extensions
-                )
+        (-each
+            (-filter
+             (lambda (x) (not (--any? (s-contains? it x) '("ZZZ" "Violin" "Bass" "bass" "melody" "Z-SIB" "Piano" "sketch" "piano" "Vibraphone" "Trombone"))))
+             (directory-files-recursively-with-names-and-extensions
+              hc-Carr_tunes                 ;; dir-to-search
+              (list tune)                   ;;  want
+              '("mp3" "mscz" "sib" "pdf"))) ;; extensions
           #'(lambda (x) (princ (format "%s\n" x)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
