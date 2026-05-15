@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 May 08 (Fri) 12:23:05 by Harold Carr.
+;;;; Last Modified : 2026 May 13 (Wed) 16:41:42 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -63,6 +63,7 @@
 (hc-gptel-make-ollama "local" "gemma4:31b-coding-mtp-bf16")
 (hc-gptel-make-ollama "local" "qwen3-coder:30b")
 (hc-gptel-make-ollama "local" "qwen3.5:35b")
+(hc-gptel-make-ollama "local" "qwen3.6:27b-coding-nvfp4")
 (hc-gptel-make-ollama "local" "qwen3.6:35b")
 
 (gptel-make-openai "OpenAI"
