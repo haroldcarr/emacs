@@ -53,16 +53,17 @@
   ;; useful beyond Corfu.
   (read-extended-command-predicate #'command-completion-default-include-p))
 
-(use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  ;;:bind (("M-/" . dabbrev-completion)
-  ;;       ("C-M-/" . dabbrev-expand))
-  :config
-  (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
-  (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
-  (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))
+(cond ((not (equalp (hcMachineName) "o2011"))
+       (use-package dabbrev
+         ;; Swap M-/ and C-M-/
+         ;;:bind (("M-/" . dabbrev-completion)
+         ;;       ("C-M-/" . dabbrev-expand))
+         :config
+         (add-to-list 'dabbrev-ignored-buffer-regexps "\\` ")
+         (add-to-list 'dabbrev-ignored-buffer-modes 'authinfo-mode)
+         (add-to-list 'dabbrev-ignored-buffer-modes 'doc-view-mode)
+         (add-to-list 'dabbrev-ignored-buffer-modes 'pdf-view-mode)
+         (add-to-list 'dabbrev-ignored-buffer-modes 'tags-table-mode))))
 
 (provide 'hc-icr-ib-display-corfu)
 
