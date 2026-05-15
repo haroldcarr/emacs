@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 12 (Tue) 17:01:14 by Harold Carr.
+;;;; Last Modified : 2026 May 14 (Thu) 17:12:44 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -85,7 +85,11 @@
                   (s-lines (buffer-string))))
          (filtered (-filter
                     (lambda (line) (and (s-contains? substring line)
-                                        (s-contains? "./Carr_tunes/" line)))
+                                        (or (s-contains? "./Carr_arrangements/"     line)
+                                            (s-contains? "./Carr_book/"             line)
+                                            (s-contains? "./Carr_practice-loops/"   line)
+                                            (s-contains? "./Carr_tunes/"            line)
+                                            (s-contains? "./Carr_tunes_unfinished/" line))))
                     lines)))
     (mapcar #'hc-extract-tune-name filtered)))
 
@@ -117,17 +121,20 @@ return \"1976-Transformation\"."
 
 (defun hajj ()
   (interactive)
-  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") ":HAJJ:")
+  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "HAJJ")
     #'(lambda (tune)
         (princ (format "\n----------------------------------------------------------------------------\n"))
         (princ (format "%s\n\n" tune))
         (-each
             (-filter
-             (lambda (x) (not (--any? (s-contains? it x) '("ZZZ" "Violin" "Bass" "bass" "melody" "Z-SIB" "Piano" "sketch" "piano" "Vibraphone" "Trombone"))))
+             (lambda (x)
+               (not (--any? (s-contains? it x)
+                            '("ZZZ" "Violin" "Bass" "bass" "melody" "Z-SIB" "Piano"
+                              "sketch" "piano" "Vibraphone" "Trombone"))))
              (directory-files-recursively-with-names-and-extensions
-              hc-Carr_tunes                 ;; dir-to-search
-              (list tune)                   ;;  want
-              '("mp3" "mscz" "sib" "pdf"))) ;; extensions
+              hc-Carr_tunes                              ;; dir-to-search
+              (list tune)                                ;; want
+              '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf"))) ;; extensions
           #'(lambda (x) (princ (format "%s\n" x)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -215,7 +222,7 @@ Matching is case-insensitive."
          (names-re         (regexp-opt names))
          (exts-re          (regexp-opt exts))
          (re               (concat names-re ".*\\." exts-re "\\'")))
-    (directory-files-recursively dir re)))
+    (directory-files-recursively dir re nil nil t)))
 
 ;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
 

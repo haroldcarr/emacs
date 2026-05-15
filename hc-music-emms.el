@@ -125,6 +125,81 @@
 ;; (global-set-key (kbd "C-c e b") #'hc-emms-add-buffer-tracks)
 
 ;; ------------------------------------------------------------------------------
+;; YouTube EXTM3U for EMMS/mpv
+
+;; USAGE:
+;;
+;; Get YT topic share URL
+;; cd ~/z-TMP-COPY/yt-search-m3u
+;; cargo run -- "Tethered Moon Experiencing Tosca" experiencing-tosca.m3u
+;; (hc-emms-play-youtube-m3u "~/z-TMP-COPY/yt-search-m3u/experiencing-tosca.m3u")
+
+;; summary
+;; - Playable thing = (emms-track 'url URL)
+;; - Display name = info-title (NOT name)
+;; - Do NOT use emms-play-playlist for YouTube M3U
+;; - Build tracks yourself → insert → play
+
+(require 'emms)
+(require 'emms-player-mpv)
+(require 'emms-playlist-mode)
+(require 'subr-x)
+
+;;(setq emms-player-list '(emms-player-mpv))
+
+(setq emms-track-description-function
+      (lambda (track)
+        (or (emms-track-get track 'info-title)
+            (emms-track-name track)
+            "unknown")))
+
+(defun hc-emms-youtube-m3u--tracks (file)
+  "Return EMMS tracks from YouTube EXTM3U FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (let ((title nil)
+          tracks)
+      (dolist (raw-line (split-string (buffer-string) "\n" t))
+        (let ((line (string-trim raw-line)))
+          (cond
+           ((string-match "\\`#EXTINF:[^,]*,\\(.*\\)\\'" line)
+            (setq title (match-string 1 line)))
+
+           ((or (string-empty-p line)
+                (string-prefix-p "#" line))
+            nil)
+
+           (t
+            (let ((track (emms-track 'url line)))
+              ;; Keep URL as playable name.
+              ;; Store title only as display metadata.
+              (when title
+                (emms-track-set track 'info-title title))
+              (push track tracks))
+            (setq title nil)))))
+      (nreverse tracks))))
+
+(defun hc-emms-add-youtube-m3u (file)
+  "Add YouTube EXTM3U FILE to a fresh EMMS playlist."
+  (interactive "fM3U file: ")
+  (let ((tracks (hc-emms-youtube-m3u--tracks file))
+        (buf (emms-playlist-new "youtube-m3u")))
+    (emms-playlist-set-playlist-buffer buf)
+    (with-current-buffer buf
+      (dolist (track tracks)
+        (emms-playlist-insert-track track))
+      (goto-char (point-min)))
+    (switch-to-buffer buf)))
+
+(defun hc-emms-play-youtube-m3u (file)
+  "Load YouTube EXTM3U FILE into EMMS and play first track."
+  (interactive "fM3U file: ")
+  (hc-emms-add-youtube-m3u file)
+  (with-current-buffer emms-playlist-buffer
+    (goto-char (point-min))
+    (emms-playlist-select (point))))
+
+;; ------------------------------------------------------------------------------
 ;; OLD
 ;; (eval-when-compile (require 'use-package))
 

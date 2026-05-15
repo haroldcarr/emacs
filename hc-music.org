@@ -1,0 +1,41 @@
+* listen/look at tagged Carr_tunes
+
+#+begin_src elisp
+(load-library "hc-music-automation")
+(load-library "hc-music-emms")
+(switch-to-buffer "*scratch*")
+(hajj)
+(hc-emms-add-buffer-tracks)
+(emms-playlist-mode-go)
+#+end_src
+
+* CHAPTERS
+
+check:
+       yt-dlp -J --no-playlist URL | jq '.chapters'
+if null then use yt-search-m3u
+if list then use yt-album-m3u
+
+yt-dlp -J --no-playlist 'https://www.youtube.com/watch?v=fNk_zzaMoSs' | jq '.chapters'
+
+You should see a non-empty JSON array.
+
+yt-album-m3u 'https://www.youtube.com/watch?v=fNk_zzaMoSs' essence.m3u
+
+(hc-emms-play-youtube-m3u "/path/to/essence.m3u")
+
+Another one that has chapters : https://www.youtube.com/watch?v=b1Fo_M_tj6w
+
+
+* create and play youtube playlist via search
+
+#+begin_src elisp
+cd ~/z-TMP-COPY/yt-search-m3u
+cargo run -- "Tethered Moon - Triangle" Tethered_Moon-Triangle.m3u
+edit Tethered_Moon-Triangle.m3u
+mv Tethered_Moon-Triangle.m3u ~/.sync/.wsync/music/playlists/Tethered_Moon
+(load-library "hc-music-emms")
+(hc-emms-play-youtube-m3u  "~/.sync/.wsync/music/playlists/Tethered_Moon/Tethered_Moon-Triangle.m3u")
+#+end_src
+
+cargo run -- https://music.youtube.com/playlist?list=PLH8NVjolugrMYSBg-TLn7JCI_KzDQvaYA
