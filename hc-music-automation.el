@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 14 (Thu) 17:12:44 by Harold Carr.
+;;;; Last Modified : 2026 May 16 (Sat) 22:19:29 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -119,9 +119,12 @@ return \"1976-Transformation\"."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HAJJ
 
-(defun hajj ()
+(defun hajj () (tagged-with "HAJJ"))
+(defun solo () (tagged-with "SOLO"))
+
+(defun tagged-with (tag-string)
   (interactive)
-  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "HAJJ")
+  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") tag-string)
     #'(lambda (tune)
         (princ (format "\n----------------------------------------------------------------------------\n"))
         (princ (format "%s\n\n" tune))
@@ -222,7 +225,7 @@ Matching is case-insensitive."
          (names-re         (regexp-opt names))
          (exts-re          (regexp-opt exts))
          (re               (concat names-re ".*\\." exts-re "\\'")))
-    (directory-files-recursively dir re nil nil t)))
+    (directory-files-recursively dir re nil #'file-directory-p t)))
 
 ;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
 
