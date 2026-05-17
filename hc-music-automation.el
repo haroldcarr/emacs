@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 17 (Sun) 10:43:05 by Harold Carr.
+;;;; Last Modified : 2026 May 17 (Sun) 16:44:21 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -126,7 +126,7 @@ return \"1976-Transformation\"."
                (not (--any? (s-contains? it x)
                             '("ZZZ" "Violin" "melody" "Z-SIB" "Piano"
                               "sketch" "piano" "Vibraphone" "Trombone"))))
-             (directory-files-recursively-with-names-and-extensions
+             (directory-files-recursively-with-want-and-extensions
               dir-to-search
               (list tune)                                ;; want
               '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf"))) ;; extensions
@@ -166,7 +166,7 @@ return \"1976-Transformation\"."
   (let* ((candidates
           (-filter
            (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
-           (directory-files-recursively-with-names-and-extensions dir-to-search want extensions))))
+           (directory-files-recursively-with-want-and-extensions dir-to-search want extensions))))
 
     ;; --------------------------------------------------
     (-each candidates
@@ -199,22 +199,12 @@ return \"1976-Transformation\"."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; utilities
 
-(defun hc-quote-if-spaces (s)
-  "Return S quoted if it contains whitespace, otherwise return S unchanged."
-  (if (string-match-p "[[:space:]]" s)
-      (format "%S" s)
-    s))
+(defun directory-files-recursively-with-want-and-do-not-want-and-extensions (dir-to-search want do-not-want exts)
+  (-filter
+   (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
+   (directory-files-recursively-with-want-and-extensions dir-to-search want exts)))
 
-(defun hc-directory-files-recursively-with-extension (dir ext)
-  "Return a list of absolute paths for all files under DIR ending with EXT."
-  (directory-files-recursively
-   dir
-   (concat "\\." (regexp-quote ext) "$")))
-
-;;(hc-directory-files-recursively-with-extension hc-Carr_tunes "mp3")
-;;(hc-directory-files-recursively-with-extension hc-music-others "m3u")
-
-(defun directory-files-recursively-with-names-and-extensions (dir names exts)
+(defun directory-files-recursively-with-want-and-extensions (dir names exts)
   "Return absolute paths for files under DIR whose names contain
 any substring in NAMES and whose extensions contain any substring in EXTS.
 Matching is case-insensitive."
@@ -224,7 +214,7 @@ Matching is case-insensitive."
          (re               (concat names-re ".*\\." exts-re "\\'")))
     (directory-files-recursively dir re nil #'file-directory-p t)))
 
-;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
+;;(directory-files-recursively-with-want-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
 
 (defun hc-write-candidate-file (tune-names out)
   "Write lines to OUT after adding header."
@@ -232,6 +222,12 @@ Matching is case-insensitive."
          (result (concat (s-join "\n" with-header) "\n")))
     (with-temp-file out (insert result))
     (message "Wrote %d matching lines to %s" (length tune-names) out)))
+
+(defun hc-quote-if-spaces (s)
+  "Return S quoted if it contains whitespace, otherwise return S unchanged."
+  (if (string-match-p "[[:space:]]" s)
+      (format "%S" s)
+    s))
 
 (provide 'hc-music-automation)
 
