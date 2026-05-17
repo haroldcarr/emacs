@@ -55,3 +55,10 @@
 
 ;; see current bindings
 ;; M-x describe-keymap RET embark-file-map
+
+(defun hc-embark-remove-defun-target-in-org ()
+  (setq-local embark-target-finders
+              (cl-remove #'embark-target-defun-at-point
+                         embark-target-finders)))
+
+(add-hook 'org-mode-hook #'hc-embark-remove-defun-target-in-org)
