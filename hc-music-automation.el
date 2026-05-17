@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 17 (Sun) 16:44:21 by Harold Carr.
+;;;; Last Modified : 2026 May 17 (Sun) 16:49:05 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -121,15 +121,12 @@ return \"1976-Transformation\"."
         (princ (format "\n----------------------------------------------------------------------------\n"))
         (princ (format "%s\n\n" tune))
         (-each
-            (-filter
-             (lambda (x)
-               (not (--any? (s-contains? it x)
-                            '("ZZZ" "Violin" "melody" "Z-SIB" "Piano"
-                              "sketch" "piano" "Vibraphone" "Trombone"))))
-             (directory-files-recursively-with-want-and-extensions
-              dir-to-search
-              (list tune)                                ;; want
-              '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf"))) ;; extensions
+            (directory-files-recursively-with-want-and-do-not-want-and-extensions
+             dir-to-search
+             (list tune) ;; want
+             '("ZZZ" "Violin" "melody" "Z-SIB" "Piano"
+               "sketch" "piano" "Vibraphone" "Trombone") ;; do not want
+             '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf")) ;; extensions
           #'(lambda (x) (princ (format "%s\n" x)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -164,9 +161,8 @@ return \"1976-Transformation\"."
   (remove-overlays)
 
   (let* ((candidates
-          (-filter
-           (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
-           (directory-files-recursively-with-want-and-extensions dir-to-search want extensions))))
+          (directory-files-recursively-with-want-and-do-not-want-and-extensions
+           dir-to-search want do-not-want extensions)))
 
     ;; --------------------------------------------------
     (-each candidates
