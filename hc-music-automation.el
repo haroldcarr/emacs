@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 17 (Sun) 08:12:35 by Harold Carr.
+;;;; Last Modified : 2026 May 17 (Sun) 10:43:05 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -76,8 +76,7 @@
 (defvar hc-music             (hcLocation           "music"))
 (defvar hc-Carr_tunes        (concat hc-music      "/Carr_tunes"))
 (defvar hc-Carr_arrangements (concat hc-music      "/Carr_arrangements"))
-(defvar hc-2010-Beowawe      (concat hc-Carr_tunes "/2010-Beowawe"))
-(defvar hc-2010-Georgia      (concat hc-Carr_tunes "/2010-Georgia"))
+(defun  hc-zcm-2025-tunes () (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25"))
 
 (defun hc-get-tune-names (in substring)
   "Read IN, return lines containing SUBSTRING."
@@ -107,15 +106,6 @@ return \"1976-Transformation\"."
        (-filter (lambda (x) (not (s-blank? x)))) ; drop empty lines
        (-third-item)))
 
-;; after the necessary functions defined
-(defvar hc-zcm-2025-tunes
-  (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") "Z25"))
-
-(defun hc-play-zcm-2025 ()
-  "Play ZCM 2025."
-  (interactive)
-  (hc-play-music "ZCM 2025" hc-Carr_tunes hc-zcm-2025-tunes '("Z-SIB") '("mp3")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HAJJ
 
@@ -143,7 +133,12 @@ return \"1976-Transformation\"."
           #'(lambda (x) (princ (format "%s\n" x)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; generic
+;; TODO : replace with EMMS
+
+(defun hc-play-zcm-2025 ()
+  "Play ZCM 2025."
+  (interactive)
+  (hc-play-music "ZCM 2025" hc-Carr_tunes (hc-zcm-2025-tunes) '("Z-SIB") '("mp3")))
 
 (defvar hc-audacity "/Applications/Audacity.app/Contents/MacOS/Audacity")
 (defvar hc-vlc      "/Applications/VLC.app/Contents/MacOS/VLC")
@@ -201,14 +196,14 @@ return \"1976-Transformation\"."
    (concat hc-vlc " --loop " (hc-quote-if-spaces filename))
    (concat "*" filename "*")))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; utilities
+
 (defun hc-quote-if-spaces (s)
   "Return S quoted if it contains whitespace, otherwise return S unchanged."
   (if (string-match-p "[[:space:]]" s)
       (format "%S" s)
     s))
-
-;;(hc-play-it (concat hc-2010-Beowawe "/2023-Beowawe.mp3"))
-;;(hc-play-it (concat hc-2010-Georgia "/2010-Georgia.mp3"))
 
 (defun hc-directory-files-recursively-with-extension (dir ext)
   "Return a list of absolute paths for all files under DIR ending with EXT."
@@ -230,9 +225,6 @@ Matching is case-insensitive."
     (directory-files-recursively dir re nil #'file-directory-p t)))
 
 ;;(directory-files-recursively-with-names-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; utilities
 
 (defun hc-write-candidate-file (tune-names out)
   "Write lines to OUT after adding header."
