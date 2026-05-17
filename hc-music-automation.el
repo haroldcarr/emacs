@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 16 (Sat) 22:19:29 by Harold Carr.
+;;;; Last Modified : 2026 May 17 (Sun) 08:12:35 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -73,10 +73,11 @@
 
 (declare-function hcLocation "")
 
-(defvar hc-music        (hcLocation           "music"))
-(defvar hc-Carr_tunes   (concat hc-music      "/Carr_tunes"))
-(defvar hc-2010-Beowawe (concat hc-Carr_tunes "/2010-Beowawe"))
-(defvar hc-2010-Georgia (concat hc-Carr_tunes "/2010-Georgia"))
+(defvar hc-music             (hcLocation           "music"))
+(defvar hc-Carr_tunes        (concat hc-music      "/Carr_tunes"))
+(defvar hc-Carr_arrangements (concat hc-music      "/Carr_arrangements"))
+(defvar hc-2010-Beowawe      (concat hc-Carr_tunes "/2010-Beowawe"))
+(defvar hc-2010-Georgia      (concat hc-Carr_tunes "/2010-Georgia"))
 
 (defun hc-get-tune-names (in substring)
   "Read IN, return lines containing SUBSTRING."
@@ -115,14 +116,15 @@ return \"1976-Transformation\"."
   (interactive)
   (hc-play-music "ZCM 2025" hc-Carr_tunes hc-zcm-2025-tunes '("Z-SIB") '("mp3")))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HAJJ
 
-(defun hajj () (tagged-with "HAJJ"))
-(defun solo () (tagged-with "SOLO"))
+(defun hajj () (tagged-with "HAJJ" hc-Carr_tunes))
+(defun solo ()
+  (tagged-with "SOLO" hc-Carr_arrangements)
+  (tagged-with "SOLO" hc-Carr_tunes))
 
-(defun tagged-with (tag-string)
+(defun tagged-with (tag-string dir-to-search)
   (interactive)
   (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") tag-string)
     #'(lambda (tune)
@@ -132,10 +134,10 @@ return \"1976-Transformation\"."
             (-filter
              (lambda (x)
                (not (--any? (s-contains? it x)
-                            '("ZZZ" "Violin" "Bass" "bass" "melody" "Z-SIB" "Piano"
+                            '("ZZZ" "Violin" "melody" "Z-SIB" "Piano"
                               "sketch" "piano" "Vibraphone" "Trombone"))))
              (directory-files-recursively-with-names-and-extensions
-              hc-Carr_tunes                              ;; dir-to-search
+              dir-to-search
               (list tune)                                ;; want
               '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf"))) ;; extensions
           #'(lambda (x) (princ (format "%s\n" x)))))))
