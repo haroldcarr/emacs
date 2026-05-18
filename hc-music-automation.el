@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 17 (Sun) 16:49:05 by Harold Carr.
+;;;; Last Modified : 2026 May 17 (Sun) 18:00:47 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -24,49 +24,6 @@
 
 (eval-when-compile
   (require 'wid-edit))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; play along
-
-(defvar hc-music-others "/Volumes/exFAT-exter/MusicOthers")
-
-(defun hc-play-play-along ()
-  "Play play along."
-  (interactive)
-  (hc-play-music
-   "PLAY ALONG"
-   hc-music-others
-   '(
-     "airegin"
-     "all the things you are"
-     "Body and Soul" "Body & Soul"
-     "bolivia"
-     "Fee-Fi-Fo-Fum" "Fee Fi Fo Fum"
-     "foolish dog" "foolish door"
-     "round midnight" "round about midnight"
-     "skylark"
-     )
-   '(
-     "199x-Stray"
-     "2009-12-22-rehearsal"
-     "2010-01-04-rehearsal"
-     "2010-01-18-rehearsal"
-     "2010-01-20-City-Art"
-     "2010-07-14-Wayne"
-     "2010-10-26-John-Stowell"
-     "2021-spring"
-     "2022-05-07-Foolish_Door"
-     "2022-06-02-Emilee"
-     "2022-07-28-Emilee"
-     "2022-08-18-keith"
-     "2022-10-03-goran"
-     "2022-10-08-goran"
-     "2022-10-28-flanders"
-     "2024-06-01-tony-elison"
-     "2024-08-29-josh"
-     "._Foolish_Door"
-     )
-   '("flac" "m4a" "mp3" "wav")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; HC music
@@ -107,30 +64,143 @@ return \"1976-Transformation\"."
        (-third-item)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; HAJJ
+;; select "Carr" music
 
 (defun hajj () (tagged-with "HAJJ" hc-Carr_tunes))
 (defun solo ()
   (tagged-with "SOLO" hc-Carr_arrangements)
   (tagged-with "SOLO" hc-Carr_tunes))
+(defun zcm25 () (tagged-with "Z25" hc-Carr_tunes))
 
 (defun tagged-with (tag-string dir-to-search)
+  (hc-princ-selections
+   (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") tag-string)
+   dir-to-search
+   '("ZZZ" "Violin" "melody" "Z-SIB" "Piano" "sketch" "piano" "Vibraphone" "Trombone") ;; do not want
+   '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; select other music
+
+(defvar hc-music-others "/Volumes/exFAT-exter/MusicOthers")
+
+(defun hc-standards ()
   (interactive)
-  (-each (hc-get-tune-names (concat hc-music "/0-AAA-TUNE-LIST.org") tag-string)
+  (hc-princ-selections
+   '( "airegin"
+     "bolivia"
+     "skylark"
+    )
+   hc-music-others
+   '("199x-Stray"
+     "2009-12-22-rehearsal"
+     "2010-01-04-rehearsal"
+     "2010-01-18-rehearsal"
+     "2010-01-20-City-Art"
+     "2010-07-14-Wayne"
+     "2010-10-26-John-Stowell"
+     "2021-spring"
+     "2022-05-07-Foolish_Door"
+     "2022-06-02-Emilee"
+     "2022-07-28-Emilee"
+     "2022-08-18-keith"
+     "2022-10-03-goran"
+     "2022-10-08-goran"
+     "2022-10-28-flanders"
+     "2024-06-01-tony-elison"
+     "2024-08-29-josh"
+     "._Foolish_Door"
+     )
+   '("flac" "m4a" "mp3" "wav")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; utilities
+
+(defun hc-princ-selections (tunes dir-to-search do-not-want extensions)
+  (-each tunes
     #'(lambda (tune)
         (princ (format "\n----------------------------------------------------------------------------\n"))
         (princ (format "%s\n\n" tune))
         (-each
             (directory-files-recursively-with-want-and-do-not-want-and-extensions
              dir-to-search
-             (list tune) ;; want
-             '("ZZZ" "Violin" "melody" "Z-SIB" "Piano"
-               "sketch" "piano" "Vibraphone" "Trombone") ;; do not want
-             '("jpg" "jpeg" "mp3" "mscz" "sib" "pdf")) ;; extensions
+             (list tune)   ;; want
+             do-not-want
+             extensions)
           #'(lambda (x) (princ (format "%s\n" x)))))))
+
+(defun directory-files-recursively-with-want-and-do-not-want-and-extensions (dir-to-search want do-not-want exts)
+  (-filter
+   (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
+   (directory-files-recursively-with-want-and-extensions dir-to-search want exts)))
+
+(defun directory-files-recursively-with-want-and-extensions (dir names exts)
+  "Return absolute paths for files under DIR whose names contain
+any substring in NAMES and whose extensions contain any substring in EXTS.
+Matching is case-insensitive."
+  (let* ((case-fold-search t)
+         (names-re         (regexp-opt names))
+         (exts-re          (regexp-opt exts))
+         (re               (concat names-re ".*\\." exts-re "\\'")))
+    (directory-files-recursively dir re nil #'file-directory-p t)))
+
+;;(directory-files-recursively-with-want-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
+
+(defun hc-write-candidate-file (tune-names out)
+  "Write lines to OUT after adding header."
+  (let* ((with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
+         (result (concat (s-join "\n" with-header) "\n")))
+    (with-temp-file out (insert result))
+    (message "Wrote %d matching lines to %s" (length tune-names) out)))
+
+(defun hc-quote-if-spaces (s)
+  "Return S quoted if it contains whitespace, otherwise return S unchanged."
+  (if (string-match-p "[[:space:]]" s)
+      (format "%S" s)
+    s))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; TODO : replace with EMMS
+
+(defvar hc-music-others "/Volumes/exFAT-exter/MusicOthers")
+
+(defun hc-play-play-along ()
+  "Play play along."
+  (interactive)
+  (hc-play-music
+   "PLAY ALONG"
+   hc-music-others
+   '(
+     "airegin"
+     "all the things you are"
+     "Body and Soul" "Body & Soul"
+     "bolivia"
+     "Fee-Fi-Fo-Fum" "Fee Fi Fo Fum"
+     "foolish dog" "foolish door"
+     "round midnight" "round about midnight"
+     "skylark"
+     )
+   '(
+     "199x-Stray"
+     "2009-12-22-rehearsal"
+     "2010-01-04-rehearsal"
+     "2010-01-18-rehearsal"
+     "2010-01-20-City-Art"
+     "2010-07-14-Wayne"
+     "2010-10-26-John-Stowell"
+     "2021-spring"
+     "2022-05-07-Foolish_Door"
+     "2022-06-02-Emilee"
+     "2022-07-28-Emilee"
+     "2022-08-18-keith"
+     "2022-10-03-goran"
+     "2022-10-08-goran"
+     "2022-10-28-flanders"
+     "2024-06-01-tony-elison"
+     "2024-08-29-josh"
+     "._Foolish_Door"
+     )
+   '("flac" "m4a" "mp3" "wav")))
 
 (defun hc-play-zcm-2025 ()
   "Play ZCM 2025."
@@ -191,39 +261,6 @@ return \"1976-Transformation\"."
   (async-shell-command
    (concat hc-vlc " --loop " (hc-quote-if-spaces filename))
    (concat "*" filename "*")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; utilities
-
-(defun directory-files-recursively-with-want-and-do-not-want-and-extensions (dir-to-search want do-not-want exts)
-  (-filter
-   (lambda (x) (not (--any? (s-contains? it x) do-not-want)))
-   (directory-files-recursively-with-want-and-extensions dir-to-search want exts)))
-
-(defun directory-files-recursively-with-want-and-extensions (dir names exts)
-  "Return absolute paths for files under DIR whose names contain
-any substring in NAMES and whose extensions contain any substring in EXTS.
-Matching is case-insensitive."
-  (let* ((case-fold-search t)
-         (names-re         (regexp-opt names))
-         (exts-re          (regexp-opt exts))
-         (re               (concat names-re ".*\\." exts-re "\\'")))
-    (directory-files-recursively dir re nil #'file-directory-p t)))
-
-;;(directory-files-recursively-with-want-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
-
-(defun hc-write-candidate-file (tune-names out)
-  "Write lines to OUT after adding header."
-  (let* ((with-header (cons "These are candidate tunes.  The list and the tunes themselves are still in progress.\n" tune-names))
-         (result (concat (s-join "\n" with-header) "\n")))
-    (with-temp-file out (insert result))
-    (message "Wrote %d matching lines to %s" (length tune-names) out)))
-
-(defun hc-quote-if-spaces (s)
-  "Return S quoted if it contains whitespace, otherwise return S unchanged."
-  (if (string-match-p "[[:space:]]" s)
-      (format "%S" s)
-    s))
 
 (provide 'hc-music-automation)
 
