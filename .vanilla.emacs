@@ -47,66 +47,30 @@
 
 ;; (hcSection "Packages")
 
-;;- [[http://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html#Packages]]
-;;- [[http://emacswiki.org/emacs/ELPA]]
-
-;; ELPA does not update the load path when new packages are installed.
-;; This will do that.
-
-(defvar package-alist)
-(defun package-update-load-path ()
-  "Update the load path for newly installed packages."
-  (interactive)
-  (let ((package-dir (hcExpandFileName nil package-user-dir)))
-    (mapc (lambda (pkg)
-            (let ((stem (symbol-name (car pkg)))
-		  (version "")
-		  (first t)
-		  path)
-	      (mapc (lambda (num)
-		      (if first
-			  (setq first nil)
-			  (setq version (format "%s." version)))
-		      (setq version (format "%s%s" version num)))
-		    (aref (cdr pkg) 0))
-              (setq path (format "%s/%s-%s" package-dir stem version))
-              (add-to-list 'load-path path)))
-          package-alist)))
-
 (require 'package)
-;; TODO: Other code uses .emacs.d too.
-;;       For now I have a symlink from ~/.emacs.d to here.
-;; (setq package-user-dir (concat (hcEmacsDir) "/.emacs.d/elpa"))
-(setq package-archives
-      '(
-        ("melpa"  . "http://melpa.org/packages/")
-        ;; https://list.orgmode.org/87lfa7tc9v.fsf@gnu.org/t/
-        ("gnu"    . "http://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-        ;;("org"    . "http://orgmode.org/elpa/")
-       ))
 
-;;        ("marmalade"    . "http://marmalade-repo.org/packages/")
-;;        ("melpa-stable" . "http://stable.melpa.org/packages/")
-
-(package-initialize)
 (setq package-enable-at-startup nil)
 
-;; can't get rid of warning
-;; https://stackoverflow.com/questions/5019724/in-emacs-what-does-this-error-mean-warning-cl-package-required-at-runtime
-(eval-and-compile
-  (require 'cl))
+(setq package-archives
+      '(("melpa"  . "https://melpa.org/packages/")
+        ("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(package-initialize)
 
 (eval-and-compile
-  (defvar use-package-verbose t)
-  (require 'use-package)
-  (require 'bind-key))
+  (require 'cl-lib)
+  (setq use-package-verbose t)
+  (require 'use-package))
 
 (require 'diminish nil t)
 
-(add-to-list 'load-path (shell-command-to-string "hcLocation emacs"))
+(add-to-list 'load-path (string-trim (shell-command-to-string "hcLocation emacs")))
 
-(require 'use-package)
 
 ;; ------------------------------------------------------------------------------
 ;; * Sections
@@ -421,6 +385,13 @@
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator ":"))
 
+(add-hook 'html-mode-hook
+          (lambda ()
+            (setq-local sgml-basic-offset 4)))
+(add-hook 'mhtml-mode-hook
+          (lambda ()
+            (setq-local sgml-basic-offset 4)))
+
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-time)
 ;; ------------------------------------------------------------------------------
@@ -487,6 +458,8 @@
 (hcSectionLoadOnDevMachines hc-agda)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoadOnDevMachines hc-haskell)
+;; ------------------------------------------------------------------------------
+(hcSectionLoadOnDevMachines hc-lean)
 ;; ------------------------------------------------------------------------------
 ;; (hcSectionLoadOnDevMachines hc-python)
 ;; ------------------------------------------------------------------------------

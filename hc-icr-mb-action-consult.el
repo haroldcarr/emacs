@@ -101,8 +101,9 @@
 
   ;; HC : do not preview when selecting from the bookmark list.
   (consult-customize
-   consult-bookmark
-   :preview-key nil)
+   consult-bookmark :preview-key nil
+   consult-buffer   :preview-key nil
+   )
 
   ;; Optionally configure the narrowing key.
   ;; Both < and C-+ work reasonably well.

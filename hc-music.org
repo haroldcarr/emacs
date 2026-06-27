@@ -1,15 +1,18 @@
+------------------------------------------------------------------------------
 * listen/look at tagged Carr_tunes
 
 #+begin_src elisp
 (load-library "hc-music-automation")
 (load-library "hc-music-emms")
-(switch-to-buffer "*scratch*")
-(hajj)
-(hc-emms-add-buffer-tracks)
-(emms-playlist-mode-go)
+(hc-emms-playlist-go #'hc-hajj)
+(hc-emms-playlist-go #'hc-solo)
 #+end_src
 
-* CHAPTERS
+------------------------------------------------------------------------------
+* see hc-youtube.el
+
+------------------------------------------------------------------------------
+* YOUTUBE CHAPTERS
 
 check:
        yt-dlp -J --no-playlist URL | jq '.chapters'
@@ -26,7 +29,7 @@ yt-album-m3u 'https://www.youtube.com/watch?v=fNk_zzaMoSs' essence.m3u
 
 Another one that has chapters : https://www.youtube.com/watch?v=b1Fo_M_tj6w
 
-
+------------------------------------------------------------------------------
 * create and play youtube playlist via search
 
 #+begin_src elisp
@@ -35,7 +38,8 @@ cargo run -- "Tethered Moon - Triangle" Tethered_Moon-Triangle.m3u
 edit Tethered_Moon-Triangle.m3u
 mv Tethered_Moon-Triangle.m3u ~/.sync/.wsync/music/playlists/Tethered_Moon
 (load-library "hc-music-emms")
-(hc-emms-play-youtube-m3u  "~/.sync/.wsync/music/playlists/Tethered_Moon/Tethered_Moon-Triangle.m3u")
+(hc-emms-play-youtube-m3u  "~/.sync/.wsync/music/playlists/Tethered_Moon/1991-Tethered_Moon-Triangle.m3u")
+(hc-emms-play-youtube-m3u  "~/.sync/.wsync/music/playlists/Tethered_Moon/2002-Tethered_Moon-Experiencing_Tosca.m3u")
 #+end_src
 
 cargo run -- https://music.youtube.com/playlist?list=PLH8NVjolugrMYSBg-TLn7JCI_KzDQvaYA

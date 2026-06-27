@@ -10,7 +10,7 @@
 
 (use-package corfu
   ;; Optional customizations
-  ;; :custom
+  :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -22,6 +22,11 @@
   ;; :hook ((prog-mode . corfu-mode)
   ;;        (shell-mode . corfu-mode)
   ;;        (eshell-mode . corfu-mode))
+
+  ;; HC
+  (corfu-auto t)
+  (corfu-auto-delay 0.5)
+  (corfu-auto-prefix 2)
 
   :init
 

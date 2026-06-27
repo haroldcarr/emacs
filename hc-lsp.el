@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2023 Sep 05 (Tue) 09:07:54 by Harold Carr.
+;;;; Last Modified : 2026 Jun 23 (Tue) 18:59:45 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -24,6 +24,9 @@
         lsp-enable-snippet       nil
         lsp-file-watch-threshold 512
         )
+
+  (add-to-list 'warning-suppress-types '(lsp-mode)) ;; TODO : remove this when supported
+
   :custom
   ;; https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
 

@@ -28,7 +28,11 @@
   ;;(setq holidays-in-diary-buffer nil)
   (setq calendar-latitude  40.785188)
   (setq calendar-longitude -111.863011)
-
+  (with-eval-after-load 'holidays
+    (setq holiday-bahai-holidays  nil)
+    (setq holiday-hebrew-holidays nil)
+    (setq holiday-jewish-holidays nil)
+  )
   (add-hook 'diary-display-hook 'fancy-diary-display)
   (setq diary-list-include-blanks t)
   ;; not working: (add-hook 'list-diary-entries-hook 'sort-diary-entries t)
@@ -49,6 +53,18 @@
 	 (add-hook 'diary-hook 'appt-make-list)
 	 (let ((diary-display-hook 'ignore))
 	   (diary)))))
+
+(with-eval-after-load 'holidays
+  (setq holiday-bahai-holidays nil
+        holiday-hebrew-holidays nil
+        holiday-jewish-holidays nil
+        calendar-holidays
+        (append holiday-general-holidays
+                holiday-local-holidays
+                holiday-christian-holidays
+                holiday-islamic-holidays
+                holiday-oriental-holidays
+                holiday-solar-holidays)))
 
 (use-package calendar :defer t :config (hcCalendar))
 

@@ -28,10 +28,14 @@
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block)
   (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
-  (add-hook 'completion-at-point-functions #'cape-history)
+  ;;(add-hook 'completion-at-point-functions #'cape-history)
   (add-hook 'completion-at-point-functions #'cape-keyword)
   ;; ...
 )
+
+(setq completion-styles '(orderless basic)
+      completion-category-overrides
+      '((file (styles basic partial-completion))))
 
 (provide 'hc-icr-ib-completions-cape)
 

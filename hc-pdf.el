@@ -1,3 +1,9 @@
+;;; hc-pdf.el --- summary          -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
 ;; see ./pdf-tools.org
 
 ;; * cause

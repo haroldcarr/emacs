@@ -80,16 +80,18 @@
   ;; Include entries from the emacs diary into =org-mode='s agenda.
   (setq org-agenda-include-diary t)
 
+  (setq org-agenda-window-setup 'current-window)
+  (setq org-agenda-restore-windows-after-quit t)
+
   ;; org-mode manages the =org-agenda-files= variable automatically using
   ;; C-c [ and C-c ] to add/remove files respectively.
   ;; Instead, disable those keys and replace with an explicit directory list.
   ;; Any org files in those directories are automatically included in the agenda.
   (setq org-agenda-files
         (list
-         (concat (hcRpt)      "/TODO-WORK.org")
          (concat (hcFinance)  "/0-TODO-FINANCE.org")
          (concat (hcMusic)    "/0-TODO-MUSIC.txt")
-         (concat (hcFsync)    "/TODO-ME.org")
+         (concat (hcFsync)    "/0-TODO-ME.org")
          ;; (hcRpt)
          ;; (concat (hcRpt)   "/.past/2014")
          ;; (concat (hcRpt)   "/.past/2013")

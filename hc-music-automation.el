@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 May 17 (Sun) 18:00:47 by Harold Carr.
+;;;; Last Modified : 2026 Jun 26 (Fri) 19:47:02 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -66,10 +66,12 @@ return \"1976-Transformation\"."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; select "Carr" music
 
-(defun hajj () (tagged-with "HAJJ" hc-Carr_tunes))
-(defun solo ()
+(defun hc-hajj () (tagged-with "HAJJ" hc-Carr_tunes))
+
+(defun hc-solo ()
   (tagged-with "SOLO" hc-Carr_arrangements)
   (tagged-with "SOLO" hc-Carr_tunes))
+
 (defun zcm25 () (tagged-with "Z25" hc-Carr_tunes))
 
 (defun tagged-with (tag-string dir-to-search)
@@ -115,6 +117,26 @@ return \"1976-Transformation\"."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; utilities
+
+(require 'hc-music-emms)
+(require 'emms-playlist-mode)
+
+(defun hc-emms-playlist-go (selection-function)
+  (interactive)
+  (load-library "hc-music-automation")
+  (load-library "hc-music-emms")
+  (hc-run-with-princ-to-buffer "*scratch*" selection-function)
+  (switch-to-buffer "*scratch*")
+  (hc-emms-add-buffer-tracks)
+  (emms-playlist-mode-go))
+
+(defun hc-run-with-princ-to-buffer (buffer function)
+  "Run FUNCTION with all `princ' output going to BUFFER."
+  (with-current-buffer (get-buffer-create buffer)
+    (erase-buffer)
+    (let ((standard-output (current-buffer)))
+      (funcall function))
+    (pop-to-buffer (current-buffer))))
 
 (defun hc-princ-selections (tunes dir-to-search do-not-want extensions)
   (-each tunes
@@ -172,12 +194,13 @@ Matching is case-insensitive."
    hc-music-others
    '(
      "airegin"
-     "all the things you are"
-     "Body and Soul" "Body & Soul"
+     ;;"all the things you are"
+     ;;"Body and Soul" "Body & Soul"
      "bolivia"
-     "Fee-Fi-Fo-Fum" "Fee Fi Fo Fum"
-     "foolish dog" "foolish door"
-     "round midnight" "round about midnight"
+     ;;"Fee-Fi-Fo-Fum" "Fee Fi Fo Fum"
+     ;;"foolish dog" "foolish door"
+     "inner urge"
+     ;;"round midnight" "round about midnight"
      "skylark"
      )
    '(

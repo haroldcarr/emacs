@@ -8,20 +8,72 @@
 
 (require 'emms-setup)
 (emms-all)
-(setq emms-player-list    '(emms-player-mpv))
+
+(require 'emms-player-simple)
+(require 'emms-player-mpv)
+(require 'emms-player-vlc)
+(setq emms-player-vlc-command-name "/Applications/VLC.app/Contents/MacOS/VLC")
+
+(defun hc-emms-use-mpv ()
+  (interactive)
+  (setq emms-player-list '(emms-player-mpv)))
+
+(defun hc-emms-use-vlc ()
+  (interactive)
+  (setq emms-player-list           '(emms-player-vlc))
+  (setq emms-player-vlc-parameters '("--intf" "macosx")))
+
+;; M-x hc-emms-use-mpv   ;; headless mpv
+;; M-x hc-emms-use-vlc   ;; GUI VLC
+
+(hc-emms-use-vlc)
+
 (setq emms-info-functions '(emms-info-native))
 
 (require 'emms-mode-line)
+(emms-mode-line-mode 1)
+
 (require 'emms-playing-time)
-(emms-mode-line 1)
-(emms-playing-time 1)
+(emms-playing-time-mode 1)
 
 (require 'hc-music-volume)
-(setq emms-volume-change-function 'hc-mac-volume-change)
-(setq emms-volume-change-amount 10)
+(setopt emms-volume-change-function 'hc-mac-volume-change)
+(setopt emms-volume-change-amount 10)
 
 ;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/ZCM25_MP3")
 ;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/2026-03-26-mixes")
+
+;; ------------------------------------------------------------------------------
+;; track display
+
+(defun hc-emms-track-description (track)
+  (let ((name        (emms-track-get track 'name))
+        (title       (emms-track-get track 'info-title))
+        (album       (emms-track-get track 'info-album))
+        (albumartist (emms-track-get track 'info-albumartist))
+        (artist      (emms-track-get track 'info-artist)))
+    (concat
+     (or title (hc-last-n-chars name 40))
+     ":"
+     (or albumartist artist)
+     ":"
+     album
+     )))
+
+(defun hc-last-n-chars (s n)
+  (substring s (- (length s) (min n (length s)))))
+
+(setq emms-track-description-function #'hc-emms-track-description)
+
+(defun hc-emms-refresh-playlist-buffer ()
+  "Refresh the visible EMMS playlist buffer."
+  (interactive)
+  (with-current-emms-playlist
+    (let ((inhibit-read-only t)
+          (tracks (emms-playlist-tracks-in-region (point-min) (point-max))))
+      (erase-buffer)
+      (mapc #'emms-playlist-mode-insert-track tracks)
+      (goto-char (point-min)))))
 
 ;; ------------------------------------------------------------------------------
 ;; EMMS playlist highlight config
@@ -45,21 +97,6 @@
 ;; - This highlight should persist when paused/stopped
 ;; - If not visible, customize the face manually:
 ;;     M-x customize-face RET emms-playlist-selected-face RET
-
-;; ------------------------------------------------------------------------------
-;; custom EMMS track display
-
-;; - short entries: show full
-;; - long paths: trim LEFT
-
-(defun hc-emms-track-description (track)
-  (let ((info (emms-info-track-description track))
-        (max  65))
-    (if (<= (length info) max)
-        info
-      (concat "…" (substring info (- (length info) max))))))
-
-(setq emms-track-description-function #'hc-emms-track-description)
 
 ;; ------------------------------------------------------------------------------
 
@@ -146,12 +183,6 @@
 (require 'subr-x)
 
 ;;(setq emms-player-list '(emms-player-mpv))
-
-(setq emms-track-description-function
-      (lambda (track)
-        (or (emms-track-get track 'info-title)
-            (emms-track-name track)
-            "unknown")))
 
 (defun hc-emms-youtube-m3u--tracks (file)
   "Return EMMS tracks from YouTube EXTM3U FILE."
