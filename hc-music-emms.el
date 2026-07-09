@@ -14,6 +14,8 @@
 (require 'emms-player-vlc)
 (setq emms-player-vlc-command-name "/Applications/VLC.app/Contents/MacOS/VLC")
 
+;; on o2011 : older version
+;; nix shell github:NixOS/nixpkgs/nixos-23.05#mpv
 (defun hc-emms-use-mpv ()
   (interactive)
   (setq emms-player-list '(emms-player-mpv)))
@@ -37,8 +39,8 @@
 (emms-playing-time-mode 1)
 
 (require 'hc-music-volume)
-(setopt emms-volume-change-function 'hc-mac-volume-change)
-(setopt emms-volume-change-amount 10)
+(setq emms-volume-change-function 'hc-mac-volume-change)
+(setq emms-volume-change-amount 10)
 
 ;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/ZCM25_MP3")
 ;;(emms-add-directory "/usr/local/hc/00-music-with-friends/00-with-friends/2025-ZCM/2026-03-26-mixes")

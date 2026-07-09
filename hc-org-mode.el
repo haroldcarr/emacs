@@ -26,7 +26,7 @@
   (add-to-list 'org-file-apps '("\\.hcScript\\'" . emacs))
 
   ;; "Standard" key bindings (but not provided)
-  (global-set-key "\C-cl" 'org-store-link)
+  ;;(global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
   ;; TODO: find a replacement
