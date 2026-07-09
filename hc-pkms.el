@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : 2026 Jul 08 (Wed) 14:56:06 by Harold Carr.
-;;;; Last Modified : 2026 Jul 08 (Wed) 20:47:59 by Harold Carr.
+;;;; Last Modified : 2026 Jul 09 (Thu) 07:15:48 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -18,7 +18,7 @@
 
 (use-package hyperbole
   :custom
-  (hywiki-directory (concat (hcLocation 'emacs) "/hywiki/"))
+  (hywiki-directory (concat (hcFsync) "/0-HYWIKI/"))
   ;; t        = Hyperbole M-RET handles more Org contexts
   ;; 'buttons = Hyperbole M-RET mainly handles buttons/links
   ;; nil      = leave Org M-RET alone
