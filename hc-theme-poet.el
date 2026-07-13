@@ -15,7 +15,7 @@
             (variable-pitch-mode 1)))
 
 ;;(olivetti-mode 1)        ;; Centers text in the buffer - TODO: UNDEFINED
-(flyspell-mode 1)        ;; Catch Spelling mistakes
+;;(flyspell-mode 1)        ;; Catch Spelling mistakes
 ;; (typo-mode 1)            ;; Good for symbols like em-dash - TODO: UNDEFINED
 (blink-cursor-mode 0)    ;; Reduce visual noise
 (linum-mode 0)           ;; No line numbers for prose
