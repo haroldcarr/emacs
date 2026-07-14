@@ -10,6 +10,22 @@
 
 ;; ------------------------------------------------------------------------------
 
+;; monitors I typically work with.
+(defconst hc-monitor-mm-sizes
+  '(("laptop"    . (301 196))
+    ("portrait"  . (349 609))   ;; utah
+    ("landscape" . (602 338)))) ;; utah
+
+(defun hc-get-available-monitor-name ()
+  "Return the first available monitor name in priority order."
+  (let ((available-mm-sizes (mapcar (lambda (attrs) (alist-get 'mm-size attrs))
+                                    (display-monitor-attributes-list))))
+    (seq-find (lambda (name) (member (cdr (assoc name hc-monitor-mm-sizes))
+                                     available-mm-sizes))
+              '("portrait" "landscape" "laptop"))))
+
+;; ------------------------------------------------------------------------------
+
 (defun hc-appearance-startup ()
   (interactive)
   (set-frame-height (selected-frame) 88) ;; 100
@@ -24,19 +40,6 @@
              ("laptop"    (progn (hc-font-size 18) (hc-resize-frame "full"))))))))
 
 ;; ------------------------------------------------------------------------------
-
-(defconst hc-monitor-mm-sizes
-  '(("laptop"    . (301 196))
-    ("portrait"  . (349 609))   ;; utah
-    ("landscape" . (602 338)))) ;; utah
-
-(defun hc-get-available-monitor-name ()
-  "Return the first available monitor name in priority order."
-  (let ((available-mm-sizes (mapcar (lambda (attrs) (alist-get 'mm-size attrs))
-                                    (display-monitor-attributes-list))))
-    (seq-find (lambda (name) (member (cdr (assoc name hc-monitor-mm-sizes))
-                                     available-mm-sizes))
-              '("portrait" "landscape" "laptop"))))
 
 (defun hc-move-frame-to-monitor (&optional name)
   "Move selected frame to monitor NAME."
