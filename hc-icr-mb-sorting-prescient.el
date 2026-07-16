@@ -8,10 +8,9 @@
 ;; PRESCIENT : The Sorting Layer
 ;; https://github.com/radian-software/prescient.el
 
-(use-package prescient)
-(use-package corfu-prescient)
-(use-package vertico-prescient)
-
+(use-package prescient :ensure t)
+(use-package corfu-prescient :ensure t)
+(use-package vertico-prescient :ensure t)
 
 (provide 'hc-icr-mb-sorting-prescient)
 

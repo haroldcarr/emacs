@@ -12,7 +12,7 @@
 
 ;; monitors I typically work with.
 (defconst hc-monitor-mm-sizes
-  '(("laptop"    . (301 196))
+  '(("laptop"    . (301 195))
     ("portrait"  . (349 609))   ;; utah
     ("landscape" . (602 338)))) ;; utah
 

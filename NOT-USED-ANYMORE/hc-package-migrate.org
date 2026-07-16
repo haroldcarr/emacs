@@ -1,0 +1,105 @@
+ace-window                MELPA 20220911.358     -> gnu    0.10.0
+anti-zenburn-theme        MELPA 20180712.1838    -> nongnu 2.5.1
+async                     MELPA 20260318.1803    -> gnu    1.9.9
+avy                       MELPA 20241101.1357    -> gnu    0.5.0
+cape                      MELPA 20260519.1021    -> gnu    2.7
+cider                     MELPA 20260715.1543    -> nongnu 1.22.2
+clojure-mode              MELPA 20260709.952     -> nongnu 5.23.0
+company                   MELPA 20260627.1337    -> gnu    1.0.2
+cond-let                  MELPA 20260701.1237    -> nongnu 1.1.3
+consult                   MELPA 20260605.1907    -> gnu    3.6
+corfu                     MELPA 20260519.1053    -> gnu    2.10
+dash                      MELPA 20260221.1346    -> gnu    2.20.0
+diff-hl                   MELPA 20260627.208     -> gnu    1.10.0
+diminish                  MELPA 20220909.847     -> gnu    0.46
+dirvish                   MELPA 20250504.807     -> nongnu 2.3.0
+edit-indirect             MELPA 20240128.119     -> nongnu 0.1.13
+editorconfig              MELPA 20260118.718     -> nongnu 0.11.0
+elpher                    MELPA 20260221.920     -> nongnu 3.7.0
+embark                    MELPA 20260610.302     -> gnu    1.2
+embark-consult            MELPA 20260503.118     -> gnu    1.2
+emms                      MELPA 20260414.1505    -> gnu    26
+esxml                     MELPA 20260329.1617    -> nongnu 0.3.8
+evil                      MELPA 20260603.654     -> nongnu 1.15.0
+exec-path-from-shell      MELPA 20260423.1833    -> nongnu 2.2
+flycheck                  MELPA 20260604.2002    -> nongnu 36.0
+golden-ratio              MELPA 20230912.1825    -> nongnu 1.0.1
+goto-chg                  MELPA 20240407.1110    -> nongnu 1.7.5
+gptel                     MELPA 20260715.1547    -> nongnu 0.9.9.5
+graphql                   MELPA 20221128.1106    -> gnu    0.1.2
+haskell-mode              MELPA 20260206.1050    -> nongnu 17.5
+helm                      MELPA 20260712.427     -> nongnu 4.0.7
+helm-core                 MELPA 20260618.1908    -> nongnu 4.0.7
+hydra                     MELPA 20250316.1254    -> gnu    0.15.0
+hyperbole                 MELPA 20260714.1519    -> gnu    9.0.1
+idris-mode                MELPA 20260506.2033    -> nongnu 1.1.0
+ivy                       MELPA 20260413.2102    -> gnu    0.15.1
+jinx                      MELPA 20260519.1041    -> gnu    2.8
+js2-mode                  MELPA 20260627.1342    -> gnu    20231224
+json-mode                 MELPA 20240427.1245    -> gnu    0.3.1
+llama                     MELPA 20260601.1455    -> nongnu 1.0.5
+lua-mode                  MELPA 20250310.1150    -> nongnu 20221027
+lv                        MELPA 20200507.1518    -> gnu    0.15.0
+magit                     MELPA 20260711.1257    -> nongnu 4.6.0
+magit-section             MELPA 20260709.950     -> nongnu 4.6.0
+marginalia                MELPA 20260519.1044    -> gnu    2.11
+markdown-mode             MELPA 20260425.954     -> nongnu 2.8
+mmm-mode                  MELPA 20240222.428     -> gnu    0.5.11
+modus-themes              MELPA 20260714.716     -> gnu    5.3.0
+multiple-cursors          MELPA 20260419.931     -> nongnu 1.5.0
+nov                       MELPA 20251213.1501    -> nongnu 0.5.0
+orderless                 MELPA 20260519.1029    -> gnu    1.7
+osm                       MELPA 20260705.1259    -> gnu    2.4
+parseclj                  MELPA 20260526.1843    -> nongnu 1.1.1
+parseedn                  MELPA 20260601.1258    -> nongnu 1.2.1
+popup                     MELPA 20251231.1622    -> nongnu 0.5.9
+posframe                  MELPA 20260527.857     -> gnu    1.5.2
+projectile                MELPA 20260713.1548    -> nongnu 3.2.1
+prop-menu                 MELPA 20150728.1118    -> nongnu 0.1.2
+reformatter               MELPA 20241204.1051    -> nongnu 0.8
+request                   MELPA 20250219.2213    -> nongnu 0.3.3
+sesman                    MELPA 20260616.1239    -> nongnu 0.3.2
+swiper                    MELPA 20260101.2125    -> gnu    0.15.1
+tablist                   MELPA 20260623.1855    -> nongnu 1.0
+transient                 MELPA 20260701.1255    -> gnu    0.13.5
+treepy                    MELPA 20260531.1144    -> nongnu 0.1.3
+vertico                   MELPA 20260709.1303    -> gnu    2.10
+web-server                MELPA 20210708.2242    -> gnu    0.1.2
+wfnames                   MELPA 20260706.903     -> nongnu 1.2
+which-key                 MELPA 20240620.2145    -> gnu    3.6.1
+with-editor               MELPA 20260701.1252    -> nongnu 3.5.2
+yaml                      MELPA 20260605.834     -> gnu    1.2.4
+yaml-mode                 MELPA 20260420.156     -> nongnu 0.0.16
+yasnippet                 MELPA 20250602.1342    -> gnu    0.14.3
+
+
+------------------------------------------------------------------------------
+
+The migration mostly worked.
+
+In list-packages:
+
+ace-window  0.10.0  dependency
+consult     3.6     dependency
+corfu       2.10    dependency
+jinx        2.8     dependency
+which-key   3.6.1   dependency
+
+means the GNU/NonGNU versions were installed.
+dependency does not identify the archive;
+it means they are not listed in package-selected-packages.
+
+Some MELPA versions remain because their migration or deletion failed, including:
+
+haskell-mode   20260206.1050
+helm           20260712.427
+helm-core      20260618.1908
+magit          20260711.1257
+
+The main immediate problem is haskell-mode:
+NonGNU 17.5 failed during byte compilation,
+so the old MELPA version correctly remains installed.
+
+Also, do not run package-autoremove yet.
+Many newly migrated packages now appear as dependencies and could be proposed for removal
+unless packages you use are properly represented in package-selected-packages.

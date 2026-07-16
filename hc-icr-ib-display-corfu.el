@@ -9,6 +9,7 @@
 ;; https://github.com/minad/corfu
 
 (use-package corfu
+  :ensure t
   ;; Optional customizations
   :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'

@@ -9,6 +9,7 @@
 ;; https://github.com/minad/vertico
 
 (use-package vertico
+  :ensure t
   ;;:custom
   ;; (vertico-scroll-margin 0) ;; Different scroll margin
   ;; (vertico-count 20) ;; Show more candidates
@@ -19,6 +20,7 @@
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
+  :ensure t
   :init
   (savehist-mode))
 

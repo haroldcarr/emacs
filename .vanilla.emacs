@@ -52,9 +52,117 @@
 (setq package-enable-at-startup nil)
 
 (setq package-archives
-      '(("melpa"  . "https://melpa.org/packages/")
-        ("gnu"    . "https://elpa.gnu.org/packages/")
-        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")
+        ))
+
+;; Prefer GNU ELPA over NonGNU ELPA over MELPA when versions are equal.
+(setq package-archive-priorities
+      '(("gnu"    . 30)
+        ("nongnu" . 20)
+        ("melpa"  . 10)
+        ))
+
+;; Pins for packages also built into Emacs,
+;; e.g., eglot, jsonrpc, project, python, seq, and xref
+;; enable newer GNU ELPA versions to override the bundled versions.
+(setq package-pinned-packages
+      '(
+        (ace-window          . "gnu")
+        (async               . "gnu")
+        (avy                 . "gnu")
+        (cape                . "gnu")
+        (company             . "gnu")
+        (compat              . "gnu")
+        (cond-let            . "nongnu")
+        (cl-generic          . "gnu")
+        (cl-lib              . "gnu")
+        (corfu               . "gnu")
+        (dash                . "gnu")
+        (diff-hl             . "gnu")
+        (dirvish             . "nongnu")
+        (eat                 . "gnu")
+        (edit-indirect       . "nongnu")
+        (editorconfig        . "nongnu")
+        (ef-themes           . "gnu")
+        (eglot               . "gnu")
+        (eldoc               . "gnu")
+        (embark              . "gnu")
+        (embark-consult      . "gnu")
+        (emms                . "gnu")
+        (erc                 . "gnu")
+        (esxml               . "nongnu")
+        (evil                . "nongnu")
+        (external-completion . "gnu")
+        (flycheck            . "nongnu")
+        (flymake             . "gnu")
+        (goto-chg            . "nongnu")
+        (gptel               . "nongnu")
+        ;; (haskell-mode     . "nongnu")   ; Uncomment once the compile bug is fixed.
+        (helm                . "nongnu")
+        (helm-core           . "nongnu")
+        (hydra               . "gnu")
+        (idlwave             . "gnu")
+        (idris-mode          . "nongnu")
+        (js2-mode            . "gnu")
+        (jsonrpc             . "gnu")
+        (let-alist           . "gnu")
+        (llama               . "nongnu")
+        (lua-mode            . "nongnu")
+        (lv                  . "gnu")
+        (magit               . "nongnu")
+        (magit-section       . "nongnu")
+        (map                 . "gnu")
+        (marginalia          . "gnu")
+        (markdown-mode       . "nongnu")
+        (memory-usage        . "gnu")
+        (mmm-mode            . "gnu")
+        (minimap             . "gnu")
+        (modus-themes        . "gnu")
+        (multiple-cursors    . "nongnu")
+        (nadvice             . "gnu")
+        (nano-theme          . "gnu")
+        (nov                 . "gnu")
+        (ntlm                . "gnu")
+        (oauth2              . "gnu")
+        (orderless           . "gnu")
+        (peg                 . "gnu")
+        (popup               . "nongnu")
+        (posframe            . "gnu")
+        (project             . "gnu")
+        (projectile          . "nongnu")
+        (prop-menu           . "nongnu")
+        (python              . "gnu")
+        (rainbow-mode        . "gnu")
+        (request             . "nongnu")
+        (seq                 . "gnu")
+        (so-long             . "gnu")
+        (soap-client         . "gnu")
+        (spinner             . "gnu")
+        (svg                 . "gnu")
+        (tablist             . "nongnu")
+        (track-changes       . "gnu")
+        (tramp               . "gnu")
+        (transient           . "gnu")
+        (treepy              . "nongnu")
+        (use-package         . "gnu")
+        (vertico             . "gnu")
+        (wfnames             . "nongnu")
+        (which-key           . "gnu")
+        (window-tool-bar     . "gnu")
+        (with-editor         . "nongnu")
+        (xref                . "gnu")
+        (yaml                . "gnu")
+        (yaml-mode           . "nongnu")
+        (yasnippet           . "gnu")
+        ))
+
+;; 1. Restart Emacs.
+;; 2. Run =M-x package-refresh-contents=.
+;; 3. In =M-x list-packages=, install the pinned GNU/NonGNU versions.
+;; 4. Mark obsolete versions with =~= and delete with =x=.
+;; Keep the MELPA =haskell-mode= for now if NonGNU 17.5 still triggers the byte-compilation error.
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -91,12 +199,12 @@
          (setq *hcSection* title)
          (message title))))
 
-(defmacro hcSectionLoad (name)
+(defmacro hcSectionLoad (name) "NAME."
   `(progn
      (hcSection ,(symbol-name name))
      (use-package ,name)))
 
-(defmacro hcSectionLoadOnDevMachines (name)
+(defmacro hcSectionLoadOnDevMachines (name) "NAME."
   `(when (member (hcMachineName) hc-dev-machines)
      (hcSectionLoad ,name)))
 
@@ -435,7 +543,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-org-mode)
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-pkms) ;; must come after org-mode
+;;TODO(hcSectionLoad hc-pkms) ;; must come after org-mode
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-tags)
 ;; ------------------------------------------------------------------------------
@@ -484,10 +592,10 @@
 (hcSectionLoadOnDevMachines hc-rust)
 ;; ------------------------------------------------------------------------------
 ;; * Typescript
-(when (member (hcMachineName) hc-dev-machines)
-  (hcSection "Typescript")
-  (use-package typescript)
-  (setq typescript-indent-level 2))
+;; (when (member (hcMachineName) hc-dev-machines)
+;;   (hcSection "Typescript")
+;;   (use-package typescript)
+;;   (setq typescript-indent-level 2))
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-java)
 ;; ------------------------------------------------------------------------------
@@ -496,7 +604,8 @@
 ;; This should come AFTER all language-specific setup above.
 (when (member (hcMachineName) hc-dev-machines)
   (hcSection "LSP and EGLOT")
-  (use-package hc-lsp-pick)
+  ;;(use-package hc-lsp-pick)
+  (use-package hc-lsp)
   (use-package hc-eglot)
 )
 ;; ------------------------------------------------------------------------------
@@ -512,6 +621,7 @@
 (use-package httpcode :defer t)
 
 (defun hc-tps (ntx ndays nhours nminutes nseconds)
+  "NTX NDAYS NHOURS NMINUTES NSECONDS."
   (let ((days-seconds    (* (* (* ndays 24) 60) 60))
         (hours-seconds   (* (* nhours       60) 60))
         (minutes-seconds (* nminutes            60)))
@@ -519,6 +629,7 @@
 
 ;; https://emacs.stackexchange.com/a/73152
 (defun hc-reverse-dependencies (package-name)
+  "PACKAGE-NAME."
   (let ((needle package-name)
         (resolve-deps-recursively t)
         curr-deps

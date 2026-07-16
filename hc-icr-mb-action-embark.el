@@ -9,6 +9,7 @@
 ;; https://github.com/oantolin/embark
 
 (use-package embark
+  :ensure t
   :bind
   (("C-." . embark-act)         ;; pick some comfortable binding
    ("C-;" . embark-dwim)        ;; good alternative: M-.
@@ -16,7 +17,7 @@
 
   :init
   ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
+  ;;(setq prefix-help-command #'embark-prefix-help-command)
 
   ;; Show the Embark target at point via Eldoc. You may adjust the
   ;; Eldoc strategy, if you want to see the documentation from
@@ -39,7 +40,8 @@
                  (window-parameters (mode-line-format . none)))))
 
 ;; Consult users will also want the embark-consult package.
-(use-package embark-consult) ; only need to install it, embark loads it after consult if found
+(use-package embark-consult
+  :ensure t) ; only need to install it, embark loads it after consult if found
 
 (provide 'hc-icr-mb-action-embark)
 
@@ -56,9 +58,9 @@
 ;; see current bindings
 ;; M-x describe-keymap RET embark-file-map
 
-(defun hc-embark-remove-defun-target-in-org ()
-  (setq-local embark-target-finders
-              (cl-remove #'embark-target-defun-at-point
-                         embark-target-finders)))
+;; (defun hc-embark-remove-defun-target-in-org ()
+;;   (setq-local embark-target-finders
+;;               (cl-remove #'embark-target-defun-at-point
+;;                          embark-target-finders)))
 
-(add-hook 'org-mode-hook #'hc-embark-remove-defun-target-in-org)
+;; (add-hook 'org-mode-hook #'hc-embark-remove-defun-target-in-org)
