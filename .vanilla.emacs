@@ -99,10 +99,11 @@
         (flymake             . "gnu")
         (goto-chg            . "nongnu")
         (gptel               . "nongnu")
-        ;; (haskell-mode     . "nongnu")   ; Uncomment once the compile bug is fixed.
+        ;; (haskell-mode     . "nongnu")   ; TODO: Uncomment once the compile bug is fixed.
         (helm                . "nongnu")
         (helm-core           . "nongnu")
         (hydra               . "gnu")
+        (hyperbole           . "melpa")    ; TODO: switch to gnu once hywiki added to hyperbole/gnu
         (idlwave             . "gnu")
         (idris-mode          . "nongnu")
         (js2-mode            . "gnu")
@@ -507,7 +508,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-spelling)
+;;TODO(hcSectionLoad hc-spelling)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-time)
 ;; ------------------------------------------------------------------------------
@@ -543,7 +544,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-org-mode)
 ;; ------------------------------------------------------------------------------
-;;TODO(hcSectionLoad hc-pkms) ;; must come after org-mode
+(hcSectionLoad hc-pkms) ;; must come after org-mode
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-tags)
 ;; ------------------------------------------------------------------------------
