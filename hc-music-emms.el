@@ -38,6 +38,7 @@
 (require 'emms-playing-time)
 (emms-playing-time-mode 1)
 
+(require 'emms-volume)
 (require 'hc-music-volume)
 (setq emms-volume-change-function 'hc-mac-volume-change)
 (setq emms-volume-change-amount 10)
