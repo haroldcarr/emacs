@@ -81,7 +81,6 @@
         (corfu               . "gnu")
         (dash                . "gnu")
         (diff-hl             . "gnu")
-        (dirvish             . "nongnu")
         (eat                 . "gnu")
         (edit-indirect       . "nongnu")
         (editorconfig        . "nongnu")
