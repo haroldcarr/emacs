@@ -1,3 +1,62 @@
+* keep
+- =.org-id-locations=       ; needed for Org ID links
+- =elpa/=                   ; installed packages
+- =init_BASH.sh=            ; inspect before deleting
+- =network-security.data=
+- =transient/=              ; saved Transient values/history
+
+* Safe to delete; Emacs recreates them
+
+- =%backup%~=
+- =.dap-breakpoints=        ; if you do not need saved breakpoints
+- =.DS_Store=
+- =.emacs.desktop.lock=     ; only when Emacs is not running
+- =.emacs.desktop-2020-03-11=
+- =.emacs.desktop-2022-05-18=
+- =.lsp-session-v1=
+- =auto-save-list/=
+- =eln-cache/=
+- =image-dired/=
+- =projectile.cache=
+- =projectile-frecency.eld=
+- =request/=
+- =server/=                 ; only when Emacs is not running
+- =thumbs/=
+- =tramp=
+- =url/=
+
+* Delete only if you no longer use the related feature
+
+- =.cache/=                 ; inspect contents first
+- =.emacs.desktop=
+- =.pinboard.eld=
+- =.cask/=
+- =dirvish/=
+- =elpy/=
+- =emms/=
+- =eshell/=
+- =eww-bookmarks=
+- =fastgpt/=
+- =games/=
+- =history=
+- =indium-chrome-profile/=
+- =nov-places=
+- =places=
+- =projectile-bookmarks.eld=
+- =projects=
+- =recentf=
+- =session.*=
+- =smudge/=
+- =snippets/=
+- =tutorial/=
+- =var/=                    ; contains package caches such as OSM
+- =ytr/=
+
+Deleting these loses saved state, history, bookmarks, or configuration, but not
+your main Emacs installation.
+
+------------------------------------------------------------------------------
+
 ## Key Bindings That Are Set Multiple Times:
 
 1. **`C-x o` (other-window)** - This key binding is set in multiple files:

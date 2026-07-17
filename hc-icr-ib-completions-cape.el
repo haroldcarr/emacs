@@ -25,12 +25,15 @@
   ;; used by `completion-at-point'.  The order of the functions matters, the
   ;; first function returning a result wins.  Note that the list of buffer-local
   ;; completion functions takes precedence over the global list.
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)      ; from current buffers
+  ;;(add-hook 'completion-at-point-functions #'cape-dictionary) ; from a dictionary file
+  (add-hook 'completion-at-point-functions #'cape-file)         ; file paths
+  ;;(add-hook 'completion-at-point-functions #cape-emoji)       ; what it says
   (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  (add-hook 'completion-at-point-functions #'cape-elisp-symbol)
+  (add-hook 'completion-at-point-functions #'cape-elisp-symbol) ; elisp symbols anywhere (comments and docs too)
   ;;(add-hook 'completion-at-point-functions #'cape-history)
-  (add-hook 'completion-at-point-functions #'cape-keyword)
+  (add-hook 'completion-at-point-functions #'cape-keyword)      ; programming language keywords
+  ;;(add-hook 'completion-at-point-functions #'cape-line)       ; complete entire ines from the buffer
   ;; ...
 )
 

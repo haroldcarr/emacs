@@ -26,7 +26,7 @@
 
   ;; HC
   (corfu-auto t)
-  (corfu-auto-delay 0.5)
+  (corfu-auto-delay 1.0)
   (corfu-auto-prefix 2)
 
   :init
