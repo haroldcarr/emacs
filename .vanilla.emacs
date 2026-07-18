@@ -1,4 +1,4 @@
-;;; .emacs.vanilla --- init file         -*- mode: emacs-lisp -*-
+;;; .vanilla.emacs --- init file         -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
