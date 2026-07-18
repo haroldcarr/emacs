@@ -475,16 +475,19 @@
   (setq line-spacing n))
 
 ;; momentarily show the point of the window/buffer being switched to
-(hcRequire pulse)
+(use-package pulse
+  :config
+  (setopt pulse-delay 0.20))
+
 (defun pulse-line (&rest _)
-  "Interactive function to pulse the current line."
+  "Pulse the current line."
   (interactive)
   (pulse-momentary-highlight-one-line (point)))
-(defadvice other-window        (after        other-window-pulse activate) "." (pulse-line))
-(defadvice delete-window       (after       delete-window-pulse activate) "." (pulse-line))
-(defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate) "." (pulse-line))
-(defadvice other-frame         (after         other-frame-pulse activate) "." (pulse-line))
-(setq pulse-delay 0.20)
+
+(advice-add 'other-window        :after #'pulse-line)
+(advice-add 'delete-window       :after #'pulse-line)
+(advice-add 'recenter-top-bottom :after #'pulse-line)
+(advice-add 'other-frame         :after #'pulse-line)
 
 ;; WHICH KEY
 (use-package which-key
