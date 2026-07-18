@@ -59,7 +59,7 @@
   ;; useful beyond Corfu.
   (read-extended-command-predicate #'command-completion-default-include-p))
 
-(cond ((not (equalp (hcMachineName) "o2011"))
+(cond ((not (string-equal (hcMachineName) "o2011"))
        (use-package dabbrev
          ;; Swap M-/ and C-M-/
          ;;:bind (("M-/" . dabbrev-completion)

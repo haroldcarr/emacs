@@ -213,11 +213,11 @@
 
 (setq debug-on-error t)
 
-(defmacro comment (&rest x) "X." nil)
+(defmacro comment (&rest _) "." nil)
 
 ;; see: https://github.com/jwiegley/use-package
 (defmacro hcRequire (name &rest body)
-  "NAME BODY: poor man's 'use-package'."
+  "NAME BODY: poor man\'s \"use-package\"."
   `(if (require ',name nil t)
        (progn ,@body)
      (warn (concat (format "%s" ',name) " NOT FOUND"))))
@@ -225,9 +225,9 @@
 (hcRequire use-package)
 
 ;; https://github.com/emacs-mirror/emacs/commit/881be95cddcab3cf37373678002c35334c177c97
-(setq package-review-policy t
-      package-review-diff-command
-      '("git" "diff" "--no-index" "--color=never" "--diff-filter=d"))
+(setopt package-review-policy t)
+(setopt package-review-diff-command
+        '("git" "diff" "--no-index" "--color=never" "--diff-filter=d"))
 
 ;; ------------------------------------------------------------------------------
 (hcSection "Beans")
@@ -349,8 +349,10 @@
 (setq initial-buffer-choice (concat (hcSync) "/DEIK/DEIK.org"))
 
 ;; Avoid Service Name Too Long error
-(setq server-socket-dir "/tmp/hc-server-socket-dir")
-(make-directory server-socket-dir t)
+(use-package server
+  :config
+  (setq server-socket-dir "/tmp/hc-server-socket-dir")
+  (make-directory server-socket-dir t))
 
 (advice-add 'risky-local-variable-p :override #'ignore)
 
@@ -376,9 +378,7 @@
 
 ;; Ask before exit.
 (setq confirm-kill-emacs
-      (lambda (e)
-        (y-or-n-p-with-timeout
-         "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
+      (lambda (_) (y-or-n-p-with-timeout "Really exit Emacs (automatically exits in 5 secs)? " 5 t)))
 
 ;; don't ask when killing shell buffer (and other processes)
 (setq kill-buffer-query-functions
@@ -398,10 +398,9 @@
 ;; highlight text beyond nth column
 (use-package whitespace
   :config
-  (progn
-    (setq whitespace-style '(face lines-tail))
-    (setq whitespace-line-column 1000)
-    (global-whitespace-mode t)))
+  (setopt whitespace-style '(face lines-tail))
+  (setopt whitespace-line-column 1000)
+  (global-whitespace-mode t))
 
 ;; so list-buffers won't jump back to top
 (defvar global-auto-revert-non-file-buffers)
@@ -410,8 +409,10 @@
 ;; TRAMP : do not ask to save passwords
 (setq auth-source-save-behavior nil)
 
-;; have 'M-x dictionary-search' use
-(setq dictionary-server "dict.org")
+(use-package dictionary
+  :init
+  ;; have 'M-x dictionary-search' use
+  (setq dictionary-server "dict.org"))
 
 (when (member (hcMachineName) hc-dev-machines)
   (desktop-save-mode 1))
@@ -548,7 +549,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-bookmarks)
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-web-browsing)
+;;TODO(hcSectionLoad hc-web-browsing)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-timestamp)
 ;; ------------------------------------------------------------------------------
@@ -582,13 +583,6 @@
 (hcSectionLoad hc-projectile)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-compilation)
-;; ------------------------------------------------------------------------------
-(hcSection "Line Numbers")
-
-;; http://www.emacswiki.org/LineNumbers
-(use-package linum :defer t
-;;  :config (setq global-linum-mode t) ;; always on
-)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoadOnDevMachines hc-agda)
 ;; ------------------------------------------------------------------------------
@@ -639,16 +633,16 @@
     (/ ntx (+ days-seconds hours-seconds minutes-seconds nseconds))))
 
 ;; https://emacs.stackexchange.com/a/73152
-(defun hc-reverse-dependencies (package-name)
-  "PACKAGE-NAME."
+;; (hc-reverse-dependencies 'transient t)
+(defun hc-reverse-dependencies (package-name resolve-deps-recursively)
+  "PACKAGE-NAME, RESOLVE-DEPS-RECURSIVELY."
   (let ((needle package-name)
-        (resolve-deps-recursively t)
         curr-deps
         all-rdeps)
     (dolist (curr package-archive-contents all-rdeps)
       ;; (car curr) => pkg
       ;; (cadr curr) => pkg-desc
-      (setq curr-deps (if nil ;; resolve-deps-recursively
+      (setq curr-deps (if resolve-deps-recursively
                           (package--dependencies (car curr))
                         (mapcar #'car (package-desc-reqs (cadr curr)))))
       (when (memq needle curr-deps)
