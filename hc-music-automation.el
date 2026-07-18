@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : 2025 Nov 01 (Sat) 20:03:04 by Harold Carr.
-;;;; Last Modified : 2026 Jun 26 (Fri) 19:47:02 by Harold Carr.
+;;;; Last Modified : 2026 Jul 17 (Fri) 21:50:32 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -146,7 +146,7 @@ return \"1976-Transformation\"."
         (-each
             (directory-files-recursively-with-want-and-do-not-want-and-extensions
              dir-to-search
-             (list tune)   ;; want
+             (list (substring tune 5))   ;; want ;; strip date so things that have mult-year versions found
              do-not-want
              extensions)
           #'(lambda (x) (princ (format "%s\n" x)))))))
@@ -167,6 +167,8 @@ Matching is case-insensitive."
     (directory-files-recursively dir re nil #'file-directory-p t)))
 
 ;;(directory-files-recursively-with-want-and-extensions hc-music-others '("lark" "train") '("mp3" "wav" "flac"))
+
+;;(directory-files-recursively-with-want-and-extensions `hc-Carr_tunes' '("Number_One") '("mp3" "wav" "flac"))
 
 (defun hc-write-candidate-file (tune-names out)
   "Write lines to OUT after adding header."
