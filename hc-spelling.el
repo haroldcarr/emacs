@@ -8,6 +8,7 @@
 
 ;; enchant installed in home-manager and .bashrc
 
+(when (string-equal (hcMachineName) "hc2025")
 (use-package jinx
   :custom-face
   ;; Available styles:  line, double-line, wave, dots, dashes
@@ -17,7 +18,7 @@
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$"   . jinx-correct)
          ("C-M-$" . jinx-languages)))
-
+)
 (provide 'hc-spelling)
 
 ;;; hc-spelling.el ends here
