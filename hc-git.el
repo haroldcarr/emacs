@@ -22,11 +22,12 @@
 
 (use-package magit
   :config
-  (progn
-    (setq git-commit-summary-max-length 80)
-    (setq git-commit-fill-column        80)
-  )
+  (setq git-commit-summary-max-length 80)
+  (setq git-commit-fill-column        80)
 )
+
+(use-package git-timemachine
+  :ensure t)
 
 (use-package diff-hl
   :hook (dired-mode . diff-hl-dired-mode)

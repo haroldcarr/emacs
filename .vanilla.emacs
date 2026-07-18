@@ -1,4 +1,4 @@
-;;; .vanilla.emacs --- init file         -*- lexical-binding: t; -*-
+;;; .vanilla.emacs --- init file          -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -96,6 +96,7 @@
         (external-completion . "gnu")
         (flycheck            . "nongnu")
         (flymake             . "gnu")
+        (git-timemachine     . "melpa")
         (goto-chg            . "nongnu")
         (gptel               . "nongnu")
         (gptel-agent         . "melpa")
@@ -481,7 +482,6 @@
 
 (defun pulse-line (&rest _)
   "Pulse the current line."
-  (interactive)
   (pulse-momentary-highlight-one-line (point)))
 
 (advice-add 'other-window        :after #'pulse-line)
