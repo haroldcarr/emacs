@@ -4,7 +4,11 @@
 
 ;;; Code:
 
-(use-package emms)
+(use-package emms
+  :config
+  ;; by default, emms names this with a leading space: " *EMMS Playlist*"
+  ;; which causes emms playlist buffers not to show in a buffer list.
+  (setopt emms-playlist-buffer-name "*EMMS Playlist*"))
 
 (require 'emms-setup)
 (emms-all)
