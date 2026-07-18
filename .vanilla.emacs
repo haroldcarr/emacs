@@ -98,6 +98,7 @@
         (flymake             . "gnu")
         (goto-chg            . "nongnu")
         (gptel               . "nongnu")
+        (gptel-agent         . "melpa")
         ;; (haskell-mode     . "nongnu")   ; TODO: Uncomment once the compile bug is fixed.
         (helm                . "nongnu")
         (helm-core           . "nongnu")
@@ -105,6 +106,7 @@
         (hyperbole           . "melpa")    ; TODO: switch to gnu once hywiki added to hyperbole/gnu
         (idlwave             . "gnu")
         (idris-mode          . "nongnu")
+        (jinx                . "gnu")
         (js2-mode            . "gnu")
         (jsonrpc             . "gnu")
         (let-alist           . "gnu")
@@ -343,6 +345,8 @@
 ;; ------------------------------------------------------------------------------
 (hcSection "Top level misc stuff")
 
+(setq initial-buffer-choice (concat (hcSync) "/DEIK/DEIK.org"))
+
 ;; Avoid Service Name Too Long error
 (setq server-socket-dir "/tmp/hc-server-socket-dir")
 (make-directory server-socket-dir t)
@@ -507,7 +511,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
 ;; ------------------------------------------------------------------------------
-;;TODO(hcSectionLoad hc-spelling)
+(hcSectionLoad hc-spelling)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-time)
 ;; ------------------------------------------------------------------------------
