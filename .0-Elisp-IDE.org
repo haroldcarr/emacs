@@ -1,0 +1,125 @@
+Emacs functions out of the box as a fully integrated Emacs Lisp
+(Elisp) IDE because the editor itself is written in and powered by an
+Elisp interpreter.
+
+1. Code Evaluation (The Core Loop)
+   Since your editor is the compiler, you can run and test code immediately without restarting
+   Emacs.
+
+- C-x C-e
+  runs the single Elisp expression (sexp) directly behind your cursor (eval-last-sexp).
+- C-M-x
+  evaluates the top-level form or
+  function definition (defun) containing your cursor.
+- M-x ielm
+  opens an interactive, real-time Elisp REPL buffer for rapid testing and experimentation.
+- M-x eval-buffer
+  executes the entire active buffer to  load all definitions into your live session.
+
+2. Live Debugging
+
+- M-x debug-on-entry
+  forces Emacs to pause execution and
+  open a debugger whenever a specific function is called.
+- (debug)
+  can be inserted directly into your code to act as a manual breakpoint.
+- d
+  steps forward into the next function call when trapped inside the debugger
+  window.c exits the debugger and resumes normal execution of the
+  program.
+
+3. Navigation and Code Discovery
+
+- M-.
+  jumps directly to the definition of the function or variable under your cursor.
+- M-,
+  pops you right back to your previous file position after
+  navigating away.
+- C-h f
+  opens documentation for any function and provides a direct hyperlink to its .el source file.
+- C-h v
+  instantly describes any global variable, tracking its current value and
+  configuration history.
+
+4. Packages to Enhance the IDE
+
+Package         | Purpose                                                     | IDE Equivalent
+Paredit / Lispy | Enforces perfectly balanced parentheses automatically       | Structure Protection
+Company         | Offers contextual, fast symbol autocompletion as you type   | IntelliSense
+Flycheck        | Delivers real-time linter warnings for syntax issues        | Code Linting
+Elisp-format    | Formats code automatically according to GNU Emacs standards | Prettier / Code Formatter
+
+- Edebug
+  - =C-u C-M-x=          instrument current defun
+  - =M-x edebug-defun=
+  - step, trace, breakpoints
+
+- ERT (testing)
+  - =M-x ert=
+  - =ert-deftest=
+
+- Byte compiler
+  - =M-x byte-compile-file=
+  - =M-x emacs-lisp-byte-compile=
+  - treat warnings as bugs
+
+- Native compiler
+  - =M-x native-compile=
+  - =native-compile-async=
+
+- checkdoc
+  - checks package/function documentation
+
+- package-lint
+  - checks MELPA/GNU ELPA package quality
+
+- elint
+  - static analysis
+
+- profiler
+  - =M-x profiler-start=
+  - =M-x profiler-report=
+
+- benchmark
+  - =benchmark-run=
+  - =benchmark-call=
+
+- Macro expansion
+  - =macroexpand-1=
+  - =pp-macroexpand-last-sexp=
+
+- EIEIO inspector
+  - =eieio-browse=
+
+- Xref
+  - =M-.=
+  - =M-?= (find references)
+
+- Eldoc
+  - function signatures while typing
+
+- Helpful
+  - much better help buffers than built-in Help
+
+- corfu + cape
+  - completion
+
+- Flymake (preferred over Flycheck for Elisp)
+  - integrates with the byte compiler
+
+In my opinion, a modern Elisp IDE consists of:
+
+1. Corfu
+2. Cape
+3. Eldoc
+4. Xref
+5. Edebug
+6. ERT
+7. Flymake
+8. Byte compiler
+9. Native compiler
+10. package-lint
+11. checkdoc
+12. profiler
+13. benchmark
+14. Helpful
