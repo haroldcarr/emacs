@@ -490,7 +490,15 @@
 (use-package which-key
   :ensure t
   :demand
-  :init (which-key-mode))
+  :config
+  (which-key-mode)
+  ;; default 1.0
+  (setopt which-key-idle-delay 1.0)
+  ;; where popup shows      : side-window (default), minibuffer, frame, custom
+  (setopt which-key-popup-type 'side-window)
+  ;; where side window sits : bottom (default), top, left, right
+  (setopt which-key-side-window-location 'bottom)
+)
 
 ;; ** Make buffer names unique
 ;; Use part of the path name for buffer name when visiting two different files with same name.
@@ -501,12 +509,8 @@
   (setq uniquify-buffer-name-style 'post-forward)
   (setq uniquify-separator ":"))
 
-(add-hook 'html-mode-hook
-          (lambda ()
-            (setq-local sgml-basic-offset 4)))
-(add-hook 'mhtml-mode-hook
-          (lambda ()
-            (setq-local sgml-basic-offset 4)))
+(add-hook 'html-mode-hook  (lambda () (setq-local sgml-basic-offset 4)))
+(add-hook 'mhtml-mode-hook (lambda () (setq-local sgml-basic-offset 4)))
 
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
