@@ -90,8 +90,9 @@
   (setq org-agenda-files
         (list
          (concat (hcFinance)  "/0-TODO-FINANCE.org")
-         (concat (hcMusic)    "/0-TODO-MUSIC.txt")
          (concat (hcFsync)    "/0-TODO-ME.org")
+         (concat (hcMusic)    "/0-TODO-MUSIC.txt")
+         (concat (hcWsync)    "/0-TODO-TEXT.org")
          ;; (hcRpt)
          ;; (concat (hcRpt)   "/.past/2014")
          ;; (concat (hcRpt)   "/.past/2013")
@@ -121,6 +122,12 @@
           ("DONE"       :foreground "forest green"   :weight bold)
           ("DROP"       :foreground "brown"          :weight bold)
           ))
+
+  (org-link-set-parameters "org-agenda-weekly"  :follow (lambda (_ _) (org-agenda nil "a")))
+  (org-link-set-parameters "org-agenda-todo"    :follow (lambda (_ _) (org-agenda nil "t")))
+  (org-link-set-parameters "org-agenda-keyword" :follow (lambda (_ _) (org-agenda nil "T")))
+  (org-link-set-parameters "org-agenda-tags"    :follow (lambda (_ _) (org-agenda nil "m")))
+  (org-link-set-parameters "org-agenda-search"  :follow (lambda (_ _) (org-agenda nil "s")))
 
   ;;;
   ;;; Literate programming
@@ -187,6 +194,35 @@
 (use-package ox-md :defer t) ;; load this so menu options show up
 
 (use-package ox-beamer :defer t) ;; see: http://nickhigham.wordpress.com/2013/07/05/emacs-org-mode-version-8/
+
+;; ------------------------------------------------------------------------------
+
+(require 'org-element)
+(require 'subr-x)
+
+(defun hc-org-insert-toc ()
+  "Replace CONTENTS-PLACEHOLDER with links to all headings."
+  (interactive)
+  (let* ((tree (org-element-parse-buffer))
+         (contents
+          (org-element-map
+              tree 'headline
+            (lambda (heading)
+              (let ((title (org-element-property :raw-value heading))
+                    (level (org-element-property :level heading)))
+                (unless (string= title "Contents")
+                  (format "%s- [[%s]]"
+                          (make-string (* 2 (1- level)) ?\s)
+                          title)))))))
+    (save-excursion
+      (goto-char (point-min))
+      (unless (re-search-forward "^CONTENTS-PLACEHOLDER$" nil t)
+        (user-error "CONTENTS-PLACEHOLDER not found"))
+      (replace-match
+       (string-join (delq nil contents) "\n")
+       t t))))
+
+;; ------------------------------------------------------------------------------
 
 (provide 'hc-org-mode)
 

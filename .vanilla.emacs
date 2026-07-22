@@ -43,6 +43,15 @@
 (setq gc-cons-threshold (* 50 1000000))
 
 ;; ------------------------------------------------------------------------------
+;; Compatibility
+
+(defmacro hc-setopt (&rest pairs)
+  "PAIRS."
+  (if (fboundp 'setopt)
+      `(setopt ,@pairs)
+    `(setq ,@pairs)))
+
+;; ------------------------------------------------------------------------------
 ;; * SETUP
 
 ;; (hcSection "Packages")
@@ -182,7 +191,6 @@
 
 (add-to-list 'load-path (string-trim (shell-command-to-string "hcLocation emacs")))
 
-
 ;; ------------------------------------------------------------------------------
 ;; * Sections
 
@@ -225,9 +233,9 @@
 (hcRequire use-package)
 
 ;; https://github.com/emacs-mirror/emacs/commit/881be95cddcab3cf37373678002c35334c177c97
-(setopt package-review-policy t)
-(setopt package-review-diff-command
-        '("git" "diff" "--no-index" "--color=never" "--diff-filter=d"))
+(hc-setopt package-review-policy t)
+(hc-setopt package-review-diff-command
+           '("git" "diff" "--no-index" "--color=never" "--diff-filter=d"))
 
 ;; ------------------------------------------------------------------------------
 (hcSection "Beans")
@@ -337,6 +345,7 @@
 (hcDefineBean hcSync         (hcLocation  'sync))
 (hcDefineBean hcUlhcd        (hcLocation  'ulhcd))
 (hcDefineBean hcWs           (hcLocation  'ws))
+(hcDefineBean hcWsync        (hcLocation  'wsync))
 
 (hcShDefCmdMemo hcPathSep)
 (hcShDefCmd     hcLibClasspath ())
@@ -398,8 +407,8 @@
 ;; highlight text beyond nth column
 (use-package whitespace
   :config
-  (setopt whitespace-style '(face lines-tail))
-  (setopt whitespace-line-column 1000)
+  (hc-setopt whitespace-style '(face lines-tail))
+  (hc-setopt whitespace-line-column 1000)
   (global-whitespace-mode t))
 
 ;; so list-buffers won't jump back to top
@@ -479,7 +488,7 @@
 ;; momentarily show the point of the window/buffer being switched to
 (use-package pulse
   :config
-  (setopt pulse-delay 0.20))
+  (hc-setopt pulse-delay 0.20))
 
 (defun pulse-line (&rest _)
   "Pulse the current line."
@@ -497,11 +506,11 @@
   :config
   (which-key-mode)
   ;; default 1.0
-  (setopt which-key-idle-delay 1.0)
+  (hc-setopt which-key-idle-delay 1.0)
   ;; where popup shows      : side-window (default), minibuffer, frame, custom
-  (setopt which-key-popup-type 'side-window)
+  (hc-setopt which-key-popup-type 'side-window)
   ;; where side window sits : bottom (default), top, left, right
-  (setopt which-key-side-window-location 'bottom)
+  (hc-setopt which-key-side-window-location 'bottom)
 )
 
 ;; ** Make buffer names unique
@@ -650,6 +659,8 @@
 
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-appearance)
+;; ------------------------------------------------------------------------------
+(cond ((string-equal (hcMachineName) "hc2025") (hc-appearance-startup)))
 ;; ------------------------------------------------------------------------------
 ;; END STARTUP
 ;; Make gc pauses faster by decreasing the threshold.

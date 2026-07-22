@@ -104,10 +104,6 @@ where SIZE is either \"full\" or \"left-2/3\"."
 ;; this one changes font size but keeps frame size the same
 (use-package presentation)
 
-;; ------------------------------------------------------------------------------
-
-(cond ((hcDarwinP) (hc-appearance-startup)))
-
 (provide 'hc-appearance)
 
 ;;; hc-appearance.el ends here
