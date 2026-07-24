@@ -357,6 +357,10 @@
 
 (setq initial-buffer-choice (concat (hcSync) "/DEIK/DEIK.org"))
 
+; make isearch always ignore case, even when the search string contains uppercase
+(setq-default case-fold-search t)
+(setq search-upper-case nil)
+
 ;; Avoid Service Name Too Long error
 (use-package server
   :config
