@@ -1,0 +1,5 @@
+https://rahuljuliato.com/posts/completions-buffer-is-now-enough
+
+nix shell github:NixOS/nixpkgs/b7c2ada94fe99c15b0dbcf4d11fd7850b957a436#emacs31
+
+emacs -Q --load 0-emacs31-test.el
