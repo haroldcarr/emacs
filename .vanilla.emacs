@@ -96,6 +96,7 @@
         (ef-themes           . "gnu")
         (eglot               . "gnu")
         (eldoc               . "gnu")
+        (elpher              . "nongnu")
         (embark              . "gnu")
         (embark-consult      . "gnu")
         (emms                . "gnu")
@@ -168,6 +169,7 @@
         (yaml                . "gnu")
         (yaml-mode           . "nongnu")
         (yasnippet           . "gnu")
+        (zenburn-theme       . "nongnu")
         ))
 
 ;; 1. Restart Emacs.
@@ -437,6 +439,13 @@
 ;; rather than highlight or off
 (setq blink-matching-paren (quote jump))
 
+;; on an expr that only shows portion of it (need to scroll to see rest)
+;; mixed : highlight the expr.
+;; expression : see whole expression highlighted
+(show-paren-mode t)
+;;(setq show-paren-style 'mixed)
+(setq show-paren-style 'expression)
+
 ;; Simplify prompts.
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -453,8 +462,25 @@
 ;; Enable ESC : to evaluate emacs Lisp commands.
 (put 'eval-expression 'disabled nil)
 
+;; navigate help menus ; when following links in a help buffer
+;; help-window-keep-selected  keeps help in its own dedicated window.
+;; Going back to the original is same as other browser-like buffers like in Eww.
+;; Go forward with r.
+(setq help-window-select t)
+(setq help-window-keep-selected t)
+
 ;; do not minimize
 (global-unset-key (kbd "C-z"))
+;; do not exit
+(global-unset-key (kbd "C-x C-c"))
+
+;; flash a glyph instead of beep
+(setq visible-bell t)
+
+;; visual line mode : text lines “wrap” inside frame instead of continuing beyond edge.
+;; global-visual-wrap-prefix-mode : preserves indentation on wrapped lines.
+;;(global-visual-line-mode t)
+;;(global-visual-wrap-prefix-mode t)
 
 ;; ** Mode line
 ;; http://www.emacswiki.org/emacs/DisplayTime
@@ -463,6 +489,12 @@
 ;;(display-time)
 (line-number-mode)
 (column-number-mode)
+
+;; put stuff from other programs into the emacs kill ring
+(setq save-interprogram-paste-before-kill t)
+
+;; move up and down by pixels when on an image (instead of by lines)
+(pixel-scroll-precision-mode t)
 
 ;; ** Display full filepath in title
 ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/
@@ -498,10 +530,14 @@
   "Pulse the current line."
   (pulse-momentary-highlight-one-line (point)))
 
-(advice-add 'other-window        :after #'pulse-line)
-(advice-add 'delete-window       :after #'pulse-line)
-(advice-add 'recenter-top-bottom :after #'pulse-line)
-(advice-add 'other-frame         :after #'pulse-line)
+(dolist (command '(delete-window
+                   other-frame
+                   other-window
+                   scroll-down-command
+                   scroll-up-command
+                   recenter-top-bottom
+                   ))
+  (advice-add command :after #'pulse-line))
 
 ;; WHICH KEY
 (use-package which-key
@@ -528,6 +564,12 @@
 
 (add-hook 'html-mode-hook  (lambda () (setq-local sgml-basic-offset 4)))
 (add-hook 'mhtml-mode-hook (lambda () (setq-local sgml-basic-offset 4)))
+
+(use-package artist
+  :custom
+  (artist-text-renderer-function #'artist-text))
+
+
 
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
@@ -568,7 +610,7 @@
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-org-mode)
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-pkms) ;; must come after org-mode
+;;TODO(hcSectionLoad hc-pkms) ;; must come after org-mode
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-tags)
 ;; ------------------------------------------------------------------------------
