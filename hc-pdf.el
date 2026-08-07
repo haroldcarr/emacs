@@ -39,20 +39,21 @@
 ;; - add `extra-nix-path`, restart daemon, restart Emacs
 
 ;;  activate it
-(with-no-warnings
-(when (require 'pdf-tools nil :noerror)
-  (progn
-    (pdf-tools-install)
-    ;; THIS WORKS
-    (setq pdf-annot-list-format
-          '((page     .  3)
-            (type     . 10)
-            (label    . 24)
-            (contents . 56)))
-    (global-set-key (kbd "C-c z") 'pdf-view-midnight-minor-mode)
-  )
-)
-)
+(use-package pdf-tools
+  :ensure t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+
+  :config
+  ;; (pdf-tools-install :no-query) ;; ONLY DO THIS ON NEW VERSIONS
+
+  (setq pdf-annot-list-format
+        '((page     .  3)
+          (type     . 10)
+          (label    . 24)
+          (contents . 56)))
+
+  (keymap-global-set "C-c z" #'pdf-view-midnight-minor-mode))
+
 
 ;; default
 ;;(setq pdf-annot-list-format

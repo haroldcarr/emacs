@@ -140,6 +140,7 @@
         (ntlm                . "gnu")
         (oauth2              . "gnu")
         (orderless           . "gnu")
+        (pdftools            . "nongnu")
         (peg                 . "gnu")
         (popup               . "nongnu")
         (posframe            . "gnu")

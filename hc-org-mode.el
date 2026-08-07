@@ -12,13 +12,6 @@
 
 (eval-when-compile (require 'use-package))
 
-(use-package org
-  :defer t
-  :config
-  (hc-org-mode)
-  (when (member (hcMachineName) hc-dev-machines)
-    (use-package hc-noter)))
-
 (defun hc-org-mode ()
   (add-to-list 'auto-mode-alist '("\\.\\(org\\|rpt\\|txt\\)$" . org-mode))
   ;; So I can visit script links in org files (instead of execute them)
@@ -183,6 +176,13 @@
             (cons '(:cache . "yes")
                   (assq-delete-all :cache org-babel-default-header-args))))
   )
+
+(use-package org
+  :defer t
+  :config
+  (hc-org-mode)
+  (when (member (hcMachineName) hc-dev-machines)
+    (use-package hc-noter)))
 
 ;; ------------------------------------------------------------------------------
 

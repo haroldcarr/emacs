@@ -1,0 +1,57 @@
+`nix shell ... -c bash` does not run the `pkg-config` setup hook, so
+`PKG_CONFIG_PATH` is not populated.
+
+Use `nix develop` with an `mkShell`.
+
+Create `hc-pdf-flake.nix`:
+
+#+begin_src nix
+{
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = { nixpkgs, ... }:
+    let
+      system = "aarch64-darwin";
+      pkgs = import nixpkgs { inherit system; };
+    in {
+      devShells.${system}.default = pkgs.mkShell {
+        nativeBuildInputs = [
+          pkgs.pkg-config
+        ];
+
+        buildInputs = [
+          pkgs.poppler
+          pkgs.glib
+          pkgs.cairo
+          pkgs.libpng
+          pkgs.zlib
+        ];
+      };
+    };
+}
+#+end_src
+
+Then:
+
+#+begin_src sh
+ln -s hc-pdf-flake.nix flake.nix
+nix develop
+
+pkg-config --modversion poppler-glib
+pkg-config --modversion poppler
+#+end_src
+
+`pkg-config` belongs in `nativeBuildInputs`; the libraries belong in
+`buildInputs`. That causes Nix's setup hooks to construct
+`PKG_CONFIG_PATH`. :contentReference[oaicite:0]{index=0}
+
+Then start Emacs from that shell and rebuild:
+
+#+begin_src sh
+emacs
+#+end_src
+
+#+begin_example
+C-u M-x pdf-tools-install
+#+end_example
+
