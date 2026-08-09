@@ -4,7 +4,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2025 Dec 25 (Thu) 12:44:48 by Harold Carr.
+;;;; Last Modified : 2026 Aug 06 (Thu) 21:05:26 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -13,8 +13,8 @@
 
 (use-package hc-lsp)
 
-(add-hook 'haskell-mode-hook          #'lsp-mode)
-(add-hook 'haskell-literate-mode-hook #'lsp-mode)
+(add-hook 'haskell-mode-hook          #'lsp)
+(add-hook 'haskell-literate-mode-hook #'lsp)
 
 (use-package lsp-haskell
   :custom
