@@ -21,7 +21,7 @@
 
 (use-package youtube-music
   :ensure nil
-  :bind ("C-c y" . youtube-music)
+  ;;:bind ("C-c y" . youtube-music)
   :config (youtube-music-modeline-mode 1))
 
 (provide 'hc-youtube)

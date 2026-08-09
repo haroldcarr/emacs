@@ -170,6 +170,7 @@
         (yaml                . "gnu")
         (yaml-mode           . "nongnu")
         (yasnippet           . "gnu")
+        (youtube-music       . "melpa")
         (zenburn-theme       . "nongnu")
         ))
 
