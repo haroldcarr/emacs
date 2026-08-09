@@ -39,12 +39,13 @@
 ;; - add `extra-nix-path`, restart daemon, restart Emacs
 
 ;;  activate it
+
 (use-package pdf-tools
-  :ensure t
+  :ensure nil
   :mode ("\\.pdf\\'" . pdf-view-mode)
 
   :config
-  ;; (pdf-tools-install :no-query) ;; ONLY DO THIS ON NEW VERSIONS
+  (pdf-tools-install :no-query)
 
   (setq pdf-annot-list-format
         '((page     .  3)

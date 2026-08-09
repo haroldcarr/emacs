@@ -1,57 +1,47 @@
-`nix shell ... -c bash` does not run the `pkg-config` setup hook, so
-`PKG_CONFIG_PATH` is not populated.
 
-Use `nix develop` with an `mkShell`.
-
-Create `hc-pdf-flake.nix`:
+* home-manager : add to 2025
 
 #+begin_src nix
-{
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  programs.emacs.extraPackages = epkgs: [
+    epkgs.pdf-tools
+  ];
+#+end_src
 
-  outputs = { nixpkgs, ... }:
-    let
-      system = "aarch64-darwin";
-      pkgs = import nixpkgs { inherit system; };
-    in {
-      devShells.${system}.default = pkgs.mkShell {
-        nativeBuildInputs = [
-          pkgs.pkg-config
-        ];
-
-        buildInputs = [
-          pkgs.poppler
-          pkgs.glib
-          pkgs.cairo
-          pkgs.libpng
-          pkgs.zlib
-        ];
-      };
-    };
-}
+#+begin_src
+M-x list-packages
 #+end_src
 
 Then:
 
-#+begin_src sh
-ln -s hc-pdf-flake.nix flake.nix
-nix develop
+- find `pdf-tools`
+- mark it for deletion with:
+  `d`
+- execute deletions with:
+  `x`
 
-pkg-config --modversion poppler-glib
-pkg-config --modversion poppler
-#+end_src
+This is safer than manually deleting the ELPA directory.
 
-`pkg-config` belongs in `nativeBuildInputs`; the libraries belong in
-`buildInputs`. That causes Nix's setup hooks to construct
-`PKG_CONFIG_PATH`. :contentReference[oaicite:0]{index=0}
-
-Then start Emacs from that shell and rebuild:
+* after that
 
 #+begin_src sh
-emacs
+home-manager switch --flake .#carr@hc2025
 #+end_src
 
-#+begin_example
-C-u M-x pdf-tools-install
-#+end_example
+and keep:
 
+#+begin_src emacs-lisp
+(use-package pdf-tools
+  :ensure nil
+  :config
+  (pdf-tools-install :no-query))
+#+end_src
+
+
+#+begin_src sh
+home-manager switch --flake .#carr@hc2025
+#+end_src
+
+* notes
+
+- `:ensure nil` tells `use-package` to use the Nix-installed package.
+- `pdf-tools-install` initializes the already-built `epdfinfo`; it should not compile it.
