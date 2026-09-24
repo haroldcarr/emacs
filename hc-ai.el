@@ -6,7 +6,7 @@
 
 ;;;;
 ;;;; Created       : ...                        by Harold Carr.
-;;;; Last Modified : 2026 Jul 08 (Wed) 20:44:57 by Harold Carr.
+;;;; Last Modified : 2026 Aug 10 (Mon) 11:44:16 by Harold Carr.
 ;;;;
 
 ;;; Code:
@@ -58,7 +58,7 @@
 
 (hc-gptel-make-ollama "cloud" "deepseek-v4-pro:cloud")
 (hc-gptel-make-ollama "cloud" "minimax-m2.7:cloud")
-
+(hc-gptel-make-ollama "local" "devstral-small-2")
 (hc-gptel-make-ollama "local" "gemma4:31b")
 (hc-gptel-make-ollama "local" "gemma4:31b-coding-mtp-bf16")
 (hc-gptel-make-ollama "local" "qwen3-coder:30b")

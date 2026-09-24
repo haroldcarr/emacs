@@ -43,6 +43,145 @@
 (setq gc-cons-threshold (* 50 1000000))
 
 ;; ------------------------------------------------------------------------------
+;; Security https://www.jamescherti.com/emacs-security-settings/
+
+(setq gnutls-verify-error t)      ;; GnuTLS cert verification. t: validation failure is fatal
+(setq tls-checktrust t)           ;; External TLS binaries. t: cert validation enforced if Emacs falls back to using external tools.
+(setq gnutls-min-prime-bits 3072) ;; Min size for Diffie-Hellman key exchange primes. 3072: rejects handshakes using primes smaller than 3072 bits.
+
+;; The ffap (Find File At Point) package scans text around point to
+;; identify file paths, URLs, and hostnames. This triggers when you
+;; invoke an ffap command, most commonly find-file-at-point, which
+;; replaces standard C-x C-f if you have (ffap-bindings) enabled,
+;; while your cursor is resting on or near a string of text that
+;; resembles a domain name.
+;;
+;; 'reject prevents FFAP from probing hostnames with known domains.
+;; The tradeoff is that ffap will no longer automatically recognize
+;; hostnames as remote connection targets, meaning you must enter
+;; remote host paths explicitly.
+(setq ffap-machine-p-known 'reject)
+
+
+;; Encrypting auth sources
+
+;; Emacs' auth-source uses files such as ~/.authinfo and ~/.netrc to
+;; store authentication credentials that other Emacs packages can
+;; retrieve when connecting to remote services. For example:
+;;
+;; - Tramp: Passwords for remote server access.
+;; - Gnus and Message: Credentials for mail retrieval (IMAP, POP3) and transmission (SMTP).
+;
+;; An auth-source entry can contain information such as a hostname,
+;; username, password, port, or protocol. Because these files may
+;; contain sensitive credentials, storing them as plain text exposes
+;; them to any process or user that can read the file.
+
+;; To enforce the exclusive use of an encrypted file and prevent
+;; accidental plain-text credential storage, redefine the
+;; authentication sources list:
+
+(setq auth-sources '("~/.authinfo.gpg"))
+
+;; Additional security configurations:
+
+;; - To encrypt the file using specific GPG public keys, define the
+;;   recipients using auth-source-gpg-encrypt-to:
+;;(setq auth-source-gpg-encrypt-to '("your.email@example.com"))
+
+;; - Emacs can cache passwords to minimize prompt interruptions. The
+;;   cache expiration can be configured using auth-source-cache-expiry:
+(setq auth-source-cache-expiry 3600)
+
+;; Clear auth-source cache when the user is idle
+
+;; The auth-source library uses password cache to store authentication
+;; data in memory. By default, auth-source-do-cache is enabled (t) and
+;; auth-source-cache-expiry is set to 7200 seconds (2 hours). You can
+;; restrict this credential exposure using idle timers, targeted cache
+;; clearing, or by disabling the cache entirely.
+
+;; Use an idle timer to purge credentials after a period of inactivity
+;; instead of waiting for the absolute cache expiry limit:
+
+;; (defun my-security-clear-caches ()
+;;   "Clear all cached authentication data managed by auth-source."
+;;   (when (fboundp 'auth-source-forget-all-cached)
+;;     (auth-source-forget-all-cached)))
+
+;; (run-with-idle-timer 900 t #'my-security-clear-caches)
+
+;; The benefit is that it limits memory exposure to 15 minutes of idle
+;; time. The tradeoff is that background operations requiring
+;; authentication may fail or block while awaiting a passphrase when returning to the editor.
+
+;; TRAMP : do not ask to save passwords
+(setq auth-source-save-behavior nil)
+
+
+;; Symbol shorthand code execution
+
+;; Emacs 28.1 added a feature called symbol shorthands
+;; (read-symbol-shorthands). A vulnerability exists in Emacs versions
+;; 28.1 through 31 pretest where this feature can be abused to trigger
+;; arbitrary code execution simply by opening a specially crafted
+;; file. The malicious execution occurs immediately, even before the
+;; file contents are displayed.
+
+;; The exploit relies on Emacs evaluating symbol shorthands during
+;; unsafe intern calls in vc-find-backend-function and
+;; c-compose-keywords-list. Emacs 31.1 mitigates the
+;; vulnerability. Earlier versions, including affected Emacs 31
+;; pretest versions, remain vulnerable unless the mitigation is
+;; applied manually.
+
+;; For users on Emacs 31 pretest or older, you can implement a
+;; mitigation by defining an advice function that locally disables
+;; symbol shorthands and applying it around the vulnerable operations.
+
+;; This protects the editor from silent code execution attacks
+;; embedded in untrusted source files without requiring an upgrade to
+;; an unreleased Emacs version. The tradeoff is that it modifies core
+;; function behavior via advice, though the impact on version control
+;; and C/C++ fontification performance is negligible.
+
+(defun my-suppress-shorthands (orig &rest args)
+  "Call ORIG function with ARGS while binding `read-symbol-shorthands' to nil.
+ORIG is the original function being advised.
+ARGS is the list of arguments passed to the original function.
+This acts as advice to prevent arbitrary code execution via symbol shorthands
+during unsafe operations like interning symbols on file open."
+  (let (read-symbol-shorthands)
+    (apply orig args)))
+
+;; A workaround patch (Commit 8466eb44) was applied to the emacs-31 release
+;; branch on August 5, 2026. Early pretest versions of Emacs 31 do not
+;; include this mitigation.
+(when (< emacs-major-version 32)
+  (advice-add 'vc-find-backend-function :around #'my-suppress-shorthands)
+  (with-eval-after-load 'cc-fonts
+    (advice-add 'c-compose-keywords-list :around #'my-suppress-shorthands)))
+
+;; Package Management
+
+;; Emacs 31.1 added package-review-policy, an automated package review
+;; system, allowing inspection of upstream code changes before
+;; installation:
+
+;; Setting package-review-policy to t causes Emacs to require a review
+;; of packages before installation or upgrade. The package is unpacked
+;; into a temporary review directory, where the source can be compared
+;; with the previous installation (diff), and reviewed. The package is
+;; installed only if the review succeeds.
+
+;; The main downside is that updates can no longer run in the
+;; background. Having to review diffs by hand gets tedious when
+;; upgrading multiple packages at once.
+(setq package-review-policy t)
+
+;; TODO: https://www.jamescherti.com/securing-emacs-dir-locals-el-local-variables/
+
+;; ------------------------------------------------------------------------------
 ;; Compatibility
 
 (defmacro hc-setopt (&rest pairs)
@@ -82,6 +221,7 @@
         (async               . "gnu")
         (avy                 . "gnu")
         (cape                . "gnu")
+        (casual              . "nongnu")
         (company             . "gnu")
         (compat              . "gnu")
         (cond-let            . "nongnu")
@@ -90,6 +230,7 @@
         (corfu               . "gnu")
         (dash                . "gnu")
         (diff-hl             . "gnu")
+        (docker              . "melpa")
         (eat                 . "gnu")
         (edit-indirect       . "nongnu")
         (editorconfig        . "nongnu")
@@ -423,9 +564,6 @@
 (defvar global-auto-revert-non-file-buffers)
 (setq global-auto-revert-non-file-buffers nil)
 
-;; TRAMP : do not ask to save passwords
-(setq auth-source-save-behavior nil)
-
 (use-package dictionary
   :init
   ;; have 'M-x dictionary-search' use
@@ -496,7 +634,8 @@
 (setq save-interprogram-paste-before-kill t)
 
 ;; move up and down by pixels when on an image (instead of by lines)
-(pixel-scroll-precision-mode t)
+(when (version<= "30.2" emacs-version )
+  (pixel-scroll-precision-mode t))
 
 ;; ** Display full filepath in title
 ;; http://emacsredux.com/blog/2013/04/07/display-visited-files-path-in-the-frame-title/
@@ -571,12 +710,14 @@
   :custom
   (artist-text-renderer-function #'artist-text))
 
-
-
+;; -----------------------------------------------------------------------------
+(when (version<= "30.2" emacs-version)
+  (require 'casual)
+  (casual-init))
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
 ;; ------------------------------------------------------------------------------
-(hcSectionLoad hc-spelling)
+;;TODO(hcSectionLoad hc-spelling)
 ;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-time)
 ;; ------------------------------------------------------------------------------
