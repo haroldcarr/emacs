@@ -715,6 +715,8 @@ during unsafe operations like interning symbols on file open."
   (require 'casual)
   (casual-init))
 ;; ------------------------------------------------------------------------------
+(hcSectionLoad hc-remoto) ;; browse github repos without cloning
+;; ------------------------------------------------------------------------------
 (hcSectionLoad hc-ai)
 ;; ------------------------------------------------------------------------------
 ;;TODO(hcSectionLoad hc-spelling)
