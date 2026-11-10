@@ -11,7 +11,7 @@
 ;; https://github.com/minad/cape
 
 (use-package cape
-  :ensure t
+  :ensure nil
   ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
   ;; Press C-c p ? to for help.
   :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
@@ -29,10 +29,10 @@
   ;;(add-hook 'completion-at-point-functions #'cape-dictionary) ; from a dictionary file
   (add-hook 'completion-at-point-functions #'cape-file)         ; file paths
   ;;(add-hook 'completion-at-point-functions #cape-emoji)       ; what it says
-  (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  (add-hook 'completion-at-point-functions #'cape-elisp-symbol) ; elisp symbols anywhere (comments and docs too)
+  ;;(add-hook 'completion-at-point-functions #'cape-elisp-block)
+  ;;(add-hook 'completion-at-point-functions #'cape-elisp-symbol) ; elisp symbols anywhere (comments and docs too)
   ;;(add-hook 'completion-at-point-functions #'cape-history)
-  (add-hook 'completion-at-point-functions #'cape-keyword)      ; programming language keywords
+  ;;(add-hook 'completion-at-point-functions #'cape-keyword)      ; programming language keywords
   ;;(add-hook 'completion-at-point-functions #'cape-line)       ; complete entire ines from the buffer
   ;; ...
 )
